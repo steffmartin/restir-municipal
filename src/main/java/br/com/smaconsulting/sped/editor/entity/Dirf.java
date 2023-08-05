@@ -1,15 +1,15 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Year;
 
 @Entity
 public class Dirf {
 
     @Id
-    String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dirf_id", columnDefinition = "serial")
+    Integer dirfId;
 
     @Column(nullable = false)
     Year anoRef;
@@ -26,4 +26,12 @@ public class Dirf {
     @Column(length = 7, nullable = false)
     String idLeiaute;
     // 2023 = ARNZRXP
+
+    @OneToOne(mappedBy = "dirf", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    Respo respo;
+
+    @OneToOne(mappedBy = "dirf", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    Declarante declarante;
 }

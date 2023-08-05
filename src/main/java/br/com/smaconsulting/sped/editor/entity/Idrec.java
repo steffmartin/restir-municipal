@@ -7,7 +7,7 @@ import javax.persistence.Id;
 @Entity
 public class Idrec {
     @Id
-    String id;
+    Integer id;
     @Column(length = 4, nullable = false)
     String codRec;
 }

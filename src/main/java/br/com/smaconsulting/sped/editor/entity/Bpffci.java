@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Entity
 public class Bpffci {
     @Id
-    String id;
+    Integer id;
 
     @Column(length = 11, nullable = false)
     String cpf;

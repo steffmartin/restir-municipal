@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Entity
 public class RegValMes {
     @Id
-    String id;
+    Integer id;
 
     @Column(length = 5, nullable = false)
     String registro;

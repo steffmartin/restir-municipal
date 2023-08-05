@@ -7,7 +7,7 @@ import javax.persistence.Id;
 @Entity
 public class Inf {
     @Id
-    String id;
+    Integer id;
 
     @Column(length = 11, nullable = false)
     String cpf;

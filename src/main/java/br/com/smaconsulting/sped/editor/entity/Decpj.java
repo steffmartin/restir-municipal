@@ -2,13 +2,10 @@ package br.com.smaconsulting.sped.editor.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Entity
-public class Decpj {
-    @Id
-    String id;
+public class Decpj extends Declarante {
 
     @Column(length = 14, nullable = false)
     String cnpj;

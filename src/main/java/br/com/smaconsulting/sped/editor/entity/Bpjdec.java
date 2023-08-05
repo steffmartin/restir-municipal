@@ -7,7 +7,7 @@ import javax.persistence.Id;
 @Entity
 public class Bpjdec {
     @Id
-    String id;
+    Integer id;
 
     @Column(length = 14, nullable = false)
     String cnpj;

@@ -3,12 +3,11 @@ package br.com.smaconsulting.sped.editor.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.time.LocalDate;
 
 @Entity
 public class Bpfscp {
     @Id
-    String id;
+    Integer id;
 
     @Column(length = 11, nullable = false)
     String cpf;

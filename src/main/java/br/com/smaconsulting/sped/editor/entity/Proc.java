@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Entity
 public class Proc {
     @Id
-    String id;
+    Integer id;
 
     @Column(nullable = false)
     Short idJustica;

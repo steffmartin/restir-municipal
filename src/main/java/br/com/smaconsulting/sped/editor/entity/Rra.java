@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Entity
 public class Rra {
     @Id
-    String id;
+    Integer id;
 
     @Column(nullable = false)
     Short idRra;

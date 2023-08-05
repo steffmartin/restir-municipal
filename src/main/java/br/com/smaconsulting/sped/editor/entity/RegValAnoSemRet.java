@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Entity
 public class RegValAnoSemRet {
     @Id
-    String id;
+    Integer id;
 
     @Column(length = 6, nullable = false)
     String registro;

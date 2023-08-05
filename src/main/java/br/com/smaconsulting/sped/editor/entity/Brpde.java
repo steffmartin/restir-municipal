@@ -3,12 +3,11 @@ package br.com.smaconsulting.sped.editor.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.math.BigDecimal;
 
 @Entity
 public class Brpde {
     @Id
-    String id;
+    Integer id;
 
     @Column(nullable = false)
     Short beneficiario;

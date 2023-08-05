@@ -1,14 +1,17 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Respo {
 
     @Id
-    String id;
+    Integer dirfId;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "dirf_id")
+    Dirf dirf;
 
     @Column(length = 11, nullable = false)
     String cpf;
