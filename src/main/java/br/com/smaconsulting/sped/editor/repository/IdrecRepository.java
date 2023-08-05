@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IdrecRepository extends JpaRepository<Idrec, Integer> {
+public interface IdrecRepository extends JpaRepository<Idrec, Idrec.IdrecId> {
 }

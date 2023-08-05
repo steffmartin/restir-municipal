@@ -1,17 +1,15 @@
 package br.com.smaconsulting.sped.editor.entity;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
 
 @Entity
+@PrimaryKeyJoinColumn(name = "dirf_id")
+@DiscriminatorValue(value = "DECPJ")
 public class Decpj extends Declarante {
-
-    @Column(length = 14, nullable = false)
-    String cnpj;
-
-    @Column(length = 150, nullable = false)
-    String nome;
 
     @Column(nullable = false)
     Short natureza;
@@ -26,19 +24,10 @@ public class Decpj extends Declarante {
     String cpfResp;
 
     @Column(nullable = false)
-    Boolean socioOstensivo;
-
-    @Column(nullable = false)
     Boolean decisaoJudicial;
 
     @Column(nullable = false)
     Boolean fundoClubeInvest;
-
-    @Column(nullable = false)
-    Boolean pgtoRendExt;
-
-    @Column(nullable = false)
-    Boolean pgtoPlanoSaude;
 
     @Column(nullable = false)
     Boolean pgtoIsentas;

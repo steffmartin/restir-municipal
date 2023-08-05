@@ -1,34 +1,23 @@
 package br.com.smaconsulting.sped.editor.entity;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
 
 @Entity
+@PrimaryKeyJoinColumn(name = "dirf_id")
+@DiscriminatorValue(value = "DECPF")
 public class Decpf extends Declarante {
-
-    @Column(length = 11, nullable = false)
-    String cpf;
-
-    @Column(length = 60, nullable = false)
-    String nome;
-
-    @Column(nullable = false)
-    Boolean pgtoRendExt;
 
     @Column(nullable = false)
     Boolean titServNotoriais;
 
     @Column(nullable = false)
-    Boolean pgtoPlanoSaude;
-
-    @Column(nullable = false)
-    Boolean socioOstensivo;
-
-    @Column(nullable = false)
     Boolean espolioSaidaDef;
 
-    LocalDate dataEvento;
+    LocalDate dataEspolioSaidaDef;
 
     Short tipoEvento;
     //1 – Encerramento de espólio
