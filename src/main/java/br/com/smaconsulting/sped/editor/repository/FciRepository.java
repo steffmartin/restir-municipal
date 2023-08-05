@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FciRepository extends JpaRepository<Fci, Integer> {
+public interface FciRepository extends JpaRepository<Fci, Fci.FciId> {
 }

@@ -1,16 +1,27 @@
 package br.com.smaconsulting.sped.editor.entity;
 
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
+@IdClass(Proc.ProcId.class)
+@EqualsAndHashCode(of = {"dirfId", "procId"})
 public class Proc {
     @Id
-    Integer id;
+    Integer procId;
+
+    @Id
+    @Column(name = "dirf_id")
+    Integer dirfId;
+
+    @ManyToOne
+    @MapsId("dirf_id")
+    @JoinColumn(name = "dirf_id")
+    Dirf dirf;
 
     @Column(nullable = false)
     Short idJustica;
@@ -33,5 +44,10 @@ public class Proc {
 
     @ColumnDefault("0")
     BigDecimal vlrAdv;
+
+    public class ProcId implements Serializable {
+        Integer dirfId;
+        Integer procId;
+    }
 
 }

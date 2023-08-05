@@ -1,13 +1,25 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
+@IdClass(Opse.OpseId.class)
+@EqualsAndHashCode(of = {"dirfId", "opseId"})
 public class Opse {
     @Id
-    Integer id;
+    Integer opseId;
+
+    @Id
+    @Column(name = "dirf_id")
+    Integer dirfId;
+
+    @ManyToOne
+    @MapsId("dirf_id")
+    @JoinColumn(name = "dirf_id")
+    Dirf dirf;
 
     @Column(length = 14, nullable = false)
     String cnpj;
@@ -17,5 +29,10 @@ public class Opse {
 
     @Column(length = 6)
     String ans;
+
+    public class OpseId implements Serializable {
+        Integer dirfId;
+        Integer opseId;
+    }
 
 }

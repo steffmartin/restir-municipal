@@ -1,13 +1,25 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
+@IdClass(Brpde.BrpdeId.class)
+@EqualsAndHashCode(of = {"dirfId", "brpdeId"})
 public class Brpde {
     @Id
-    Integer id;
+    Integer brpdeId;
+
+    @Id
+    @Column(name = "dirf_id")
+    Integer dirfId;
+
+    @ManyToOne
+    @MapsId("dirf_id")
+    @JoinColumn(name = "dirf_id")
+    Dirf dirf;
 
     @Column(nullable = false)
     Short beneficiario;
@@ -52,5 +64,10 @@ public class Brpde {
     String estado;
     @Column(length = 15)
     String fone;
+
+    public class BrpdeId implements Serializable {
+        Integer dirfId;
+        Integer brpdeId;
+    }
 
 }

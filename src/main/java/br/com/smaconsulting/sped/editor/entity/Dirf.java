@@ -1,9 +1,13 @@
 package br.com.smaconsulting.sped.editor.entity;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.time.Year;
+import java.util.Set;
 
 @Entity
+@EqualsAndHashCode(of = {"dirfId"})
 public class Dirf {
 
     @Id
@@ -34,4 +38,26 @@ public class Dirf {
     @OneToOne(mappedBy = "dirf", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     Declarante declarante;
+
+    @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
+    Set<Fci> fcis;
+
+    @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
+    Set<Proc> procs;
+
+    @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
+    Set<Rra> rras;
+
+    @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
+    Set<Scp> scps;
+
+    @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
+    Set<Opse> opses; //PSE
+
+    @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
+    Set<Brpde> brpdes; //RPDE
+
+    @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
+    Set<Inf> infs;
+
 }

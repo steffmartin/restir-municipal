@@ -1,16 +1,27 @@
 package br.com.smaconsulting.sped.editor.entity;
 
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
+@IdClass(Rra.RraId.class)
+@EqualsAndHashCode(of = {"dirfId", "rraId"})
 public class Rra {
     @Id
-    Integer id;
+    Integer rraId;
+
+    @Id
+    @Column(name = "dirf_id")
+    Integer dirfId;
+
+    @ManyToOne
+    @MapsId("dirf_id")
+    @JoinColumn(name = "dirf_id")
+    Dirf dirf;
 
     @Column(nullable = false)
     Short idRra;
@@ -32,5 +43,10 @@ public class Rra {
 
     @ColumnDefault("0")
     BigDecimal vlrAdv;
+
+    public class RraId implements Serializable {
+        Integer dirfId;
+        Integer rraId;
+    }
 
 }

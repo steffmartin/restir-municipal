@@ -1,15 +1,19 @@
 package br.com.smaconsulting.sped.editor.entity;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
 @Entity
+@EqualsAndHashCode(of = {"dirfId"})
 public class Respo {
 
     @Id
+    @Column(name = "dirf_id")
     Integer dirfId;
 
     @OneToOne
-    @MapsId
+    @MapsId("dirf_id")
     @JoinColumn(name = "dirf_id")
     Dirf dirf;
 
