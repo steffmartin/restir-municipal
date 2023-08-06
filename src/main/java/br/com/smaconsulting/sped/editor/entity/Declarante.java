@@ -3,7 +3,6 @@ package br.com.smaconsulting.sped.editor.entity;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @EqualsAndHashCode(of = {"dirfId"})
@@ -38,7 +37,4 @@ public class Declarante {
 
     @Column(nullable = false)
     Boolean pgtoPlanoSaude;
-
-    @OneToMany(mappedBy = "declarante", cascade = CascadeType.ALL)
-    Set<Idrec> idrecs;
 }

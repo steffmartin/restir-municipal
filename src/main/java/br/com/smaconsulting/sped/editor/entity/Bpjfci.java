@@ -9,6 +9,9 @@ public class Bpjfci {
     @Id
     Integer id;
 
+    @Column(length = 4, nullable = false)
+    String codReceita; //IDREC
+
     @Column(length = 14, nullable = false)
     String cnpj;
 

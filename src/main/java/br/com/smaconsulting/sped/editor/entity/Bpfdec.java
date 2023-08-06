@@ -10,6 +10,9 @@ public class Bpfdec {
     @Id
     Integer id;
 
+    @Column(length = 4, nullable = false)
+    String codReceita; //IDREC
+
     @Column(length = 11, nullable = false)
     String cpf;
 
