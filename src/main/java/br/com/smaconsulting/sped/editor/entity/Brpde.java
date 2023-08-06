@@ -4,12 +4,14 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @IdClass(Brpde.BrpdeId.class)
 @EqualsAndHashCode(of = {"dirf", "linhaBrpde"})
 public class Brpde {
     @Id
+    @Column(name = "linha_brpde")
     Integer linhaBrpde;
 
     @Id
@@ -60,6 +62,9 @@ public class Brpde {
     String estado;
     @Column(length = 15)
     String fone;
+
+    @OneToMany(mappedBy = "brpde", cascade = CascadeType.ALL)
+    Set<Vrpde> vrpdes;
 
     public class BrpdeId implements Serializable {
         Dirf dirf;
