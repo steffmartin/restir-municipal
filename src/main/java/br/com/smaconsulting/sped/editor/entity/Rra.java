@@ -6,12 +6,14 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 @IdClass(Rra.RraId.class)
 @EqualsAndHashCode(of = {"dirf", "rraId"})
 public class Rra {
     @Id
+    @Column(name = "rra_id")
     Integer rraId; //nº da linha
 
     @Id
@@ -39,6 +41,9 @@ public class Rra {
 
     @ColumnDefault("0")
     BigDecimal vlrAdv;
+
+    @OneToMany(mappedBy = "rra", cascade = CascadeType.ALL)
+    Set<Bpfrra> bpfrras;
 
     public class RraId implements Serializable {
         Dirf dirf;

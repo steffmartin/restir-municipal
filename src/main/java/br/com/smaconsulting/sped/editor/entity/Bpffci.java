@@ -8,8 +8,11 @@ import java.time.LocalDate;
 
 @Entity
 @IdClass(Bpffci.BpffciId.class)
-@EqualsAndHashCode(of = {"fci", "codReceita"})
+@EqualsAndHashCode(of = {"bpffciId", "fci"})
 public class Bpffci {
+
+    @Id
+    Integer bpffciId; //nº da linha
 
     @Id
     @ManyToOne
@@ -19,7 +22,6 @@ public class Bpffci {
     })
     Fci fci;
 
-    @Id
     @Column(length = 4, nullable = false)
     String codReceita; //IDREC
 
@@ -33,7 +35,7 @@ public class Bpffci {
 
     public class BpffciId implements Serializable {
         Fci fci;
-        String codReceita;
+        Integer bpffciId;
     }
 
 }

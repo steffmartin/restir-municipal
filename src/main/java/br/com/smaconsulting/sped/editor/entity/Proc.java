@@ -6,12 +6,14 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 @IdClass(Proc.ProcId.class)
 @EqualsAndHashCode(of = {"dirf", "procId"})
 public class Proc {
     @Id
+    @Column(name = "proc_id")
     Integer procId; //nº da linha
 
     @Id
@@ -40,6 +42,12 @@ public class Proc {
 
     @ColumnDefault("0")
     BigDecimal vlrAdv;
+
+    @OneToMany(mappedBy = "proc", cascade = CascadeType.ALL)
+    Set<Bpfproc> bpfprocs;
+
+    @OneToMany(mappedBy = "proc", cascade = CascadeType.ALL)
+    Set<Bpjproc> bpjprocs;
 
     public class ProcId implements Serializable {
         Dirf dirf;

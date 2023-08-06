@@ -1,14 +1,25 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
+@IdClass(Bpfrra.BpfrraId.class)
+@EqualsAndHashCode(of = {"bpfrraId", "rra"})
 public class Bpfrra {
     @Id
-    Integer id;
+    Integer bpfrraId; //nº da linha
+
+    @Id
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
+            @JoinColumn(name = "rra_id", referencedColumnName = "rra_id")
+    })
+    Rra rra;
 
     @Column(length = 4, nullable = false)
     String codReceita; //IDREC
@@ -26,5 +37,10 @@ public class Bpfrra {
 
     @Column(nullable = false)
     Boolean alimentado;
+
+    public class BpfrraId implements Serializable {
+        Integer bpfrraId;
+        Rra rra;
+    }
 
 }

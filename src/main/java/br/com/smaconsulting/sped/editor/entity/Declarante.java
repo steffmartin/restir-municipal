@@ -8,8 +8,8 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(of = {"dirfId"})
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "registro", length = 2, discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue(value = "NA")
+@DiscriminatorColumn(name = "registro", length = 5, discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue(value = "N/A")
 public class Declarante {
 
     @Column(insertable = false, updatable = false)

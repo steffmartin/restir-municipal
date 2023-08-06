@@ -1,14 +1,25 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
+@IdClass(Bpfproc.BpfprocId.class)
+@EqualsAndHashCode(of = {"bpfprocId", "proc"})
 public class Bpfproc {
     @Id
-    Integer id;
+    Integer bpfprocId; //nº da linha
+
+    @Id
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
+            @JoinColumn(name = "proc_id", referencedColumnName = "proc_id")
+    })
+    Proc proc;
 
     @Column(length = 4, nullable = false)
     String codReceita; //IDREC
@@ -20,5 +31,10 @@ public class Bpfproc {
     String nome;
 
     LocalDate dataLaudo;
+
+    public class BpfprocId implements Serializable {
+        Integer bpfprocId;
+        Proc proc;
+    }
 
 }
