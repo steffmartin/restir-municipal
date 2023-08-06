@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Entity
 public class Dtpse {
     @Id
-    Integer id;
+    Integer linhaDtpse;
 
     @Column(length = 11)
     String cpf;

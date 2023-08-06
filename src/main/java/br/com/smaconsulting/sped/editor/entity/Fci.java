@@ -8,11 +8,11 @@ import java.util.Set;
 
 @Entity
 @IdClass(Fci.FciId.class)
-@EqualsAndHashCode(of = {"dirf", "fciId"})
+@EqualsAndHashCode(of = {"dirf", "linhaFci"})
 public class Fci {
     @Id
-    @Column(name = "fci_id")
-    Integer fciId; //nº da linha
+    @Column(name = "linha_fci")
+    Integer linhaFci;
 
     @Id
     @ManyToOne
@@ -33,7 +33,7 @@ public class Fci {
 
     public class FciId implements Serializable {
         Dirf dirf;
-        Integer fciId;
+        Integer linhaFci;
     }
 
 }

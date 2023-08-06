@@ -7,10 +7,10 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Bpjdec.BpjdecId.class)
-@EqualsAndHashCode(of = {"bpjdecId", "declarante"})
+@EqualsAndHashCode(of = {"linhaBpjdec", "declarante"})
 public class Bpjdec {
     @Id
-    Integer bpjdecId; //nº da linha
+    Integer linhaBpjdec;
 
     @Id
     @ManyToOne
@@ -27,7 +27,7 @@ public class Bpjdec {
     String nome;
 
     public class BpjdecId implements Serializable {
-        Integer bpjdecId;
+        Integer linhaBpjdec;
         Declarante declarante;
     }
 

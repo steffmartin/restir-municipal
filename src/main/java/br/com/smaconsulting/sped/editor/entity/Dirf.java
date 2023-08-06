@@ -1,6 +1,7 @@
 package br.com.smaconsulting.sped.editor.entity;
 
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.Year;
@@ -9,6 +10,11 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(of = {"dirfId"})
 public class Dirf {
+
+    @ColumnDefault("1")
+    private Integer linhaDirf;
+
+    private Integer linhaFimDirf;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

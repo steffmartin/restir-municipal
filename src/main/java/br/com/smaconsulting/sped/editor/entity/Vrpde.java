@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 public class Vrpde {
     @Id
-    Integer id;
+    Integer linhaVrpde;
 
     @Column(nullable = false)
     LocalDate dataPgto;

@@ -4,13 +4,15 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @IdClass(Scp.ScpId.class)
-@EqualsAndHashCode(of = {"dirf", "scpId"})
+@EqualsAndHashCode(of = {"dirf", "linhaScp"})
 public class Scp {
     @Id
-    Integer scpId; //nº da linha
+    @Column(name = "linha_scp")
+    Integer linhaScp;
 
     @Id
     @ManyToOne
@@ -23,9 +25,15 @@ public class Scp {
     @Column(length = 150, nullable = false)
     String nome;
 
+    @OneToMany(mappedBy = "scp", cascade = CascadeType.ALL)
+    Set<Bpfscp> bpfscps;
+
+    @OneToMany(mappedBy = "scp", cascade = CascadeType.ALL)
+    Set<Bpjscp> bpjscps;
+
     public class ScpId implements Serializable {
         Dirf dirf;
-        Integer scpId;
+        Integer linhaScp;
     }
 
 }

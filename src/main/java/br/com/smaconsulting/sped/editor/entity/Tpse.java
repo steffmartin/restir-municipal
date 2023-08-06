@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Entity
 public class Tpse {
     @Id
-    Integer id;
+    Integer linhaTpse;
 
     @Column(length = 11, nullable = false)
     String cpf;

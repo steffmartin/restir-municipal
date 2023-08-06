@@ -7,10 +7,10 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Brpde.BrpdeId.class)
-@EqualsAndHashCode(of = {"dirf", "brpdeId"})
+@EqualsAndHashCode(of = {"dirf", "linhaBrpde"})
 public class Brpde {
     @Id
-    Integer brpdeId; //nº da linha
+    Integer linhaBrpde;
 
     @Id
     @ManyToOne
@@ -63,7 +63,7 @@ public class Brpde {
 
     public class BrpdeId implements Serializable {
         Dirf dirf;
-        Integer brpdeId;
+        Integer linhaBrpde;
     }
 
 }

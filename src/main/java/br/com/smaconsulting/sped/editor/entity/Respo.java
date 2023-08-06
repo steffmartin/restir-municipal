@@ -1,12 +1,16 @@
 package br.com.smaconsulting.sped.editor.entity;
 
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
 @EqualsAndHashCode(of = {"dirfId"})
 public class Respo {
+
+    @ColumnDefault("2")
+    private Integer linhaRespo;
 
     @Id
     @Column(name = "dirf_id")

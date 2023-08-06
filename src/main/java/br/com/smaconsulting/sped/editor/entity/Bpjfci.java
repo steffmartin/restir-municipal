@@ -7,16 +7,16 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Bpjfci.BpjfciId.class)
-@EqualsAndHashCode(of = {"fci", "bpjfciId"})
+@EqualsAndHashCode(of = {"fci", "linhaBpjfci"})
 public class Bpjfci {
     @Id
-    Integer bpjfciId; //nº da linha
+    Integer linhaBpjfci;
 
     @Id
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
-            @JoinColumn(name = "fci_id", referencedColumnName = "fci_id")
+            @JoinColumn(name = "linha_fci", referencedColumnName = "linha_fci")
     })
     Fci fci;
 
@@ -31,6 +31,6 @@ public class Bpjfci {
 
     public class BpjfciId implements Serializable {
         Fci fci;
-        Integer bpjfciId;
+        Integer linhaBpjfci;
     }
 }

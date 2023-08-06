@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 @Entity
 public class RegValAnoSemRet {
     @Id
-    Integer id;
+    Integer linhaRegistroAno;
 
     @Column(length = 6, nullable = false)
-    String registro;
+    String codRegistro;
     //RIL96
     //RIPTS
     //RIJMRE

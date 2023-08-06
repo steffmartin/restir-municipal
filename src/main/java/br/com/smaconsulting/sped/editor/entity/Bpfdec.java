@@ -8,11 +8,11 @@ import java.time.LocalDate;
 
 @Entity
 @IdClass(Bpfdec.BpfdecId.class)
-@EqualsAndHashCode(of = {"bpfdecId", "declarante"})
+@EqualsAndHashCode(of = {"linhaBpfdec", "declarante"})
 public class Bpfdec {
 
     @Id
-    Integer bpfdecId; //nº da linha
+    Integer linhaBpfdec;
 
     @Id
     @ManyToOne
@@ -37,7 +37,7 @@ public class Bpfdec {
     Boolean prevCompl;
 
     public class BpfdecId implements Serializable {
-        Integer bpfdecId;
+        Integer linhaBpfdec;
         Declarante declarante;
     }
 

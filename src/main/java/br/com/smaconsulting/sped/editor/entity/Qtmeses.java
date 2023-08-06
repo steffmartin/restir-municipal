@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class Qtmeses {
     @Id
-    Integer id;
+    Integer linhaQtmeses;
 
     @ColumnDefault("0")
     Short jan;

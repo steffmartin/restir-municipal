@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Entity
 public class Rtpse {
     @Id
-    Integer id;
+    Integer linhaRtpse;
 
     @Column(length = 14, nullable = false)
     String cpfCnp;

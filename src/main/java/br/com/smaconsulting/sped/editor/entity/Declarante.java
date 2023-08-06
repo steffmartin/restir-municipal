@@ -1,6 +1,7 @@
 package br.com.smaconsulting.sped.editor.entity;
 
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -8,12 +9,15 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(of = {"dirfId"})
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "registro", length = 5, discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "cod_registro", length = 5, discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue(value = "N/A")
 public class Declarante {
 
-    @Column(insertable = false, updatable = false)
-    private String registro;
+    @ColumnDefault("3")
+    private Integer linhaDec;
+
+    @Column(insertable = false, updatable = false, name = "cod_registro")
+    private String codRegistro;
 
     @Id
     @Column(name = "dirf_id")

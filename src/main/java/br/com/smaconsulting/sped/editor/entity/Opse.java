@@ -7,10 +7,10 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Opse.OpseId.class)
-@EqualsAndHashCode(of = {"dirf", "opseId"})
+@EqualsAndHashCode(of = {"dirf", "linhaOpse"})
 public class Opse {
     @Id
-    Integer opseId; //nº da linha
+    Integer linhaOpse;
 
     @Id
     @ManyToOne
@@ -28,7 +28,7 @@ public class Opse {
 
     public class OpseId implements Serializable {
         Dirf dirf;
-        Integer opseId;
+        Integer linhaOpse;
     }
 
 }

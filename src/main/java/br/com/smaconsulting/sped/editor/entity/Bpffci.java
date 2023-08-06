@@ -8,17 +8,17 @@ import java.time.LocalDate;
 
 @Entity
 @IdClass(Bpffci.BpffciId.class)
-@EqualsAndHashCode(of = {"bpffciId", "fci"})
+@EqualsAndHashCode(of = {"linhaBpffci", "fci"})
 public class Bpffci {
 
     @Id
-    Integer bpffciId; //nº da linha
+    Integer linhaBpffci;
 
     @Id
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
-            @JoinColumn(name = "fci_id", referencedColumnName = "fci_id")
+            @JoinColumn(name = "linha_fci", referencedColumnName = "linha_fci")
     })
     Fci fci;
 
@@ -35,7 +35,7 @@ public class Bpffci {
 
     public class BpffciId implements Serializable {
         Fci fci;
-        Integer bpffciId;
+        Integer linhaBpffci;
     }
 
 }

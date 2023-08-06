@@ -7,16 +7,16 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Bpjproc.BpjprocId.class)
-@EqualsAndHashCode(of = {"bpjprocId", "proc"})
+@EqualsAndHashCode(of = {"linhaBpjproc", "proc"})
 public class Bpjproc {
     @Id
-    Integer bpjprocId; //nº da linha
+    Integer linhaBpjproc;
 
     @Id
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
-            @JoinColumn(name = "proc_id", referencedColumnName = "proc_id")
+            @JoinColumn(name = "linha_proc", referencedColumnName = "linha_proc")
     })
     Proc proc;
 
@@ -30,7 +30,7 @@ public class Bpjproc {
     String nome;
 
     public class BpjprocId implements Serializable {
-        Integer bpjprocId;
+        Integer linhaBpjproc;
         Proc proc;
     }
 

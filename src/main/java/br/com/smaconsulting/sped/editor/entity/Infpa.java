@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Entity
 public class Infpa {
     @Id
-    Integer id;
+    Integer linhaInfpa;
 
     @Column(length = 11)
     String cpf;

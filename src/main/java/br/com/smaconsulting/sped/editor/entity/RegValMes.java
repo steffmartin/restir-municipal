@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 @Entity
 public class RegValMes {
     @Id
-    Integer id;
+    Integer linhaRegistroMes;
 
     @Column(length = 5, nullable = false)
-    String registro;
+    String codRegistro;
     //RTRT
     //RTPO
     //RTPP

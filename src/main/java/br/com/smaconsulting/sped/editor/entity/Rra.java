@@ -10,11 +10,11 @@ import java.util.Set;
 
 @Entity
 @IdClass(Rra.RraId.class)
-@EqualsAndHashCode(of = {"dirf", "rraId"})
+@EqualsAndHashCode(of = {"dirf", "linhaRra"})
 public class Rra {
     @Id
-    @Column(name = "rra_id")
-    Integer rraId; //nº da linha
+    @Column(name = "linha_rra")
+    Integer linhaRra;
 
     @Id
     @ManyToOne
@@ -47,7 +47,7 @@ public class Rra {
 
     public class RraId implements Serializable {
         Dirf dirf;
-        Integer rraId;
+        Integer linhaRra;
     }
 
 }

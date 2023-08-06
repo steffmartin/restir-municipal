@@ -7,7 +7,7 @@ import javax.persistence.Id;
 @Entity
 public class Infpc {
     @Id
-    Integer id;
+    Integer linhaInfpc;
 
     @Column(length = 14, nullable = false)
     String cnpj;

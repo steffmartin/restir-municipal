@@ -10,11 +10,11 @@ import java.util.Set;
 
 @Entity
 @IdClass(Proc.ProcId.class)
-@EqualsAndHashCode(of = {"dirf", "procId"})
+@EqualsAndHashCode(of = {"dirf", "linhaProc"})
 public class Proc {
     @Id
-    @Column(name = "proc_id")
-    Integer procId; //nº da linha
+    @Column(name = "linha_proc")
+    Integer linhaProc;
 
     @Id
     @ManyToOne
@@ -51,7 +51,7 @@ public class Proc {
 
     public class ProcId implements Serializable {
         Dirf dirf;
-        Integer procId;
+        Integer linhaProc;
     }
 
 }

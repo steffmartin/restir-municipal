@@ -8,16 +8,16 @@ import java.time.LocalDate;
 
 @Entity
 @IdClass(Bpfproc.BpfprocId.class)
-@EqualsAndHashCode(of = {"bpfprocId", "proc"})
+@EqualsAndHashCode(of = {"linhaBpfproc", "proc"})
 public class Bpfproc {
     @Id
-    Integer bpfprocId; //nº da linha
+    Integer linhaBpfproc;
 
     @Id
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
-            @JoinColumn(name = "proc_id", referencedColumnName = "proc_id")
+            @JoinColumn(name = "linha_proc", referencedColumnName = "linha_proc")
     })
     Proc proc;
 
@@ -33,7 +33,7 @@ public class Bpfproc {
     LocalDate dataLaudo;
 
     public class BpfprocId implements Serializable {
-        Integer bpfprocId;
+        Integer linhaBpfproc;
         Proc proc;
     }
 

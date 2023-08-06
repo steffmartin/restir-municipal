@@ -7,11 +7,11 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Vpeim.VpeimId.class)
-@EqualsAndHashCode(of = {"vpeimId", "decpj"})
+@EqualsAndHashCode(of = {"linhaVpeim", "decpj"})
 public class Vpeim {
 
     @Id
-    Integer vpeimId; //nº da linha
+    Integer linhaVpeim;
 
     @Id
     @ManyToOne
@@ -26,7 +26,7 @@ public class Vpeim {
 
     public class VpeimId implements Serializable {
         Decpj decpj;
-        Integer vpeimId;
+        Integer linhaVpeim;
     }
 
 }

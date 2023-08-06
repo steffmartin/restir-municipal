@@ -8,16 +8,16 @@ import java.time.LocalDate;
 
 @Entity
 @IdClass(Bpfrra.BpfrraId.class)
-@EqualsAndHashCode(of = {"bpfrraId", "rra"})
+@EqualsAndHashCode(of = {"linhaBpfrra", "rra"})
 public class Bpfrra {
     @Id
-    Integer bpfrraId; //nº da linha
+    Integer linhaBpfrra;
 
     @Id
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
-            @JoinColumn(name = "rra_id", referencedColumnName = "rra_id")
+            @JoinColumn(name = "linha_rra", referencedColumnName = "linha_rra")
     })
     Rra rra;
 
@@ -39,7 +39,7 @@ public class Bpfrra {
     Boolean alimentado;
 
     public class BpfrraId implements Serializable {
-        Integer bpfrraId;
+        Integer linhaBpfrra;
         Rra rra;
     }
 

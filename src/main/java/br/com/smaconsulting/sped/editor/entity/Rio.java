@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Entity
 public class Rio {
     @Id
-    Integer id;
+    Integer linhaRio;
 
     @Column(nullable = false)
     BigDecimal vlrAno;
