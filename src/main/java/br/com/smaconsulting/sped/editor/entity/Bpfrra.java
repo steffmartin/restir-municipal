@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = {"linhaBpfrra", "rra"})
 public class Bpfrra {
     @Id
+    @Column(name = "linha_bpfrra")
     Integer linhaBpfrra;
 
     @Id
@@ -37,6 +38,10 @@ public class Bpfrra {
 
     @Column(nullable = false)
     Boolean alimentado;
+
+    @OneToOne(mappedBy = "bpfrra", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    Qtmeses qtmeses;
 
     public class BpfrraId implements Serializable {
         Integer linhaBpfrra;

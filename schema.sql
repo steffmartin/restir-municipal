@@ -210,7 +210,9 @@
        linha_infpc int4 not null,
         cnpj varchar(14) not null,
         nome varchar(150) not null,
-        primary key (linha_infpc)
+        dirf_id int4 not null,
+        linha_bpfdec int4 not null,
+        primary key (dirf_id, linha_bpfdec, linha_infpc)
     )
 
     create table public.opse (
@@ -235,7 +237,9 @@
     )
 
     create table public.qtmeses (
-       linha_qtmeses int4 not null,
+       dirf_id int4 not null,
+        linha_bpfrra int4 not null,
+        linha_rra int4 not null,
         abr int2 default 0,
         ago int2 default 0,
         dez int2 default 0,
@@ -243,12 +247,13 @@
         jan int2 default 0,
         jul int2 default 0,
         jun int2 default 0,
+        linha_qtmeses int4,
         mai int2 default 0,
         mar int2 default 0,
         nov int2 default 0,
         out int2 default 0,
         set int2 default 0,
-        primary key (linha_qtmeses)
+        primary key (dirf_id, linha_bpfrra, linha_rra)
     )
 
     create table public.rdtpse (
@@ -453,6 +458,11 @@
        foreign key (dirf_id) 
        references public.dirf
 
+    alter table public.infpc 
+       add constraint FKt8nrlj4fxafcsvtmusdw6kxlu 
+       foreign key (dirf_id, linha_bpfdec) 
+       references public.bpfdec
+
     alter table public.opse 
        add constraint FKnly9q20o49hwa993nfoeb5e0e 
        foreign key (dirf_id) 
@@ -462,6 +472,11 @@
        add constraint FK2dmww8cgm03ephdb8jp6fm7qu 
        foreign key (dirf_id) 
        references public.dirf
+
+    alter table public.qtmeses 
+       add constraint FKa3twkgc0okykat5casj6c4cn6 
+       foreign key (dirf_id, linha_bpfrra, linha_rra) 
+       references public.bpfrra
 
     alter table public.rdtpse 
        add constraint FK764yjoyb2240qtlqoe9toxxqm 

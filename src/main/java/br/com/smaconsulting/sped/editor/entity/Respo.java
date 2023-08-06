@@ -6,7 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 
 @Entity
-@EqualsAndHashCode(of = {"dirfId"})
+@EqualsAndHashCode(of = {"dirf"})
 public class Respo {
 
     @ColumnDefault("2")

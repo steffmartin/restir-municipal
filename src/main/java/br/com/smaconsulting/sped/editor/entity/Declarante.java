@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@EqualsAndHashCode(of = {"dirfId"})
+@EqualsAndHashCode(of = {"dirf"})
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "cod_registro", length = 5, discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue(value = "N/A")
