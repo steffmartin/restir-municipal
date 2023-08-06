@@ -10,7 +10,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(of = {"dirfId", "brpdeId"})
 public class Brpde {
     @Id
-    Integer brpdeId;
+    Integer brpdeId; //nº da linha
 
     @Id
     @Column(name = "dirf_id")

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BpjdecRepository extends JpaRepository<Bpjdec, Integer> {
+public interface BpjdecRepository extends JpaRepository<Bpjdec, Bpjdec.BpjdecId> {
 }

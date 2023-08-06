@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(of = {"dirfId", "procId"})
 public class Proc {
     @Id
-    Integer procId;
+    Integer procId; //nº da linha
 
     @Id
     @Column(name = "dirf_id")

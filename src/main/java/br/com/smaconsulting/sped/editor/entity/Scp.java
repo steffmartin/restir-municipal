@@ -10,7 +10,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(of = {"dirfId", "scpId"})
 public class Scp {
     @Id
-    Integer scpId;
+    Integer scpId; //nº da linha
 
     @Id
     @Column(name = "dirf_id")

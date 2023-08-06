@@ -1,14 +1,24 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
+@IdClass(Bpjdec.BpjdecId.class)
+@EqualsAndHashCode(of = {"dirfId", "codReceita"})
 public class Bpjdec {
     @Id
-    Integer id;
+    @Column(name = "dirf_id")
+    Integer dirfId;
 
+    @ManyToOne
+    @MapsId("dirf_id")
+    @JoinColumn(name = "dirf_id")
+    Declarante declarante;
+
+    @Id
     @Column(length = 4, nullable = false)
     String codReceita; //IDREC
 
@@ -17,5 +27,10 @@ public class Bpjdec {
 
     @Column(length = 150, nullable = false)
     String nome;
+
+    public class BpjdecId implements Serializable {
+        Integer dirfId;
+        Integer codReceita;
+    }
 
 }

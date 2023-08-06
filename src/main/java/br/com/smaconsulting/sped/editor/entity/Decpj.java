@@ -1,10 +1,8 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "dirf_id")
@@ -39,4 +37,7 @@ public class Decpj extends Declarante {
     Boolean sitEspecial;
 
     LocalDate dataEvento;
+
+    @OneToMany(mappedBy = "decpj", cascade = CascadeType.ALL)
+    Set<Vpeim> vpeims;
 }
