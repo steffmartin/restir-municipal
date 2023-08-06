@@ -1,15 +1,27 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@IdClass(Dtpse.DtpseId.class)
+@EqualsAndHashCode(of = {"linhaDtpse", "tpse"})
 public class Dtpse {
     @Id
     Integer linhaDtpse;
+
+    @Id
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
+            @JoinColumn(name = "linha_opse", referencedColumnName = "linha_opse"),
+            @JoinColumn(name = "linha_tpse", referencedColumnName = "linha_tpse")
+    })
+    Tpse tpse;
 
     @Column(length = 11)
     String cpf;
@@ -28,5 +40,10 @@ public class Dtpse {
 
     @Column(nullable = false)
     BigDecimal vlrAno;
+
+    public class DtpseId implements Serializable {
+        Tpse tpse;
+        Integer linhaDtpse;
+    }
 
 }

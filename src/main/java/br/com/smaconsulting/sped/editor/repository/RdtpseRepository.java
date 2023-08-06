@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RdtpseRepository extends JpaRepository<Rdtpse, Integer> {
+public interface RdtpseRepository extends JpaRepository<Rdtpse, Rdtpse.RdtpseId> {
 }
