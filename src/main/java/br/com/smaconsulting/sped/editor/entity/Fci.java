@@ -4,21 +4,19 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @IdClass(Fci.FciId.class)
-@EqualsAndHashCode(of = {"dirfId", "fciId"})
+@EqualsAndHashCode(of = {"dirf", "fciId"})
 public class Fci {
     @Id
+    @Column(name = "fci_id")
     Integer fciId; //nº da linha
 
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
-
     @ManyToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
+    @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id")
     Dirf dirf;
 
     @Column(length = 14, nullable = false)
@@ -27,8 +25,14 @@ public class Fci {
     @Column(length = 150, nullable = false)
     String nome;
 
+    @OneToMany(mappedBy = "fci", cascade = CascadeType.ALL)
+    Set<Bpffci> bpffcis;
+
+    @OneToMany(mappedBy = "fci", cascade = CascadeType.ALL)
+    Set<Bpjfci> bpjfcis;
+
     public class FciId implements Serializable {
-        Integer dirfId;
+        Dirf dirf;
         Integer fciId;
     }
 

@@ -1,14 +1,23 @@
 package br.com.smaconsulting.sped.editor.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
+@IdClass(Bpjfci.BpjfciId.class)
+@EqualsAndHashCode(of = {"fci", "codReceita"})
 public class Bpjfci {
     @Id
-    Integer id;
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id"),
+            @JoinColumn(name = "fci_id", referencedColumnName = "fci_id")
+    })
+    Fci fci;
 
+    @Id
     @Column(length = 4, nullable = false)
     String codReceita; //IDREC
 
@@ -18,4 +27,8 @@ public class Bpjfci {
     @Column(length = 150, nullable = false)
     String nome;
 
+    public class BpjfciId implements Serializable {
+        Fci fci;
+        String codReceita;
+    }
 }
