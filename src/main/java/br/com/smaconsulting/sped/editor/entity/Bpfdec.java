@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @IdClass(Bpfdec.BpfdecId.class)
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 public class Bpfdec {
 
     @Id
+    @Column(name = "linha_bpfdec")
     Integer linhaBpfdec;
 
     @Id
@@ -35,6 +37,9 @@ public class Bpfdec {
 
     @Column(nullable = false)
     Boolean prevCompl;
+
+    @OneToMany(mappedBy = "bpfdec", cascade = CascadeType.ALL)
+    Set<Infpc> infpcs;
 
     public class BpfdecId implements Serializable {
         Integer linhaBpfdec;
