@@ -7,18 +7,14 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Brpde.BrpdeId.class)
-@EqualsAndHashCode(of = {"dirfId", "brpdeId"})
+@EqualsAndHashCode(of = {"dirf", "brpdeId"})
 public class Brpde {
     @Id
     Integer brpdeId; //nº da linha
 
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
-
     @ManyToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
+    @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id")
     Dirf dirf;
 
     @Column(nullable = false)
@@ -66,7 +62,7 @@ public class Brpde {
     String fone;
 
     public class BrpdeId implements Serializable {
-        Integer dirfId;
+        Dirf dirf;
         Integer brpdeId;
     }
 

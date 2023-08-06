@@ -7,18 +7,14 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Opse.OpseId.class)
-@EqualsAndHashCode(of = {"dirfId", "opseId"})
+@EqualsAndHashCode(of = {"dirf", "opseId"})
 public class Opse {
     @Id
     Integer opseId; //nº da linha
 
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
-
     @ManyToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
+    @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id")
     Dirf dirf;
 
     @Column(length = 14, nullable = false)
@@ -31,7 +27,7 @@ public class Opse {
     String ans;
 
     public class OpseId implements Serializable {
-        Integer dirfId;
+        Dirf dirf;
         Integer opseId;
     }
 

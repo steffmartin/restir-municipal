@@ -9,18 +9,14 @@ import java.math.BigDecimal;
 
 @Entity
 @IdClass(Proc.ProcId.class)
-@EqualsAndHashCode(of = {"dirfId", "procId"})
+@EqualsAndHashCode(of = {"dirf", "procId"})
 public class Proc {
     @Id
     Integer procId; //nº da linha
 
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
-
     @ManyToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
+    @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id")
     Dirf dirf;
 
     @Column(nullable = false)
@@ -46,7 +42,7 @@ public class Proc {
     BigDecimal vlrAdv;
 
     public class ProcId implements Serializable {
-        Integer dirfId;
+        Dirf dirf;
         Integer procId;
     }
 

@@ -7,18 +7,14 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Inf.InfId.class)
-@EqualsAndHashCode(of = {"dirfId", "infId"})
+@EqualsAndHashCode(of = {"dirf", "infId"})
 public class Inf {
     @Id
     Integer infId; //nº da linha
 
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
-
     @ManyToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
+    @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id")
     Dirf dirf;
 
     @Column(length = 11, nullable = false)
@@ -28,7 +24,7 @@ public class Inf {
     String informacoes;
 
     public class InfId implements Serializable {
-        Integer dirfId;
+        Dirf dirf;
         Integer infId;
     }
 

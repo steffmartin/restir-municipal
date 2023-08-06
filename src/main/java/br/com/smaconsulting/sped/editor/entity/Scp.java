@@ -7,18 +7,14 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Scp.ScpId.class)
-@EqualsAndHashCode(of = {"dirfId", "scpId"})
+@EqualsAndHashCode(of = {"dirf", "scpId"})
 public class Scp {
     @Id
     Integer scpId; //nº da linha
 
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
-
     @ManyToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
+    @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id")
     Dirf dirf;
 
     @Column(length = 14, nullable = false)
@@ -28,7 +24,7 @@ public class Scp {
     String nome;
 
     public class ScpId implements Serializable {
-        Integer dirfId;
+        Dirf dirf;
         Integer scpId;
     }
 

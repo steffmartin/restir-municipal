@@ -9,22 +9,18 @@ import java.math.BigDecimal;
 
 @Entity
 @IdClass(Rra.RraId.class)
-@EqualsAndHashCode(of = {"dirfId", "rraId"})
+@EqualsAndHashCode(of = {"dirf", "rraId"})
 public class Rra {
     @Id
     Integer rraId; //nº da linha
 
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
-
     @ManyToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
+    @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id")
     Dirf dirf;
 
     @Column(nullable = false)
-    Short idRra;
+    Short tipoRra;
     //1 – Pago pelo declarante
     //2 – Pago pela justiça
 
@@ -45,7 +41,7 @@ public class Rra {
     BigDecimal vlrAdv;
 
     public class RraId implements Serializable {
-        Integer dirfId;
+        Dirf dirf;
         Integer rraId;
     }
 

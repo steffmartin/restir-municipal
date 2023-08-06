@@ -7,15 +7,11 @@ import java.io.Serializable;
 
 @Entity
 @IdClass(Bpjdec.BpjdecId.class)
-@EqualsAndHashCode(of = {"dirfId", "codReceita"})
+@EqualsAndHashCode(of = {"declarante", "codReceita"})
 public class Bpjdec {
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
-
     @ManyToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
+    @JoinColumn(name = "dirf_id", referencedColumnName = "dirf_id")
     Declarante declarante;
 
     @Id
@@ -29,7 +25,7 @@ public class Bpjdec {
     String nome;
 
     public class BpjdecId implements Serializable {
-        Integer dirfId;
+        Declarante declarante;
         Integer codReceita;
     }
 
