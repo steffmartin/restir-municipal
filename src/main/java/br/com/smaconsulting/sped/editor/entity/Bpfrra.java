@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @IdClass(Bpfrra.BpfrraId.class)
@@ -42,6 +43,12 @@ public class Bpfrra {
     @OneToOne(mappedBy = "bpfrra", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     Qtmeses qtmeses;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "bpfrra_infpa",
+            joinColumns = {@JoinColumn(name = "linha_bpfrra"), @JoinColumn(name = "linha_rra"), @JoinColumn(name = "dirf_id")},
+            inverseJoinColumns = {@JoinColumn(name = "linha_infpa"), @JoinColumn(name = "dirf_id", insertable = false, updatable = false)})
+    Set<Infpa> infpas;
 
     public class BpfrraId implements Serializable {
         Integer linhaBpfrra;

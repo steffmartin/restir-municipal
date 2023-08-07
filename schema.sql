@@ -11,6 +11,13 @@
         primary key (dirf_id, linha_bpfdec)
     )
 
+    create table public.bpfdec_infpa (
+       linha_bpfdec int4 not null,
+        dirf_id int4 not null,
+        linha_infpa int4 not null,
+        primary key (linha_bpfdec, dirf_id, linha_infpa)
+    )
+
     create table public.bpffci (
        linha_bpffci int4 not null,
         cod_receita varchar(4) not null,
@@ -44,6 +51,14 @@
         dirf_id serial not null,
         linha_rra int4 not null,
         primary key (linha_bpfrra, dirf_id, linha_rra)
+    )
+
+    create table public.bpfrra_infpa (
+       linha_bpfrra int4 not null,
+        linha_rra serial not null,
+        dirf_id int4 not null,
+        linha_infpa int4 not null,
+        primary key (linha_bpfrra, linha_rra, dirf_id, linha_infpa)
     )
 
     create table public.bpfscp (
@@ -198,12 +213,14 @@
     )
 
     create table public.infpa (
-       linha_infpa int4 not null,
+       dirf_id int4 not null,
+        linha_infpa int4 not null,
+        cod_registro_pai varchar(6) not null,
         cpf varchar(11),
         data_nascimento date,
         nome varchar(60) not null,
         rel_dependencia int2,
-        primary key (linha_infpa)
+        primary key (dirf_id, linha_infpa)
     )
 
     create table public.infpc (
@@ -378,10 +395,26 @@
         primary key (dirf_id, linha_brpde, linha_vrpde)
     )
 
+    alter table public.bpfdec_infpa 
+       add constraint UK_9o7dgvakyc3wl1he4j3cn37ug unique (linha_infpa, dirf_id)
+
+    alter table public.bpfrra_infpa 
+       add constraint UK_sq5nfr0ktbesd98u5dygdj1h unique (linha_infpa, dirf_id)
+
     alter table public.bpfdec 
        add constraint FKnc2y4d2wp7cgp7pjwv0oc0pkp 
        foreign key (dirf_id) 
        references public.declarante
+
+    alter table public.bpfdec_infpa 
+       add constraint FKaq9sy3c374nl79wkdqbgcvqo4 
+       foreign key (linha_infpa, dirf_id) 
+       references public.infpa
+
+    alter table public.bpfdec_infpa 
+       add constraint FKque7d305qhj93xkpaaktukcnk 
+       foreign key (linha_bpfdec, dirf_id) 
+       references public.bpfdec
 
     alter table public.bpffci 
        add constraint FK7la0a4060qr71817opmyxv4c5 
@@ -397,6 +430,16 @@
        add constraint FK274r5hnu8qb08r1iheci55xvr 
        foreign key (dirf_id, linha_rra) 
        references public.rra
+
+    alter table public.bpfrra_infpa 
+       add constraint FK8lcv6rl6el4xxsp2k45p84rey 
+       foreign key (linha_infpa, dirf_id) 
+       references public.infpa
+
+    alter table public.bpfrra_infpa 
+       add constraint FKsaf7besc6cuogyasw3089ief7 
+       foreign key (linha_bpfrra, linha_rra, dirf_id) 
+       references public.bpfrra
 
     alter table public.bpfscp 
        add constraint FK7khoapdo39hi4i17hf1lhop8e 

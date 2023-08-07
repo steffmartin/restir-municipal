@@ -41,6 +41,12 @@ public class Bpfdec {
     @OneToMany(mappedBy = "bpfdec", cascade = CascadeType.ALL)
     Set<Infpc> infpcs;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "bpfdec_infpa",
+            joinColumns = {@JoinColumn(name = "linha_bpfdec"), @JoinColumn(name = "dirf_id")},
+            inverseJoinColumns = {@JoinColumn(name = "linha_infpa"), @JoinColumn(name = "dirf_id", insertable = false, updatable = false)})
+    Set<Infpa> infpas;
+
     public class BpfdecId implements Serializable {
         Integer linhaBpfdec;
         Declarante declarante;
