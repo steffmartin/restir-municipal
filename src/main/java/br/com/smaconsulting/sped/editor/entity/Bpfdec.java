@@ -47,6 +47,13 @@ public class Bpfdec {
             inverseJoinColumns = {@JoinColumn(name = "linha_infpa"), @JoinColumn(name = "dirf_id", insertable = false, updatable = false)})
     Set<Infpa> infpas;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "bpfdec_rio",
+            joinColumns = {@JoinColumn(name = "linha_bpfdec"), @JoinColumn(name = "dirf_id")},
+            inverseJoinColumns = {@JoinColumn(name = "linha_rio"), @JoinColumn(name = "dirf_id", insertable = false, updatable = false)}
+    )
+    Set<Rio> rios; //Apenas 1
+
     public class BpfdecId implements Serializable {
         Integer linhaBpfdec;
         Declarante declarante;

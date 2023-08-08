@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @IdClass(Bpffci.BpffciId.class)
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 public class Bpffci {
 
     @Id
+    @Column(name = "linha_bpffci")
     Integer linhaBpffci;
 
     @Id
@@ -32,6 +34,13 @@ public class Bpffci {
     String nome;
 
     LocalDate dataLaudo;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "bpffci_rio",
+            joinColumns = {@JoinColumn(name = "linha_bpffci"), @JoinColumn(name = "linha_fci"), @JoinColumn(name = "dirf_id")},
+            inverseJoinColumns = {@JoinColumn(name = "linha_rio"), @JoinColumn(name = "dirf_id", insertable = false, updatable = false)}
+    )
+    Set<Rio> rios; //Apenas 1
 
     public class BpffciId implements Serializable {
         Fci fci;
