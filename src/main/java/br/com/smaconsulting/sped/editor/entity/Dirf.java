@@ -1,69 +1,81 @@
 package br.com.smaconsulting.sped.editor.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.Set;
 
+@Data
 @Entity
-@EqualsAndHashCode(of = {"dirfId"})
+@Table(name = "dirf")
+@EqualsAndHashCode(of = "id")
 public class Dirf {
-
-    @ColumnDefault("1")
-    private Integer linhaDirf;
-
-    private Integer linhaFimDirf;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dirf_id", columnDefinition = "serial")
-    Integer dirfId;
+    @Column(columnDefinition = "serial")
+    Integer id;
 
-    @Column(nullable = false)
-    Year anoRef;
+    String nomeArquivo;
 
-    @Column(nullable = false)
-    Year anoCal;
+    LocalDateTime dataHoraImportacao;
 
-    @Column(nullable = false)
-    Boolean retif;
+    //DADOS REGISTRO DIRF, FIMDIRF
+
+    @ColumnDefault("1")
+    Integer dirfLinha;
+
+    Year anoReferencia;
+
+    Year anoCalendario;
+
+    Boolean retificadora;
 
     @Column(length = 12)
-    String numRec;
+    String numeroRecibo;
 
-    @Column(length = 7, nullable = false)
-    String idLeiaute;
+    @Column(length = 7)
+    String codigoLeiaute;
     // 2023 = ARNZRXP
 
-    @OneToOne(mappedBy = "dirf", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    Respo respo;
+    Integer fimdirfLinha;
 
-    @OneToOne(mappedBy = "dirf", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_responsavel", referencedColumnName = "id")
+    Responsavel responsavel;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_declarante", referencedColumnName = "id")
     Declarante declarante;
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Fci> fcis;
+    Set<FundoClubeInvest> fcis;
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Proc> procs;
+    Set<Processo> procs;
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Rra> rras;
+    Set<RendAcumulados> rras;
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Scp> scps;
+    Set<SocContaParticipacao> scps;
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Opse> opses; //PSE
+    Set<PlanoSaude> pses;
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Brpde> brpdes; //RPDE
+    Set<Informacoes> infs;
 
-    @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Inf> infs;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "dirf_rpde_beneficiario",
+            joinColumns = {@JoinColumn(name = "dirf_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
+    Set<Beneficiario> brpdes;
+    //RPDE
+    //BRPDE
 
 }

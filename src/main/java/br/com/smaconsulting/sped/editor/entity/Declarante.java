@@ -1,51 +1,97 @@
 package br.com.smaconsulting.sped.editor.entity;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 
+@Data
 @Entity
-@EqualsAndHashCode(of = {"dirf"})
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "cod_registro", length = 5, discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue(value = "N/A")
+@Table(name = "dirf_declarante")
+@EqualsAndHashCode(of = "id")
 public class Declarante {
 
-    @ColumnDefault("3")
-    private Integer linhaDec;
-
-    @Column(insertable = false, updatable = false, name = "cod_registro")
-    private String codRegistro;
-
     @Id
-    @Column(name = "dirf_id")
-    Integer dirfId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
+    Integer id;
 
-    @OneToOne
-    @MapsId("dirf_id")
-    @JoinColumn(name = "dirf_id")
-    Dirf dirf;
+    @ColumnDefault("3")
+    Integer decLinha;
 
-    @Column(length = 14, nullable = false)
-    String cpfCnpjDeclarante;
+    //DADOS DO REGISTRO DECPF, DECPJ
 
-    @Column(length = 150, nullable = false)
-    String nomeDeclarante;
+    @Column(length = 14)
+    String cpfCnpj;
 
-    @Column(nullable = false)
+    @Column(length = 150)
+    String nome;
+
     Boolean socioOstensivo;
 
-    @Column(nullable = false)
-    Boolean pgtoRendExt;
+    Boolean rendimentoExterior;
 
-    @Column(nullable = false)
-    Boolean pgtoPlanoSaude;
+    Boolean planoSaude;
 
-    @OneToMany(mappedBy = "declarante", cascade = CascadeType.ALL)
-    Set<Bpfdec> bpfdecs;
+    Boolean servicosNotoriais;
 
-    @OneToMany(mappedBy = "declarante", cascade = CascadeType.ALL)
-    Set<Bpjdec> bpjdecs;
+    Boolean espolioSaida;
+
+    Short decpfTipoEvento;
+    //1 – Encerramento de espólio
+    //2 – Saída definitiva do Brasil
+
+    LocalDate dataEspolioSaida;
+
+    Short sitEspolio;
+    //0 – Sem espólio
+    //1 – Espólio não encerrado
+
+    Boolean falecido;
+
+    LocalDate dataObito;
+
+    @Column(length = 11)
+    String cpfInventariante;
+
+    @Column(length = 60)
+    String nomeInventariante;
+
+    Short decpjNatureza;
+    //0 – Pessoa jurídica de direito privado
+    //1 – Órgãos, autarquias e fundações da administração pública federal
+    //2 – Órgãos, autarquias e fundações da administração pública estadual, municipal ou do Distrito Federal
+    //3 – Empresa pública ou sociedade de economia mista federal
+    //4 – Empresa pública ou sociedade de economia mista estadual, municipal ou do Distrito Federal
+    //8 – Entidade com alteração de natureza jurídica (uso restrito)
+
+    @Column(length = 11)
+    String cpfResponsavelPj;
+
+    Boolean decisaoJudicial;
+
+    Boolean fundoClubeInvestimento;
+
+    Boolean pgtoIsentasImunes;
+
+    Boolean fundPublicaDirPrivado;
+
+    Boolean sitEspecial;
+
+    LocalDate dataSitEspecial;
+
+    @OneToOne(mappedBy = "declarante")
+    Dirf dirf;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "dirf_declarante_beneficiario",
+            joinColumns = {@JoinColumn(name = "declarante_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
+    Set<Beneficiario> bpfdecBpjdecVpeims;
+    //BPFDEC
+    //BPJDEC
+    //VPEIM se DECPJ
 }
