@@ -90,7 +90,9 @@ public class Declarante {
     @JoinTable(name = "dirf_declarante_beneficiario",
             joinColumns = {@JoinColumn(name = "declarante_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
-    Set<Beneficiario> bpfdecBpjdecVpeims;
+    Set<Beneficiario> beneficiarios;
+    //RPDE
+    //BRPDE
     //BPFDEC
     //BPJDEC
     //VPEIM se DECPJ

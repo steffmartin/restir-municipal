@@ -70,12 +70,4 @@ public class Dirf {
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
     Set<Informacoes> infs;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "dirf_rpde_beneficiario",
-            joinColumns = {@JoinColumn(name = "dirf_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
-    Set<Beneficiario> brpdes;
-    //RPDE
-    //BRPDE
-
 }

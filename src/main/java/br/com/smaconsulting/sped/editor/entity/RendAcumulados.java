@@ -47,7 +47,7 @@ public class RendAcumulados {
     @JoinTable(name = "dirf_rra_beneficiario",
             joinColumns = {@JoinColumn(name = "rra_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
-    Set<Beneficiario> bpfrras;
+    Set<Beneficiario> beneficiarios;
     //BPFRRA
 
 }

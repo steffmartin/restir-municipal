@@ -43,6 +43,13 @@
         primary key (id)
     )
 
+    create table public.dirf_beneficiario_valores (
+       beneficiario_id serial not null,
+        valor_id serial not null,
+        cod_registro varchar(7) not null,
+        primary key (beneficiario_id, cod_registro)
+    )
+
     create table public.dirf_declarante (
        id  serial not null,
         cpf_cnpj varchar(14),
@@ -82,7 +89,7 @@
         cnpj varchar(14),
         linha_fci int4,
         nome varchar(150),
-        id_dirf serial,
+        dirf_id serial,
         primary key (id)
     )
 
@@ -96,8 +103,46 @@
        id  serial not null,
         cpf varchar(11),
         informacoes varchar(500),
-        id_dirf serial,
+        dirf_id serial,
         primary key (id)
+    )
+
+    create table public.dirf_infpa (
+       id  serial not null,
+        cpf varchar(11),
+        data_nascimento date,
+        idrec_codigo varchar(4),
+        idrec_linha int4,
+        linha_infpa int4,
+        nome varchar(60),
+        rel_dependencia int2,
+        beneficiario_id serial,
+        primary key (id)
+    )
+
+    create table public.dirf_infpa_valores (
+       infpa_id serial not null,
+        valor_id serial not null,
+        cod_registro varchar(7) not null,
+        primary key (infpa_id, cod_registro)
+    )
+
+    create table public.dirf_infpc (
+       id  serial not null,
+        cnpj varchar(14),
+        idrec_codigo varchar(4),
+        idrec_linha int4,
+        linha_infpc int4,
+        nome varchar(150),
+        beneficiario_id serial,
+        primary key (id)
+    )
+
+    create table public.dirf_infpc_valores (
+       infpc_id serial not null,
+        valor_id serial not null,
+        cod_registro varchar(7) not null,
+        primary key (infpc_id, cod_registro)
     )
 
     create table public.dirf_proc (
@@ -109,7 +154,7 @@
         num_proc varchar(20),
         tipo_adv int2,
         vlr_adv numeric(19, 2) default 0,
-        id_dirf serial,
+        dirf_id serial,
         primary key (id)
     )
 
@@ -126,7 +171,7 @@
         linha_opse int4,
         linha_pse int4,
         nome varchar(150),
-        id_dirf serial,
+        dirf_id serial,
         primary key (id)
     )
 
@@ -143,12 +188,6 @@
         primary key (id)
     )
 
-    create table public.dirf_rpde_beneficiario (
-       dirf_id serial not null,
-        beneficiario_id serial not null,
-        primary key (dirf_id, beneficiario_id)
-    )
-
     create table public.dirf_rra (
        id  serial not null,
         cpf_cnpj_adv varchar(14),
@@ -157,7 +196,7 @@
         tipo_adv int2,
         tipo_rra int2,
         vlr_adv numeric(19, 2) default 0,
-        id_dirf serial,
+        dirf_id serial,
         primary key (id)
     )
 
@@ -171,7 +210,7 @@
        id  serial not null,
         cnpj varchar(14),
         nome varchar(150),
-        id_dirf serial,
+        dirf_id serial,
         primary key (id)
     )
 
@@ -181,17 +220,48 @@
         primary key (scp_id, beneficiario_id)
     )
 
+    create table public.dirf_valores (
+       id  serial not null,
+        abr numeric(19, 2) default 0,
+        ago numeric(19, 2) default 0,
+        cod_registro varchar(7),
+        dec_ter numeric(19, 2) default 0,
+        descricao varchar(60),
+        dez numeric(19, 2) default 0,
+        fev numeric(19, 2) default 0,
+        idrec_codigo varchar(4),
+        idrec_linha int4,
+        jan numeric(19, 2) default 0,
+        jul numeric(19, 2) default 0,
+        jun numeric(19, 2) default 0,
+        linha_registro int4,
+        mai numeric(19, 2) default 0,
+        mar numeric(19, 2) default 0,
+        nov numeric(19, 2) default 0,
+        out numeric(19, 2) default 0,
+        set numeric(19, 2) default 0,
+        tipo_valor varchar(6),
+        vlr_ano numeric(19, 2) default 0,
+        primary key (id)
+    )
+
+    alter table public.dirf_beneficiario_valores 
+       add constraint UK_d5cbdnvu4enrt47bcdk9vk5lo unique (valor_id)
+
     alter table public.dirf_declarante_beneficiario 
        add constraint UK_o6el951oj9lipr5s2w4wrq4gc unique (beneficiario_id)
 
     alter table public.dirf_fci_beneficiario 
        add constraint UK_71mg7fukqi71o98jujmxopitg unique (beneficiario_id)
 
+    alter table public.dirf_infpa_valores 
+       add constraint UK_dn0xpdtxnml0kg92qv5x4m7yk unique (valor_id)
+
+    alter table public.dirf_infpc_valores 
+       add constraint UK_hmuh4sj9onyaq1vpeb7ib928g unique (valor_id)
+
     alter table public.dirf_proc_beneficiario 
        add constraint UK_oq3qek5dp3qtm691fpbjs8d6r unique (beneficiario_id)
-
-    alter table public.dirf_rpde_beneficiario 
-       add constraint UK_tfiynegm1oueco686ma5yllne unique (beneficiario_id)
 
     alter table public.dirf_rra_beneficiario 
        add constraint UK_lr9asm3wo2pwaavm41s1i0nta unique (beneficiario_id)
@@ -209,6 +279,16 @@
        foreign key (id_responsavel) 
        references public.dirf_responsavel
 
+    alter table public.dirf_beneficiario_valores 
+       add constraint FKcnpin9idry1ein8yh9kn001cx 
+       foreign key (valor_id) 
+       references public.dirf_valores
+
+    alter table public.dirf_beneficiario_valores 
+       add constraint FK7q1r6g6i7y5sh2upvy362nb6f 
+       foreign key (beneficiario_id) 
+       references public.dirf_beneficiario
+
     alter table public.dirf_declarante_beneficiario 
        add constraint FKo481o9dgau622uqvwt2t6l0t8 
        foreign key (beneficiario_id) 
@@ -220,8 +300,8 @@
        references public.dirf_declarante
 
     alter table public.dirf_fci 
-       add constraint FKge3yke8va7xuo551e5puhxlob 
-       foreign key (id_dirf) 
+       add constraint FK6b9oeqt06lujegtj2cxc7e7h2 
+       foreign key (dirf_id) 
        references public.dirf
 
     alter table public.dirf_fci_beneficiario 
@@ -235,13 +315,43 @@
        references public.dirf_fci
 
     alter table public.dirf_inf 
-       add constraint FKp5f9g2y0gduk0erabrcluck0h 
-       foreign key (id_dirf) 
+       add constraint FK54l8g6qy8cgqu4gb9t7q9xqi6 
+       foreign key (dirf_id) 
        references public.dirf
 
+    alter table public.dirf_infpa 
+       add constraint FK28yggrq1tjux5hwkexpg56y9n 
+       foreign key (beneficiario_id) 
+       references public.dirf_beneficiario
+
+    alter table public.dirf_infpa_valores 
+       add constraint FK6joe8d2qep3dagk1ojbjae2ks 
+       foreign key (valor_id) 
+       references public.dirf_valores
+
+    alter table public.dirf_infpa_valores 
+       add constraint FK7wjn52vu81ryygh67dn6uvk7j 
+       foreign key (infpa_id) 
+       references public.dirf_infpa
+
+    alter table public.dirf_infpc 
+       add constraint FKhusmc89x7m2fd8nbdcxnw5w6f 
+       foreign key (beneficiario_id) 
+       references public.dirf_beneficiario
+
+    alter table public.dirf_infpc_valores 
+       add constraint FKdgx313vxk9rmlbjn5b5flyq1w 
+       foreign key (valor_id) 
+       references public.dirf_valores
+
+    alter table public.dirf_infpc_valores 
+       add constraint FK2ytba3fo0h74p1gcgwnj8siyf 
+       foreign key (infpc_id) 
+       references public.dirf_infpc
+
     alter table public.dirf_proc 
-       add constraint FK38h9fa72m1cdiitspwj4mu54f 
-       foreign key (id_dirf) 
+       add constraint FKdfmbvggklyxydd5exi7q1lrk5 
+       foreign key (dirf_id) 
        references public.dirf
 
     alter table public.dirf_proc_beneficiario 
@@ -255,23 +365,13 @@
        references public.dirf_proc
 
     alter table public.dirf_pse_opse 
-       add constraint FK5idvowq99ebc0n1xfoj9pcotu 
-       foreign key (id_dirf) 
-       references public.dirf
-
-    alter table public.dirf_rpde_beneficiario 
-       add constraint FK6g6wdp7ptfnn58xpowgu6rwj5 
-       foreign key (beneficiario_id) 
-       references public.dirf_beneficiario
-
-    alter table public.dirf_rpde_beneficiario 
-       add constraint FKby6rv7ofae2ai2w1tlv89c2r2 
+       add constraint FKscai1pn93sv2ynwjb4is7qn6l 
        foreign key (dirf_id) 
        references public.dirf
 
     alter table public.dirf_rra 
-       add constraint FKesool5fimsn6vfe98hbwc60xa 
-       foreign key (id_dirf) 
+       add constraint FKbrwsct1rmphf4j4sn2be89k4a 
+       foreign key (dirf_id) 
        references public.dirf
 
     alter table public.dirf_rra_beneficiario 
@@ -285,8 +385,8 @@
        references public.dirf_rra
 
     alter table public.dirf_scp 
-       add constraint FKtnitccvto66grr77eelh62ys1 
-       foreign key (id_dirf) 
+       add constraint FKrrsfcx5fuao8i677lcejlmjyw 
+       foreign key (dirf_id) 
        references public.dirf
 
     alter table public.dirf_scp_beneficiario 

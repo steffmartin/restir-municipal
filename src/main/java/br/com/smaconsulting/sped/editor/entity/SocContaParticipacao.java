@@ -31,7 +31,7 @@ public class SocContaParticipacao {
     @JoinTable(name = "dirf_scp_beneficiario",
             joinColumns = {@JoinColumn(name = "scp_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
-    Set<Beneficiario> bpfscpBpjscps;
+    Set<Beneficiario> beneficiarios;
     //BPFSCP
     //BPJSCP
 

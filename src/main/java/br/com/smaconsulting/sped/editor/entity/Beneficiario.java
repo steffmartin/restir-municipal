@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 @Entity
@@ -34,7 +36,13 @@ public class Beneficiario {
 
     Boolean alimentado;
 
+    @OneToMany(mappedBy = "beneficiario", cascade = CascadeType.ALL)
+    Set<InformacoesAlimentado> infpas;
+
     Boolean prevCompl;
+
+    @OneToMany(mappedBy = "beneficiario", cascade = CascadeType.ALL)
+    Set<InformacoesPrevCompl> infpcs;
 
     @Column(length = 50)
     String rraNatureza;
@@ -81,4 +89,11 @@ public class Beneficiario {
 
     @Column(length = 15)
     String fone;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "dirf_beneficiario_valores",
+            joinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "valor_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "cod_registro", length = 7)
+    Map<String, Valores> valoresPorRegistro;
 }

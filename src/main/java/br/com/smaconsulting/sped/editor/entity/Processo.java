@@ -50,7 +50,7 @@ public class Processo {
     @JoinTable(name = "dirf_proc_beneficiario",
             joinColumns = {@JoinColumn(name = "proc_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
-    Set<Beneficiario> bpfprocBpjprocs;
+    Set<Beneficiario> beneficiarios;
     //BPFPROC
     //BPJPROC
 

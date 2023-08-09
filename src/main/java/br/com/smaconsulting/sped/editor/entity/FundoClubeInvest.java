@@ -33,7 +33,7 @@ public class FundoClubeInvest {
     @JoinTable(name = "dirf_fci_beneficiario",
             joinColumns = {@JoinColumn(name = "fci_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
-    Set<Beneficiario> bpffciBpjfcis;
+    Set<Beneficiario> beneficiarios;
     //BPFFCI
     //BPJFCI
 
