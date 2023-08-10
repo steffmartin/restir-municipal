@@ -84,6 +84,24 @@
         primary key (declarante_id, beneficiario_id)
     )
 
+    create table public.dirf_dtpse (
+       id  serial not null,
+        cpf varchar(11),
+        data_nascimento date,
+        linha_dtpse int4,
+        nome varchar(60),
+        rel_dependencia int2,
+        vlr_ano numeric(19, 2) default 0,
+        tpse_id serial,
+        primary key (id)
+    )
+
+    create table public.dirf_dtpse_reembolso (
+       dtpse_id serial not null,
+        reembolso_id serial not null,
+        primary key (dtpse_id, reembolso_id)
+    )
+
     create table public.dirf_fci (
        id  serial not null,
         cnpj varchar(14),
@@ -145,6 +163,17 @@
         primary key (infpc_id, cod_registro)
     )
 
+    create table public.dirf_opse (
+       id  serial not null,
+        ans varchar(6),
+        cnpj varchar(14),
+        linha_opse int4,
+        linha_pse int4,
+        nome varchar(150),
+        dirf_id serial,
+        primary key (id)
+    )
+
     create table public.dirf_proc (
        id  serial not null,
         cpf_cnpj_adv varchar(14),
@@ -164,14 +193,14 @@
         primary key (proc_id, beneficiario_id)
     )
 
-    create table public.dirf_pse_opse (
+    create table public.dirf_reembolso (
        id  serial not null,
-        ans varchar(6),
-        cnpj varchar(14),
-        linha_opse int4,
-        linha_pse int4,
+        cod_registro varchar(6),
+        cpf_cnp varchar(14),
+        linha_registro int4,
         nome varchar(150),
-        dirf_id serial,
+        vlr_ano_cal numeric(19, 2) default 0,
+        vlr_anos_ant numeric(19, 2) default 0,
         primary key (id)
     )
 
@@ -220,6 +249,22 @@
         primary key (scp_id, beneficiario_id)
     )
 
+    create table public.dirf_tpse (
+       id  serial not null,
+        cpf varchar(11),
+        linha_tpse int4,
+        nome varchar(60),
+        vlr_ano numeric(19, 2) default 0,
+        opse_id serial,
+        primary key (id)
+    )
+
+    create table public.dirf_tpse_reembolso (
+       tpse_id serial not null,
+        reembolso_id serial not null,
+        primary key (tpse_id, reembolso_id)
+    )
+
     create table public.dirf_valores (
        id  serial not null,
         abr numeric(19, 2) default 0,
@@ -245,11 +290,27 @@
         primary key (id)
     )
 
+    create table public.dirf_vrpde (
+       id  serial not null,
+        cod_rec varchar(4),
+        data_pgto date,
+        forma_tribut int2,
+        linha_vrpde int4,
+        tipo_rendimento int2,
+        vlr_rendimento numeric(19, 2) default 0,
+        vlr_retido numeric(19, 2) default 0,
+        beneficiario_id serial,
+        primary key (id)
+    )
+
     alter table public.dirf_beneficiario_valores 
        add constraint UK_d5cbdnvu4enrt47bcdk9vk5lo unique (valor_id)
 
     alter table public.dirf_declarante_beneficiario 
        add constraint UK_o6el951oj9lipr5s2w4wrq4gc unique (beneficiario_id)
+
+    alter table public.dirf_dtpse_reembolso 
+       add constraint UK_g246f7x567qqe3as0je868864 unique (reembolso_id)
 
     alter table public.dirf_fci_beneficiario 
        add constraint UK_71mg7fukqi71o98jujmxopitg unique (beneficiario_id)
@@ -268,6 +329,9 @@
 
     alter table public.dirf_scp_beneficiario 
        add constraint UK_p9nublq43d30ebm4uye1u5db5 unique (beneficiario_id)
+
+    alter table public.dirf_tpse_reembolso 
+       add constraint UK_rs3pv34fyunlfw94i1hx86dy9 unique (reembolso_id)
 
     alter table public.dirf 
        add constraint FKbutf2g7pgjd07no8kkbjfc6ts 
@@ -298,6 +362,21 @@
        add constraint FKkpqdhwwl56svc985t1j2xmyp1 
        foreign key (declarante_id) 
        references public.dirf_declarante
+
+    alter table public.dirf_dtpse 
+       add constraint FKnf0gba0vsif41fv27kturmjnk 
+       foreign key (tpse_id) 
+       references public.dirf_tpse
+
+    alter table public.dirf_dtpse_reembolso 
+       add constraint FKiqj6lmvivwmeiryy5plmtodwg 
+       foreign key (reembolso_id) 
+       references public.dirf_reembolso
+
+    alter table public.dirf_dtpse_reembolso 
+       add constraint FKb2m9lwxawp86l02msbw5tdwj7 
+       foreign key (dtpse_id) 
+       references public.dirf_dtpse
 
     alter table public.dirf_fci 
        add constraint FK6b9oeqt06lujegtj2cxc7e7h2 
@@ -349,6 +428,11 @@
        foreign key (infpc_id) 
        references public.dirf_infpc
 
+    alter table public.dirf_opse 
+       add constraint FKbpoorw17knpng66dtsqc5a6vi 
+       foreign key (dirf_id) 
+       references public.dirf
+
     alter table public.dirf_proc 
        add constraint FKdfmbvggklyxydd5exi7q1lrk5 
        foreign key (dirf_id) 
@@ -363,11 +447,6 @@
        add constraint FKcq9lm8fu6sgh05bm6v1oxpluf 
        foreign key (proc_id) 
        references public.dirf_proc
-
-    alter table public.dirf_pse_opse 
-       add constraint FKscai1pn93sv2ynwjb4is7qn6l 
-       foreign key (dirf_id) 
-       references public.dirf
 
     alter table public.dirf_rra 
        add constraint FKbrwsct1rmphf4j4sn2be89k4a 
@@ -398,3 +477,23 @@
        add constraint FK57dvbb2o4eqkei4r2nyqc1vxw 
        foreign key (scp_id) 
        references public.dirf_scp
+
+    alter table public.dirf_tpse 
+       add constraint FKpiepscwtodo1c0qo4mbo89ld 
+       foreign key (opse_id) 
+       references public.dirf_opse
+
+    alter table public.dirf_tpse_reembolso 
+       add constraint FKpt3a8jiapd892kqbqfuady9dd 
+       foreign key (reembolso_id) 
+       references public.dirf_reembolso
+
+    alter table public.dirf_tpse_reembolso 
+       add constraint FKsna6v67fidpdigx4ekb2kq5it 
+       foreign key (tpse_id) 
+       references public.dirf_tpse
+
+    alter table public.dirf_vrpde 
+       add constraint FKoilkqnksfp9dk5r7q8toinnf5 
+       foreign key (beneficiario_id) 
+       references public.dirf_beneficiario
