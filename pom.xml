@@ -9,9 +9,9 @@
         <version>2.3.5.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>br.com.smaconsulting</groupId>
+    <groupId>br.com</groupId>
     <artifactId>SAART</artifactId>
-    <version>0.0.1.ALPHA</version>
+    <version>0.0.1</version>
     <name>Sistema Avançado de Apuração e Restituição Tributária</name>
 
     <properties>

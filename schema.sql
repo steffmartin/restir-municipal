@@ -1,22 +1,59 @@
 
     create table public.dirf (
-       id  serial not null,
-        ano_calendario int2,
-        ano_referencia int2,
+       id  bigserial not null,
+        ano_calendario int2 not null,
+        ano_referencia int2 not null,
         codigo_leiaute varchar(7),
-        data_hora_importacao timestamp,
         dirf_linha int4 default 1,
         fimdirf_linha int4,
+        importado_em timestamp,
         nome_arquivo varchar(255),
         numero_recibo varchar(12),
         retificadora char(1),
-        id_declarante serial,
-        id_responsavel serial,
+        id_declarante int8 not null,
+        id_responsavel int8 not null,
         primary key (id)
     )
 
+    create table public.dirf_acum (
+       id  bigserial not null,
+        cpf_cnpj_adv varchar(14),
+        nome_adv varchar(150),
+        numero_requerimento varchar(20),
+        rra_linha int4,
+        tipo_adv int2,
+        tipo_rra int2,
+        vlr_adv numeric(19, 2) default 0,
+        dirf_id int8 not null,
+        primary key (id)
+    )
+
+    create table public.dirf_acum_beneficiario (
+       acum_id int8 not null,
+        beneficiario_id int8 not null,
+        primary key (acum_id, beneficiario_id)
+    )
+
+    create table public.dirf_alimentado (
+       id  bigserial not null,
+        cpf varchar(11),
+        data_nascimento date,
+        infpa_linha int4,
+        nome varchar(60),
+        rel_dependencia int2,
+        beneficiario_id int8 not null,
+        primary key (id)
+    )
+
+    create table public.dirf_alimentado_valores (
+       alimentado_id int8 not null,
+        valor_id int8 not null,
+        cod_registro varchar(7) not null,
+        primary key (alimentado_id, cod_registro)
+    )
+
     create table public.dirf_beneficiario (
-       id  serial not null,
+       id  bigserial not null,
         alimentado char(1),
         bairro_dist varchar(20),
         benef_linha int4,
@@ -24,7 +61,7 @@
         cep varchar(10),
         cidade varchar(40),
         cod_pais int2,
-        codigo_registro varchar(7),
+        codigo_registro varchar(7) not null,
         complemento varchar(25),
         cpf_cnpj varchar(14),
         data_laudo date,
@@ -44,14 +81,14 @@
     )
 
     create table public.dirf_beneficiario_valores (
-       beneficiario_id serial not null,
-        valor_id serial not null,
+       beneficiario_id int8 not null,
+        valor_id int8 not null,
         cod_registro varchar(7) not null,
         primary key (beneficiario_id, cod_registro)
     )
 
     create table public.dirf_declarante (
-       id  serial not null,
+       id  bigserial not null,
         cpf_cnpj varchar(14),
         cpf_inventariante varchar(11),
         cpf_responsavel_pj varchar(11),
@@ -79,133 +116,72 @@
     )
 
     create table public.dirf_declarante_beneficiario (
-       declarante_id serial not null,
-        beneficiario_id serial not null,
+       declarante_id int8 not null,
+        beneficiario_id int8 not null,
         primary key (declarante_id, beneficiario_id)
     )
 
-    create table public.dirf_dtpse (
-       id  serial not null,
-        cpf varchar(11),
-        data_nascimento date,
-        linha_dtpse int4,
-        nome varchar(60),
-        rel_dependencia int2,
-        vlr_ano numeric(19, 2) default 0,
-        tpse_id serial,
-        primary key (id)
-    )
-
-    create table public.dirf_dtpse_reembolso (
-       dtpse_id serial not null,
-        reembolso_id serial not null,
-        primary key (dtpse_id, reembolso_id)
-    )
-
     create table public.dirf_fci (
-       id  serial not null,
+       id  bigserial not null,
         cnpj varchar(14),
-        linha_fci int4,
+        fci_linha int4,
         nome varchar(150),
-        dirf_id serial,
+        dirf_id int8 not null,
         primary key (id)
     )
 
     create table public.dirf_fci_beneficiario (
-       fci_id serial not null,
-        beneficiario_id serial not null,
+       fci_id int8 not null,
+        beneficiario_id int8 not null,
         primary key (fci_id, beneficiario_id)
     )
 
     create table public.dirf_inf (
-       id  serial not null,
+       id  bigserial not null,
         cpf varchar(11),
+        inf_linha int4,
         informacoes varchar(500),
-        dirf_id serial,
+        dirf_id int8 not null,
         primary key (id)
     )
 
-    create table public.dirf_infpa (
-       id  serial not null,
-        cpf varchar(11),
-        data_nascimento date,
-        idrec_codigo varchar(4),
-        idrec_linha int4,
-        linha_infpa int4,
-        nome varchar(60),
-        rel_dependencia int2,
-        beneficiario_id serial,
-        primary key (id)
-    )
-
-    create table public.dirf_infpa_valores (
-       infpa_id serial not null,
-        valor_id serial not null,
-        cod_registro varchar(7) not null,
-        primary key (infpa_id, cod_registro)
-    )
-
-    create table public.dirf_infpc (
-       id  serial not null,
+    create table public.dirf_prev_compl (
+       id  bigserial not null,
         cnpj varchar(14),
-        idrec_codigo varchar(4),
-        idrec_linha int4,
-        linha_infpc int4,
+        infpc_linha int4,
         nome varchar(150),
-        beneficiario_id serial,
+        beneficiario_id int8 not null,
         primary key (id)
     )
 
-    create table public.dirf_infpc_valores (
-       infpc_id serial not null,
-        valor_id serial not null,
+    create table public.dirf_prev_compl_valores (
+       prev_compl_id int8 not null,
+        valor_id int8 not null,
         cod_registro varchar(7) not null,
-        primary key (infpc_id, cod_registro)
-    )
-
-    create table public.dirf_opse (
-       id  serial not null,
-        ans varchar(6),
-        cnpj varchar(14),
-        linha_opse int4,
-        linha_pse int4,
-        nome varchar(150),
-        dirf_id serial,
-        primary key (id)
+        primary key (prev_compl_id, cod_registro)
     )
 
     create table public.dirf_proc (
-       id  serial not null,
+       id  bigserial not null,
         cpf_cnpj_adv varchar(14),
         id_justica int2,
-        linha_proc int4,
         nome_adv varchar(150),
         num_proc varchar(20),
+        proc_linha int4,
         tipo_adv int2,
         vlr_adv numeric(19, 2) default 0,
-        dirf_id serial,
+        dirf_id int8 not null,
         primary key (id)
     )
 
     create table public.dirf_proc_beneficiario (
-       proc_id serial not null,
-        beneficiario_id serial not null,
+       proc_id int8 not null,
+        beneficiario_id int8 not null,
         primary key (proc_id, beneficiario_id)
     )
 
-    create table public.dirf_reembolso (
-       id  serial not null,
-        cod_registro varchar(6),
-        cpf_cnp varchar(14),
-        linha_registro int4,
-        nome varchar(150),
-        vlr_ano_cal numeric(19, 2) default 0,
-        vlr_anos_ant numeric(19, 2) default 0,
-        primary key (id)
-    )
-
     create table public.dirf_responsavel (
-       id  serial not null,
+       id  bigserial not null,
         cpf varchar(11),
         ddd varchar(2),
         email varchar(50),
@@ -217,59 +193,82 @@
         primary key (id)
     )
 
-    create table public.dirf_rra (
-       id  serial not null,
-        cpf_cnpj_adv varchar(14),
-        nome_adv varchar(150),
-        numero_requerimento varchar(20),
-        tipo_adv int2,
-        tipo_rra int2,
-        vlr_adv numeric(19, 2) default 0,
-        dirf_id serial,
+    create table public.dirf_saude (
+       id  bigserial not null,
+        ans varchar(6),
+        cnpj varchar(14),
+        nome varchar(150),
+        opse_linha int4,
+        pse_linha int4,
+        dirf_id int8 not null,
         primary key (id)
     )
 
-    create table public.dirf_rra_beneficiario (
-       rra_id serial not null,
-        beneficiario_id serial not null,
-        primary key (rra_id, beneficiario_id)
+    create table public.dirf_saude_dep (
+       id  bigserial not null,
+        cpf varchar(11),
+        data_nascimento date,
+        dtpse_linha int4,
+        nome varchar(60),
+        rel_dependencia int2,
+        vlr_ano numeric(19, 2) default 0,
+        saude_tit_id int8 not null,
+        primary key (id)
+    )
+
+    create table public.dirf_saude_dep_inf (
+       saude_dep_id int8 not null,
+        saude_inf_id int8 not null,
+        primary key (saude_dep_id, saude_inf_id)
+    )
+
+    create table public.dirf_saude_inf (
+       id  bigserial not null,
+        cod_registro varchar(6) not null,
+        cpf_cnp varchar(14),
+        linha_registro int4,
+        nome varchar(150),
+        vlr_ano_cal numeric(19, 2) default 0,
+        vlr_anos_ant numeric(19, 2) default 0,
+        primary key (id)
+    )
+
+    create table public.dirf_saude_tit (
+       id  bigserial not null,
+        cpf varchar(11),
+        nome varchar(60),
+        tpse_linha int4,
+        vlr_ano numeric(19, 2) default 0,
+        saude_id int8 not null,
+        primary key (id)
+    )
+
+    create table public.dirf_saude_tit_inf (
+       saude_tit_id int8 not null,
+        saude_inf_id int8 not null,
+        primary key (saude_tit_id, saude_inf_id)
     )
 
     create table public.dirf_scp (
-       id  serial not null,
+       id  bigserial not null,
         cnpj varchar(14),
         nome varchar(150),
-        dirf_id serial,
+        scp_linha int4,
+        dirf_id int8 not null,
         primary key (id)
     )
 
     create table public.dirf_scp_beneficiario (
-       scp_id serial not null,
-        beneficiario_id serial not null,
+       scp_id int8 not null,
+        beneficiario_id int8 not null,
         primary key (scp_id, beneficiario_id)
     )
 
-    create table public.dirf_tpse (
-       id  serial not null,
-        cpf varchar(11),
-        linha_tpse int4,
-        nome varchar(60),
-        vlr_ano numeric(19, 2) default 0,
-        opse_id serial,
-        primary key (id)
-    )
-
-    create table public.dirf_tpse_reembolso (
-       tpse_id serial not null,
-        reembolso_id serial not null,
-        primary key (tpse_id, reembolso_id)
-    )
-
     create table public.dirf_valores (
-       id  serial not null,
+       id  bigserial not null,
         abr numeric(19, 2) default 0,
         ago numeric(19, 2) default 0,
-        cod_registro varchar(7),
+        cod_registro varchar(7) not null,
         dec_ter numeric(19, 2) default 0,
         descricao varchar(60),
         dez numeric(19, 2) default 0,
@@ -279,29 +278,35 @@
         jan numeric(19, 2) default 0,
         jul numeric(19, 2) default 0,
         jun numeric(19, 2) default 0,
-        linha_registro int4,
         mai numeric(19, 2) default 0,
         mar numeric(19, 2) default 0,
         nov numeric(19, 2) default 0,
         out numeric(19, 2) default 0,
+        registro_linha int4,
         set numeric(19, 2) default 0,
-        tipo_valor varchar(6),
+        tipo_valor varchar(6) not null,
         vlr_ano numeric(19, 2) default 0,
         primary key (id)
     )
 
-    create table public.dirf_vrpde (
-       id  serial not null,
+    create table public.dirf_valores_ext (
+       id  bigserial not null,
         cod_rec varchar(4),
         data_pgto date,
         forma_tribut int2,
-        linha_vrpde int4,
         tipo_rendimento int2,
         vlr_rendimento numeric(19, 2) default 0,
         vlr_retido numeric(19, 2) default 0,
-        beneficiario_id serial,
+        vrpde_linha int4,
+        beneficiario_id int8 not null,
         primary key (id)
     )
+
+    alter table public.dirf_acum_beneficiario 
+       add constraint UK_fj195dc6x3bjmtjnngs06iwun unique (beneficiario_id)
+
+    alter table public.dirf_alimentado_valores 
+       add constraint UK_m3bw6trcyvi8rhxnn3ffnmtc1 unique (valor_id)
 
     alter table public.dirf_beneficiario_valores 
        add constraint UK_d5cbdnvu4enrt47bcdk9vk5lo unique (valor_id)
@@ -309,29 +314,23 @@
     alter table public.dirf_declarante_beneficiario 
        add constraint UK_o6el951oj9lipr5s2w4wrq4gc unique (beneficiario_id)
 
-    alter table public.dirf_dtpse_reembolso 
-       add constraint UK_g246f7x567qqe3as0je868864 unique (reembolso_id)
-
     alter table public.dirf_fci_beneficiario 
        add constraint UK_71mg7fukqi71o98jujmxopitg unique (beneficiario_id)
 
-    alter table public.dirf_infpa_valores 
-       add constraint UK_dn0xpdtxnml0kg92qv5x4m7yk unique (valor_id)
-
-    alter table public.dirf_infpc_valores 
-       add constraint UK_hmuh4sj9onyaq1vpeb7ib928g unique (valor_id)
+    alter table public.dirf_prev_compl_valores 
+       add constraint UK_fmtr0xl87dwn57bfjxoeh67yi unique (valor_id)
 
     alter table public.dirf_proc_beneficiario 
        add constraint UK_oq3qek5dp3qtm691fpbjs8d6r unique (beneficiario_id)
 
-    alter table public.dirf_rra_beneficiario 
-       add constraint UK_lr9asm3wo2pwaavm41s1i0nta unique (beneficiario_id)
+    alter table public.dirf_saude_dep_inf 
+       add constraint UK_mdh3ppkcpdxpr64ydvkt1n348 unique (saude_inf_id)
+
+    alter table public.dirf_saude_tit_inf 
+       add constraint UK_7xcyhn2wb1y0u3m0wj66qn5qw unique (saude_inf_id)
 
     alter table public.dirf_scp_beneficiario 
        add constraint UK_p9nublq43d30ebm4uye1u5db5 unique (beneficiario_id)
-
-    alter table public.dirf_tpse_reembolso 
-       add constraint UK_rs3pv34fyunlfw94i1hx86dy9 unique (reembolso_id)
 
     alter table public.dirf 
        add constraint FKbutf2g7pgjd07no8kkbjfc6ts 
@@ -342,6 +341,36 @@
        add constraint FK4bh8nuwuce7xemha9lvx2l1x6 
        foreign key (id_responsavel) 
        references public.dirf_responsavel
+
+    alter table public.dirf_acum 
+       add constraint FKrfogift1avfjsjfsydwiio5qw 
+       foreign key (dirf_id) 
+       references public.dirf
+
+    alter table public.dirf_acum_beneficiario 
+       add constraint FKrpj4pamvxorw4pknm9vqtv6fg 
+       foreign key (beneficiario_id) 
+       references public.dirf_beneficiario
+
+    alter table public.dirf_acum_beneficiario 
+       add constraint FKpmnoqxiukt209euisq49sa3bn 
+       foreign key (acum_id) 
+       references public.dirf_acum
+
+    alter table public.dirf_alimentado 
+       add constraint FKq0wo2lpf3a480ovyj4ftshc2c 
+       foreign key (beneficiario_id) 
+       references public.dirf_beneficiario
+
+    alter table public.dirf_alimentado_valores 
+       add constraint FKkh2c972xr0jl3dajgp6xlk05s 
+       foreign key (valor_id) 
+       references public.dirf_valores
+
+    alter table public.dirf_alimentado_valores 
+       add constraint FKtbj44l7gv2fhr9qr10l1w484s 
+       foreign key (alimentado_id) 
+       references public.dirf_alimentado
 
     alter table public.dirf_beneficiario_valores 
        add constraint FKcnpin9idry1ein8yh9kn001cx 
@@ -363,21 +392,6 @@
        foreign key (declarante_id) 
        references public.dirf_declarante
 
-    alter table public.dirf_dtpse 
-       add constraint FKnf0gba0vsif41fv27kturmjnk 
-       foreign key (tpse_id) 
-       references public.dirf_tpse
-
-    alter table public.dirf_dtpse_reembolso 
-       add constraint FKiqj6lmvivwmeiryy5plmtodwg 
-       foreign key (reembolso_id) 
-       references public.dirf_reembolso
-
-    alter table public.dirf_dtpse_reembolso 
-       add constraint FKb2m9lwxawp86l02msbw5tdwj7 
-       foreign key (dtpse_id) 
-       references public.dirf_dtpse
-
     alter table public.dirf_fci 
        add constraint FK6b9oeqt06lujegtj2cxc7e7h2 
        foreign key (dirf_id) 
@@ -398,40 +412,20 @@
        foreign key (dirf_id) 
        references public.dirf
 
-    alter table public.dirf_infpa 
-       add constraint FK28yggrq1tjux5hwkexpg56y9n 
+    alter table public.dirf_prev_compl 
+       add constraint FKrx5hj37vregrcyrk42iyxaluy 
        foreign key (beneficiario_id) 
        references public.dirf_beneficiario
 
-    alter table public.dirf_infpa_valores 
-       add constraint FK6joe8d2qep3dagk1ojbjae2ks 
+    alter table public.dirf_prev_compl_valores 
+       add constraint FKaetb9iwdic3tc9t8rdp5p69v2 
        foreign key (valor_id) 
        references public.dirf_valores
 
-    alter table public.dirf_infpa_valores 
-       add constraint FK7wjn52vu81ryygh67dn6uvk7j 
-       foreign key (infpa_id) 
-       references public.dirf_infpa
-
-    alter table public.dirf_infpc 
-       add constraint FKhusmc89x7m2fd8nbdcxnw5w6f 
-       foreign key (beneficiario_id) 
-       references public.dirf_beneficiario
-
-    alter table public.dirf_infpc_valores 
-       add constraint FKdgx313vxk9rmlbjn5b5flyq1w 
-       foreign key (valor_id) 
-       references public.dirf_valores
-
-    alter table public.dirf_infpc_valores 
-       add constraint FK2ytba3fo0h74p1gcgwnj8siyf 
-       foreign key (infpc_id) 
-       references public.dirf_infpc
-
-    alter table public.dirf_opse 
-       add constraint FKbpoorw17knpng66dtsqc5a6vi 
-       foreign key (dirf_id) 
-       references public.dirf
+    alter table public.dirf_prev_compl_valores 
+       add constraint FKrcoiq981wse16heh45i3d5jh1 
+       foreign key (prev_compl_id) 
+       references public.dirf_prev_compl
 
     alter table public.dirf_proc 
        add constraint FKdfmbvggklyxydd5exi7q1lrk5 
@@ -448,20 +442,40 @@
        foreign key (proc_id) 
        references public.dirf_proc
 
-    alter table public.dirf_rra 
-       add constraint FKbrwsct1rmphf4j4sn2be89k4a 
+    alter table public.dirf_saude 
+       add constraint FKdahef8vr3vf2epsp1tnoig1hc 
        foreign key (dirf_id) 
        references public.dirf
 
-    alter table public.dirf_rra_beneficiario 
-       add constraint FKbhxgr6nwjgl6pmcflmfxn1ami 
-       foreign key (beneficiario_id) 
-       references public.dirf_beneficiario
+    alter table public.dirf_saude_dep 
+       add constraint FK3csf1p8mbecae4jkjudlonx6d 
+       foreign key (saude_tit_id) 
+       references public.dirf_saude_tit
 
-    alter table public.dirf_rra_beneficiario 
-       add constraint FKda93tdw40xbtedgg7s3tsbev 
-       foreign key (rra_id) 
-       references public.dirf_rra
+    alter table public.dirf_saude_dep_inf 
+       add constraint FKnf7cdfqrqqmm0paa9wba2hgoe 
+       foreign key (saude_inf_id) 
+       references public.dirf_saude_inf
+
+    alter table public.dirf_saude_dep_inf 
+       add constraint FKcice7erwt323hvelo8mxw8a9b 
+       foreign key (saude_dep_id) 
+       references public.dirf_saude_dep
+
+    alter table public.dirf_saude_tit 
+       add constraint FKmc14wolsto1exmrcul9d1ryi 
+       foreign key (saude_id) 
+       references public.dirf_saude
+
+    alter table public.dirf_saude_tit_inf 
+       add constraint FK9m4cxm6xn8cbf8au3tnid7qka 
+       foreign key (saude_inf_id) 
+       references public.dirf_saude_inf
+
+    alter table public.dirf_saude_tit_inf 
+       add constraint FKskinr0rarqtsu7mro1l7as19j 
+       foreign key (saude_tit_id) 
+       references public.dirf_saude_tit
 
     alter table public.dirf_scp 
        add constraint FKrrsfcx5fuao8i677lcejlmjyw 
@@ -478,22 +492,7 @@
        foreign key (scp_id) 
        references public.dirf_scp
 
-    alter table public.dirf_tpse 
-       add constraint FKpiepscwtodo1c0qo4mbo89ld 
-       foreign key (opse_id) 
-       references public.dirf_opse
-
-    alter table public.dirf_tpse_reembolso 
-       add constraint FKpt3a8jiapd892kqbqfuady9dd 
-       foreign key (reembolso_id) 
-       references public.dirf_reembolso
-
-    alter table public.dirf_tpse_reembolso 
-       add constraint FKsna6v67fidpdigx4ekb2kq5it 
-       foreign key (tpse_id) 
-       references public.dirf_tpse
-
-    alter table public.dirf_vrpde 
-       add constraint FKoilkqnksfp9dk5r7q8toinnf5 
+    alter table public.dirf_valores_ext 
+       add constraint FK7901kwj82935v861fgo9ow8pc 
        foreign key (beneficiario_id) 
        references public.dirf_beneficiario
