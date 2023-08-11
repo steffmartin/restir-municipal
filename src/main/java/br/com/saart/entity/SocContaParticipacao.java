@@ -2,15 +2,24 @@ package br.com.saart.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "dirf_scp")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class SocContaParticipacao {
+
+    public SocContaParticipacao(Integer linha, String[] campo) {
+        this.scpLinha = linha;
+        this.cnpj = campo[2];
+        this.nome = campo[3];
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +41,7 @@ public class SocContaParticipacao {
     @JoinTable(name = "dirf_scp_beneficiario",
             joinColumns = {@JoinColumn(name = "scp_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
-    Set<Beneficiario> beneficiarios;
+    Set<Beneficiario> beneficiarios = new HashSet<>();
     //BPFSCP
     //BPJSCP
 

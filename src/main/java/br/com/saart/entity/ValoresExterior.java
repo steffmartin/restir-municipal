@@ -1,7 +1,9 @@
 package br.com.saart.entity;
 
+import br.com.saart.util.Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -12,7 +14,18 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "dirf_valores_ext")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class ValoresExterior {
+
+    public ValoresExterior(Integer linha, String[] campo) {
+        this.vrpdeLinha = linha;
+        this.dataPgto = Util.parseIsoDate(campo[2]);
+        this.codRec = campo[3];
+        this.tipoRendimento = Util.toShort(campo[4]);
+        this.vlrRendimento = Util.toBigDecimal(campo[5]);
+        this.vlrRetido = Util.toBigDecimal(campo[6]);
+        this.formaTribut = Util.toShort(campo[7]);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

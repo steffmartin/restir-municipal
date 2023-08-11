@@ -2,6 +2,7 @@ package br.com.saart.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -10,7 +11,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "dirf_responsavel")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class Responsavel {
+
+    public Responsavel(Integer linha, String[] campo) {
+        this.respoLinha = linha;
+        this.cpf = campo[2];
+        this.nome = campo[3];
+        this.ddd = campo[4];
+        this.fone = campo[5];
+        this.ramal = campo[6];
+        this.fax = campo[7];
+        this.email = campo[8];
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

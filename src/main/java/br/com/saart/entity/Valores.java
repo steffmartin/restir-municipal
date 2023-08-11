@@ -1,7 +1,9 @@
 package br.com.saart.entity;
 
+import br.com.saart.util.Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -11,7 +13,68 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "dirf_valores")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class Valores {
+
+    public Valores(Integer linha, String[] campo) {
+        this(linha, campo, null, null);
+    }
+
+    public Valores(Integer linha, String[] campo, Integer idrecLinha, String idrecCodigo) {
+        this.registroLinha = linha;
+        this.codRegistro = campo[1];
+        this.idrecLinha = idrecLinha;
+        this.idrecCodigo = idrecCodigo;
+        switch (campo[1]) {
+            case "RIL96":
+            case "RIPTS":
+            case "RIJMRE":
+            case "RIRSR": {
+                this.tipoValor = TipoValor.ANUAL;
+                this.vlrAno = Util.toBigDecimal(campo[2]);
+                break;
+            }
+            case "RIO": {
+                this.tipoValor = TipoValor.ANUAL;
+                this.vlrAno = Util.toBigDecimal(campo[2]);
+                this.descricao = campo[3];
+                break;
+            }
+            case "QTMESES": {
+                this.tipoValor = TipoValor.QUANT;
+                this.jan = Util.toBigDecimal(campo[2]);
+                this.fev = Util.toBigDecimal(campo[3]);
+                this.mar = Util.toBigDecimal(campo[4]);
+                this.abr = Util.toBigDecimal(campo[5]);
+                this.mai = Util.toBigDecimal(campo[6]);
+                this.jun = Util.toBigDecimal(campo[7]);
+                this.jul = Util.toBigDecimal(campo[8]);
+                this.ago = Util.toBigDecimal(campo[9]);
+                this.set = Util.toBigDecimal(campo[10]);
+                this.out = Util.toBigDecimal(campo[11]);
+                this.nov = Util.toBigDecimal(campo[12]);
+                this.dez = Util.toBigDecimal(campo[13]);
+                break;
+            }
+            default: {
+                this.tipoValor = TipoValor.MENSAL;
+                this.jan = Util.toBigDecimal(campo[2]);
+                this.fev = Util.toBigDecimal(campo[3]);
+                this.mar = Util.toBigDecimal(campo[4]);
+                this.abr = Util.toBigDecimal(campo[5]);
+                this.mai = Util.toBigDecimal(campo[6]);
+                this.jun = Util.toBigDecimal(campo[7]);
+                this.jul = Util.toBigDecimal(campo[8]);
+                this.ago = Util.toBigDecimal(campo[9]);
+                this.set = Util.toBigDecimal(campo[10]);
+                this.out = Util.toBigDecimal(campo[11]);
+                this.nov = Util.toBigDecimal(campo[12]);
+                this.dez = Util.toBigDecimal(campo[13]);
+                this.decTer = Util.toBigDecimal(campo[14]);
+                break;
+            }
+        }
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,19 +1,32 @@
 package br.com.saart.entity;
 
+import br.com.saart.util.Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "dirf_saude_dep")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class PlanoSaudeDependente {
+
+    public PlanoSaudeDependente(Integer linha, String[] campo) {
+        this.dtpseLinha = linha;
+        this.cpf = campo[2];
+        this.dataNascimento = Util.parseIsoDate(campo[3]);
+        this.nome = campo[4];
+        this.relDependencia = Util.toShort(campo[5]);
+        this.vlrAno = Util.toBigDecimal(campo[6]);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +60,6 @@ public class PlanoSaudeDependente {
     @JoinTable(name = "dirf_saude_dep_inf",
             joinColumns = {@JoinColumn(name = "saude_dep_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "saude_inf_id", referencedColumnName = "id")})
-    Set<PlanoSaudeInfReembolso> reembolsos;
+    Set<PlanoSaudeInfReembolso> reembolsos = new HashSet<>();
 
 }

@@ -1,19 +1,33 @@
 package br.com.saart.entity;
 
+import br.com.saart.util.Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "dirf")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class Dirf {
+
+    public Dirf(String nomeArquivo, Integer linha, String[] campo) {
+        this.nomeArquivo = nomeArquivo;
+        this.dirfLinha = linha;
+        this.anoReferencia = Util.toYear(campo[2]);
+        this.anoCalendario = Util.toYear(campo[3]);
+        this.retificadora = Util.toBoolean(campo[4]);
+        this.numeroRecibo = campo[5];
+        this.codigoLeiaute = campo[6];
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,21 +68,34 @@ public class Dirf {
     Declarante declarante;
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<FundoClubeInvest> fcis;
+    Set<FundoClubeInvest> fcis = new HashSet<>();
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Processo> procs;
+    Set<Processo> procs = new HashSet<>();
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<RendAcumulados> rras;
+    Set<RendAcumulados> rras = new HashSet<>();
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<SocContaParticipacao> scps;
+    Set<SocContaParticipacao> scps = new HashSet<>();
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<PlanoSaude> pses;
+    Set<PlanoSaude> pses = new HashSet<>();
 
     @OneToMany(mappedBy = "dirf", cascade = CascadeType.ALL)
-    Set<Informacoes> infs;
+    Set<Informacoes> infs = new HashSet<>();
+
+    @PrePersist
+    private void prePersist() {
+        importadoEm = LocalDateTime.now();
+        responsavel.setDirf(this);
+        declarante.setDirf(this);
+        fcis.forEach(fci -> fci.setDirf(this));
+        procs.forEach(proc -> proc.setDirf(this));
+        rras.forEach(rra -> rra.setDirf(this));
+        scps.forEach(scp -> scp.setDirf(this));
+        pses.forEach(pse -> pse.setDirf(this));
+        infs.forEach(inf -> inf.setDirf(this));
+    }
 
 }

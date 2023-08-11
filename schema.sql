@@ -76,6 +76,7 @@
         participacao float4,
         prev_compl char(1),
         rel_fonte_benef int2,
+        rpde_linha int4,
         rra_natureza varchar(50),
         primary key (id)
     )
@@ -164,11 +165,11 @@
     create table public.dirf_proc (
        id  bigserial not null,
         cpf_cnpj_adv varchar(14),
-        id_justica int2,
         nome_adv varchar(150),
         num_proc varchar(20),
         proc_linha int4,
         tipo_adv int2,
+        tipo_justica int2,
         vlr_adv numeric(19, 2) default 0,
         dirf_id int8 not null,
         primary key (id)
@@ -225,7 +226,7 @@
     create table public.dirf_saude_inf (
        id  bigserial not null,
         cod_registro varchar(6) not null,
-        cpf_cnp varchar(14),
+        cpf_cnpj varchar(14),
         linha_registro int4,
         nome varchar(150),
         vlr_ano_cal numeric(19, 2) default 0,

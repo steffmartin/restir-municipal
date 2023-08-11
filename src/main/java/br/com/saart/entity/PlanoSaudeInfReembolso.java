@@ -1,7 +1,9 @@
 package br.com.saart.entity;
 
+import br.com.saart.util.Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -11,7 +13,17 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "dirf_saude_inf")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class PlanoSaudeInfReembolso {
+
+    public PlanoSaudeInfReembolso(Integer linha, String[] campo) {
+        this.linhaRegistro = linha;
+        this.codRegistro = campo[1];
+        this.cpfCnpj = campo[2];
+        this.nome = campo[3];
+        this.vlrAnoCal = Util.toBigDecimal(campo[4]);
+        this.vlrAnosAnt = Util.toBigDecimal(campo[5]);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +37,7 @@ public class PlanoSaudeInfReembolso {
     //RDTPSE
 
     @Column(length = 14)
-    String cpfCnp;
+    String cpfCnpj;
 
     @Column(length = 150)
     String nome;

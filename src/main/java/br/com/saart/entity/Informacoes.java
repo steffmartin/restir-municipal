@@ -2,6 +2,7 @@ package br.com.saart.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,7 +10,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "dirf_inf")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class Informacoes {
+
+    public Informacoes(Integer linha, String[] campo) {
+        this.infLinha = linha;
+        this.cpf = campo[2];
+        this.informacoes = campo[3];
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

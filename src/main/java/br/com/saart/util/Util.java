@@ -21,10 +21,7 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
@@ -83,7 +80,7 @@ public class Util {
 
     public static boolean isDate(String str) {
         try {
-            toDate(str);
+            parseBrDate(str);
             return true;
         } catch (DateTimeParseException | NullPointerException e) {
             return false;
@@ -95,15 +92,19 @@ public class Util {
     }
 
     public static String toAMY(String str) {
-        return toDate(str).format(DATE_ISO_FMT);
+        return parseBrDate(str).format(DATE_ISO_FMT);
     }
 
-    public static LocalDate toDate(String str) {
-        return LocalDate.parse(str.replaceAll("\\D", ""), DATE_BR_FMT);
+    public static LocalDate parseBrDate(String str) {
+        return StringUtils.isBlank(str) ? null : LocalDate.parse(str.replaceAll("\\D", ""), DATE_BR_FMT);
+    }
+
+    public static LocalDate parseIsoDate(String str) {
+        return StringUtils.isBlank(str) ? null : LocalDate.parse(str.replaceAll("\\D", ""), DATE_ISO_FMT);
     }
 
     public static String toMY(String str) {
-        return toDate(str).format(MY_FMT);
+        return parseBrDate(str).format(MY_FMT);
     }
 
     public static String toMY(LocalDate date) {
@@ -122,8 +123,8 @@ public class Util {
         return date.toLocalDateTime().format(MY_FMT);
     }
 
-    public static boolean toBoolean(String str) {
-        return StringUtils.equalsAnyIgnoreCase(str, "SIM", "S");
+    public static Boolean toBoolean(String str) {
+        return StringUtils.isBlank(str) ? null : StringUtils.equalsAnyIgnoreCase(str, "SIM", "S");
     }
 
     public static BigDecimal toBigDecimal(double vlr) {
@@ -253,5 +254,17 @@ public class Util {
         }
 
         return StringUtils.stripAccents(StringUtils.normalizeSpace(str)).toUpperCase();
+    }
+
+    public static Year toYear(String s) {
+        return Year.of(Integer.parseInt(s));
+    }
+
+    public static Short toShort(String s) {
+        return StringUtils.isBlank(s) ? null : Short.parseShort(s);
+    }
+
+    public static Float toFloat(String s) {
+        return StringUtils.isBlank(s) ? null : Float.parseFloat(s);
     }
 }

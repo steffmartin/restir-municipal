@@ -1,17 +1,29 @@
 package br.com.saart.entity;
 
+import br.com.saart.util.Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
 @Entity
 @Table(name = "dirf_alimentado")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class InformacoesAlimentado {
+
+    public InformacoesAlimentado(Integer linha, String[] campo) {
+        this.infpaLinha = linha;
+        this.cpf = campo[2];
+        this.dataNascimento = Util.parseIsoDate(campo[3]);
+        this.nome = campo[4];
+        this.relDependencia = Util.toShort(campo[5]);
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +55,5 @@ public class InformacoesAlimentado {
             joinColumns = {@JoinColumn(name = "alimentado_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "valor_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "cod_registro", length = 7)
-    Map<String, Valores> valoresPorRegistro;
+    Map<String, Valores> valoresPorRegistro = new HashMap<>();
 }

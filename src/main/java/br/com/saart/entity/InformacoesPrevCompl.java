@@ -2,15 +2,24 @@ package br.com.saart.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
 @Entity
 @Table(name = "dirf_prev_compl")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class InformacoesPrevCompl {
+
+    public InformacoesPrevCompl(Integer linha, String[] campo) {
+        this.infpcLinha = linha;
+        this.cnpj = campo[2];
+        this.nome = campo[3];
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,5 +42,5 @@ public class InformacoesPrevCompl {
             joinColumns = {@JoinColumn(name = "prev_compl_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "valor_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "cod_registro", length = 7)
-    Map<String, Valores> valoresPorRegistro;
+    Map<String, Valores> valoresPorRegistro = new HashMap<>();
 }

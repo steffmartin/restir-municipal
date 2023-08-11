@@ -1,18 +1,54 @@
 package br.com.saart.entity;
 
+import br.com.saart.util.Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "dirf_declarante")
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 public class Declarante {
+
+    public Declarante(Integer linha, String[] campo) {
+        this.decLinha = linha;
+        this.cpfCnpj = campo[2];
+        this.nome = campo[3];
+        if ("DECPF".equalsIgnoreCase(campo[1])) {
+            this.rendimentoExterior = Util.toBoolean(campo[4]);
+            this.servicosNotoriais = Util.toBoolean(campo[5]);
+            this.planoSaude = Util.toBoolean(campo[6]);
+            this.socioOstensivo = Util.toBoolean(campo[7]);
+            this.sitEspecial = Util.toBoolean(campo[8]);
+            this.dataSitEspecial = Util.parseIsoDate(campo[9]);
+            this.decpfTipoEvento = Util.toShort(campo[10]);
+            this.falecido = Util.toBoolean(campo[11]);
+            this.dataObito = Util.parseIsoDate(campo[12]);
+            this.sitEspolio = Util.toShort(campo[13]);
+            this.cpfInventariante = campo[14];
+            this.nomeInventariante = campo[15];
+        } else {
+            this.decpjNatureza = Util.toShort(campo[4]);
+            this.cpfResponsavelPj = campo[5];
+            this.socioOstensivo = Util.toBoolean(campo[6]);
+            this.decisaoJudicial = Util.toBoolean(campo[7]);
+            this.fundoClubeInvestimento = Util.toBoolean(campo[8]);
+            this.rendimentoExterior = Util.toBoolean(campo[9]);
+            this.planoSaude = Util.toBoolean(campo[10]);
+            this.pgtoIsentasImunes = Util.toBoolean(campo[11]);
+            this.fundPublicaDirPrivado = Util.toBoolean(campo[12]);
+            this.sitEspecial = Util.toBoolean(campo[13]);
+            this.dataSitEspecial = Util.parseIsoDate(campo[14]);
+        }
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,10 +125,11 @@ public class Declarante {
     @JoinTable(name = "dirf_declarante_beneficiario",
             joinColumns = {@JoinColumn(name = "declarante_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
-    Set<Beneficiario> beneficiarios;
+    Set<Beneficiario> beneficiarios = new HashSet<>();
     //RPDE
     //BRPDE
     //BPFDEC
     //BPJDEC
     //VPEIM se DECPJ
+
 }
