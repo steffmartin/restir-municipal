@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "dirf_valores_ext")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "vrpdeLinha"})
 @NoArgsConstructor
 public class ValoresExterior {
 

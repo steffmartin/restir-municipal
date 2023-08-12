@@ -13,7 +13,7 @@ import java.util.Map;
 @Data
 @Entity
 @Table(name = "dirf_alimentado")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "infpaLinha"})
 @NoArgsConstructor
 public class InformacoesAlimentado {
 

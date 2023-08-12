@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "dirf_beneficiario")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "benefLinha"})
 @NoArgsConstructor
 public class Beneficiario {
 

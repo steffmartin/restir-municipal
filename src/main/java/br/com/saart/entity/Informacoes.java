@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "dirf_inf")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "infLinha"})
 @NoArgsConstructor
 public class Informacoes {
 

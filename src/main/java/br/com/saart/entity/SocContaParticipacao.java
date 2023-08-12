@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "dirf_scp")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "scpLinha"})
 @NoArgsConstructor
 public class SocContaParticipacao {
 

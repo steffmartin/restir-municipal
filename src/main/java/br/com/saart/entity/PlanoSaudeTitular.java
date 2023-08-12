@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "dirf_saude_tit")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "tpseLinha"})
 @NoArgsConstructor
 public class PlanoSaudeTitular {
 

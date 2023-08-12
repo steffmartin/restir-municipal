@@ -19,8 +19,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class Dirf {
 
-    public Dirf(String nomeArquivo, Integer linha, String[] campo) {
-        this.nomeArquivo = nomeArquivo;
+    public Dirf(String nomeArquivo) {
+        this.nomeArquivo = nomeArquivo.substring(1);
+    }
+
+    public void initDirf(Integer linha, String[] campo) {
         this.dirfLinha = linha;
         this.anoReferencia = Util.toYear(campo[2]);
         this.anoCalendario = Util.toYear(campo[3]);

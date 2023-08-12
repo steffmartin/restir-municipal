@@ -267,4 +267,8 @@ public class Util {
     public static Float toFloat(String s) {
         return StringUtils.isBlank(s) ? null : Float.parseFloat(s);
     }
+
+    public static String[] split(String linha) {
+        return linha.split("\\|", -1);
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 @Data
 @Entity
 @Table(name = "dirf_prev_compl")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "infpcLinha"})
 @NoArgsConstructor
 public class InformacoesPrevCompl {
 

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = "dirf_saude_inf")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "linhaRegistro"})
 @NoArgsConstructor
 public class PlanoSaudeInfReembolso {
 

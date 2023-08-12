@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "dirf_fci")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "fciLinha"})
 @NoArgsConstructor
 public class FundoClubeInvest {
 

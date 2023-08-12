@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "dirf_acum")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "rraLinha"})
 @NoArgsConstructor
 public class RendAcumulados {
 

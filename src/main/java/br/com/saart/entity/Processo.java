@@ -14,7 +14,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "dirf_proc")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "procLinha"})
 @NoArgsConstructor
 public class Processo {
 

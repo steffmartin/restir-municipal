@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = "dirf_valores")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "registroLinha"})
 @NoArgsConstructor
 public class Valores {
 
