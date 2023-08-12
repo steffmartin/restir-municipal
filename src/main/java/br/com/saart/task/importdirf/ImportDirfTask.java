@@ -151,6 +151,8 @@ public class ImportDirfTask extends GenericTask {
                     case "BPJPROC": {
                         ultimoBeneficiario = new Beneficiario(numLinha, campos);
                         ultimoPROC.getBeneficiarios().add(ultimoBeneficiario);
+                        ultimoInfAlimentado = null;
+                        ultimoInfPrevCompl = null;
                         break;
                     }
                     case "RRA": {
@@ -200,6 +202,8 @@ public class ImportDirfTask extends GenericTask {
                     case "SCP": {
                         ultimoSCP = new SocContaParticipacao(numLinha, campos);
                         dirf.getScps().add(ultimoSCP);
+                        linhaUltimoIDREC = null;
+                        codigoUltimoIDREC = null;
                         break;
                     }
                     case "BPFSCP":
@@ -285,7 +289,7 @@ public class ImportDirfTask extends GenericTask {
         File inputPath = new File(inputDir);
 
         if (inputPath.isDirectory()) {
-            return FileUtils.listFiles(inputPath, new String[]{"txt", "TXT"}, true)
+            return FileUtils.listFiles(inputPath, new String[]{"txt", "TXT", "dec", "DEC"}, true)
                     .stream().map(file -> StringUtils.removeStart(file.getAbsolutePath(), inputDir))
                     .sorted().collect(toList());
         } else {
