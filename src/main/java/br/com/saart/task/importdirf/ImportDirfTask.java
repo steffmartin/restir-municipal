@@ -6,6 +6,7 @@ import br.com.saart.task.GenericTask;
 import br.com.saart.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
@@ -45,8 +46,8 @@ public class ImportDirfTask extends GenericTask {
         StopWatch watch = new StopWatch();
         watch.start();
 
-        updateMessage("Calculando total de DIRFs...");
-        List<String> fileNames = fileNames();
+        updateMessage("Localizando arquivos de DIRF...");
+        List<String> fileNames = loadFileNames();
 
         int progress = 0;
         for (String fileName : fileNames) {
@@ -60,8 +61,7 @@ public class ImportDirfTask extends GenericTask {
             updateProgress(1, 1);
             updateMessage("Não há arquivos para importar.");
         } else {
-            updateMessage("Tarefa finalizada! Tempo gasto em " + progress + " DIRFs: " + Util.toHMS(
-                    watch.getTotalTimeMillis()));
+            updateMessage("Tarefa finalizada! Tempo gasto em " + progress + " DIRFs: " + Util.toHMS(watch.getTotalTimeMillis()));
         }
 
         return errors;
@@ -75,17 +75,37 @@ public class ImportDirfTask extends GenericTask {
             Dirf dirf = new Dirf(fileName);
             int numLinha = 0;
 
-            //Último
-            Integer idRecLinha = null;
-            String idRecCod = null;
-            Beneficiario beneficiario = null;
+            //Últimos
+            Integer linhaUltimoIDREC = null;
+            String codigoUltimoIDREC = null;
+            Beneficiario ultimoBeneficiario = null;
+            FundoClubeInvest ultimoFCI = null;
+            Processo ultimoPROC = null;
+            RendAcumulados ultimoRRA = null;
+            InformacoesPrevCompl ultimoInfPrevCompl = null;
+            InformacoesAlimentado ultimoInfAlimentado = null;
+            SocContaParticipacao ultimoSCP = null;
+            Integer linhaUltimoPSE = null;
+            PlanoSaude ultimoPlanoSaude = null;
+            PlanoSaudeTitular ultimoTitular = null;
+            PlanoSaudeDependente ultimoDependente = null;
+            Integer linhaUltimoRPDE = null;
 
             for (String[] campos : dirfFile.lines().map("|"::concat).map(Util::split).collect(toList())) {
+
+                if (dirf.getFimdirfLinha() != null) {
+                    break;
+                }
+
                 numLinha++;
 
                 switch (campos[1].toUpperCase()) {
                     case "DIRF": {
                         dirf.initDirf(numLinha, campos);
+                        break;
+                    }
+                    case "FIMDIRF": {
+                        dirf.setFimdirfLinha(numLinha);
                         break;
                     }
                     case "RESPO": {
@@ -98,23 +118,145 @@ public class ImportDirfTask extends GenericTask {
                         break;
                     }
                     case "IDREC": {
-                        idRecLinha = numLinha;
-                        idRecCod = campos[2];
+                        linhaUltimoIDREC = numLinha;
+                        codigoUltimoIDREC = campos[2];
                         break;
                     }
                     case "BPFDEC":
                     case "BPJDEC":
                     case "VPEIM": {
-                        beneficiario = new Beneficiario(numLinha, campos);
-                        dirf.getDeclarante().getBeneficiarios().add(beneficiario);
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        dirf.getDeclarante().getBeneficiarios().add(ultimoBeneficiario);
+                        ultimoInfAlimentado = null;
+                        ultimoInfPrevCompl = null;
                         break;
                     }
-                    case "FIMDIRF": {
-                        dirf.setFimdirfLinha(numLinha);
+                    case "FCI": {
+                        ultimoFCI = new FundoClubeInvest(numLinha, campos);
+                        dirf.getFcis().add(ultimoFCI);
                         break;
                     }
-                    default: { //VALORES
-                        beneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, idRecLinha, idRecCod));
+                    case "BPFFCI":
+                    case "BPJFCI": {
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoFCI.getBeneficiarios().add(ultimoBeneficiario);
+                        break;
+                    }
+                    case "PROC": {
+                        ultimoPROC = new Processo(numLinha, campos);
+                        dirf.getProcs().add(ultimoPROC);
+                        break;
+                    }
+                    case "BPFPROC":
+                    case "BPJPROC": {
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoPROC.getBeneficiarios().add(ultimoBeneficiario);
+                        break;
+                    }
+                    case "RRA": {
+                        ultimoRRA = new RendAcumulados(numLinha, campos);
+                        dirf.getRras().add(ultimoRRA);
+                        break;
+                    }
+                    case "BPFRRA": {
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoRRA.getBeneficiarios().add(ultimoBeneficiario);
+                        break;
+                    }
+                    case "INFPC": {
+                        ultimoInfPrevCompl = new InformacoesPrevCompl(numLinha, campos);
+                        ultimoBeneficiario.getInfPrevCompls().add(ultimoInfPrevCompl);
+                        break;
+                    }
+                    case "RTPP":
+                    case "RTFA":
+                    case "RTSP":
+                    case "RTEP":
+                    case "ESPP":
+                    case "ESFA":
+                    case "ESSP":
+                    case "ESEP": {
+                        if (BooleanUtils.isTrue(ultimoBeneficiario.getPrevCompl()) && ultimoInfPrevCompl != null) {
+                            ultimoInfPrevCompl.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                        } else {
+                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                        }
+                        break;
+                    }
+                    case "INFPA": {
+                        ultimoInfAlimentado = new InformacoesAlimentado(numLinha, campos);
+                        ultimoBeneficiario.getInfAlimentados().add(ultimoInfAlimentado);
+                        break;
+                    }
+                    case "RTPA":
+                    case "ESPA": {
+                        if (BooleanUtils.isTrue(ultimoBeneficiario.getAlimentado()) && ultimoInfAlimentado != null) {
+                            ultimoInfAlimentado.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                        } else {
+                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                        }
+                        break;
+                    }
+                    case "SCP": {
+                        ultimoSCP = new SocContaParticipacao(numLinha, campos);
+                        dirf.getScps().add(ultimoSCP);
+                        break;
+                    }
+                    case "BPFSCP":
+                    case "BPJSCP": {
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoSCP.getBeneficiarios().add(ultimoBeneficiario);
+                        break;
+                    }
+                    case "PSE": {
+                        linhaUltimoPSE = numLinha;
+                        break;
+                    }
+                    case "OPSE": {
+                        ultimoPlanoSaude = new PlanoSaude(linhaUltimoPSE, numLinha, campos);
+                        dirf.getPses().add(ultimoPlanoSaude);
+                        ultimoTitular = null;
+                        ultimoDependente = null;
+                        break;
+                    }
+                    case "TPSE": {
+                        ultimoTitular = new PlanoSaudeTitular(numLinha, campos);
+                        ultimoPlanoSaude.getTitulares().add(ultimoTitular);
+                        ultimoDependente = null;
+                        break;
+                    }
+                    case "RTPSE": {
+                        ultimoTitular.getReembolsos().add(new PlanoSaudeInfReembolso(numLinha, campos));
+                        break;
+                    }
+                    case "DTPSE": {
+                        ultimoDependente = new PlanoSaudeDependente(numLinha, campos);
+                        ultimoTitular.getDependentes().add(ultimoDependente);
+                        break;
+                    }
+                    case "RDTPSE": {
+                        ultimoDependente.getReembolsos().add(new PlanoSaudeInfReembolso(numLinha, campos));
+                        break;
+                    }
+                    case "RPDE": {
+                        linhaUltimoRPDE = numLinha;
+                        break;
+                    }
+                    case "BRPDE": {
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos, linhaUltimoRPDE);
+                        dirf.getDeclarante().getBeneficiarios().add(ultimoBeneficiario);
+                        break;
+                    }
+                    case "VRPDE": {
+                        ultimoBeneficiario.getValoresExterior().add(new ValoresExterior(numLinha, campos));
+                        break;
+                    }
+                    case "INF": {
+                        dirf.getInfs().add(new Informacoes(numLinha, campos));
+                        break;
+                    }
+                    default: {
+                        ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
                     }
                 }
             }
@@ -129,15 +271,17 @@ public class ImportDirfTask extends GenericTask {
 
     private void validaArquivoDirf(BufferedReader dirfFile) throws IOException {
         String[] linhaInicial = Util.splitFirstLineAndReset(dirfFile);
+
         if (!"DIRF".equalsIgnoreCase(linhaInicial[0])) {
             throw new UnsupportedEncodingException("O arquivo não está no leaiute da DIRF");
         }
+
         if (!leiautesSuportados.contains(linhaInicial[5])) {
             throw new UnsupportedEncodingException("O leiaute " + linhaInicial[5] + " não é suportado");
         }
     }
 
-    private List<String> fileNames() {
+    private List<String> loadFileNames() {
         File inputPath = new File(inputDir);
 
         if (inputPath.isDirectory()) {
