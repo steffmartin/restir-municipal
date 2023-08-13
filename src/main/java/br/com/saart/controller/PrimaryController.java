@@ -1,5 +1,6 @@
 package br.com.saart.controller;
 
+import atlantafx.base.theme.Theme;
 import br.com.saart.JavafxApplication;
 import br.com.saart.task.exportreport.ExportReportTask;
 import br.com.saart.task.exportreport.ReportFormat;
@@ -10,7 +11,9 @@ import br.com.saart.util.UserPreferences.Preference;
 import br.com.saart.view.Components;
 import br.com.saart.view.StageFactory;
 import br.com.saart.view.TaskParamComponents;
+import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
@@ -65,6 +68,7 @@ public class PrimaryController implements Initializable {
 
     //Menu
     public MenuBar topMenu;
+    public Menu menuTemas;
 
     @Override
     public void initialize(URL url, ResourceBundle resource) {
@@ -75,6 +79,7 @@ public class PrimaryController implements Initializable {
         reportFormats.setItems(FXCollections.observableArrayList(ReportFormat.values()));
 
         //Init User Saved Preferences
+        loadSystemPreferences();
         loadImpDirfPreferences();
         loadReportPreferences();
 
@@ -137,6 +142,26 @@ public class PrimaryController implements Initializable {
                 "Desenvolvido por:\n\nJS TECNOLOGIA EM PROCESSAMENTO DE DADOS EIRELI.\njlucio@jsconsult.com.br", false);
     }
 
+    public void menuTemas(ActionEvent e) {
+        String tema = ((RadioMenuItem) e.getSource()).getId();
+        changeTheme(tema);
+        userPreferences.set(Preference.TEMA, tema);
+    }
+
+    private void loadSystemPreferences() {
+        String tema = userPreferences.get(Preference.TEMA);
+        changeTheme(tema);
+        menuTemas.getItems().forEach(item -> {
+            if (tema.equals(item.getId())) {
+                ((RadioMenuItem) item).setSelected(true);
+            }
+        });
+    }
+
+    @SneakyThrows
+    private void changeTheme(String tema) {
+        Application.setUserAgentStylesheet("Java".equals(tema) ? null : ((Theme) Class.forName("atlantafx.base.theme." + tema).getDeclaredConstructor().newInstance()).getUserAgentStylesheet());
+    }
 
     private void loadImpDirfPreferences() {
         impDirfInputCharset

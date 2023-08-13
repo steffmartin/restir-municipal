@@ -1,5 +1,7 @@
 package br.com.saart.view;
 
+import atlantafx.base.theme.PrimerLight;
+import javafx.application.Application;
 import javafx.application.Preloader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +18,8 @@ public class ApplicationPreLoader extends Preloader {
 
     @Override
     public void start(Stage stage) {
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+
         this.stage = stage;
 
         VBox v = new VBox(10, new ProgressBar(), new Label("Iniciando..."));

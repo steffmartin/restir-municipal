@@ -17,6 +17,8 @@ public class JavafxApplication extends Application {
 
     @Override
     public void init() {
+
+
         ApplicationContextInitializer<GenericApplicationContext> initializer = springContext -> {
             springContext.registerBean(Application.class, () -> JavafxApplication.this);
             springContext.registerBean(Parameters.class, this::getParameters);

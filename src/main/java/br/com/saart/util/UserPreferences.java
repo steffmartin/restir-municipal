@@ -37,6 +37,8 @@ public class UserPreferences {
     @AllArgsConstructor
     public enum Preference {
 
+        TEMA("tema", "PrimerLight"),
+
         IMP_DIRF_INPUT("impSpedDir", SystemUtils.USER_DIR + "\\SPED Originais"),
         IMP_DIRF_INPUT_CHARSET("impSpedCharset", StandardCharsets.ISO_8859_1.name()),
 
