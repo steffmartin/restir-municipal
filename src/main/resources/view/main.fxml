@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
@@ -9,10 +10,20 @@
   <top>
     <MenuBar fx:id="topMenu" BorderPane.alignment="CENTER">
       <Menu mnemonicParsing="false" text="Arquivo">
-        <MenuItem mnemonicParsing="false" onAction="#menuStop" text="Sair"/>
+        <MenuItem mnemonicParsing="false" onAction="#menuStop" text="Sair">
+          <accelerator>
+            <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP"/>
+          </accelerator>
+        </MenuItem>
       </Menu>
-      <Menu mnemonicParsing="false" text="Ajuda">
-        <Menu fx:id="menuTemas" mnemonicParsing="false" text="Tema">
+      <Menu mnemonicParsing="false" text="Sobre">
+        <graphic>
+          <FontIcon iconLiteral="mdal-help_outline"/>
+        </graphic>
+        <Menu fx:id="menuTemas" mnemonicParsing="false" text="Temas">
+          <graphic>
+            <FontIcon iconLiteral="mdomz-palette"/>
+          </graphic>
           <RadioMenuItem fx:id="PrimerLight" mnemonicParsing="false" onAction="#menuTemas" selected="true"
                          text="Primer Light">
             <toggleGroup>
@@ -36,6 +47,7 @@
           <RadioMenuItem fx:id="CASPIAN" mnemonicParsing="false" onAction="#menuTemas" text="Caspian"
                          toggleGroup="$temas"/>
         </Menu>
+        <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem mnemonicParsing="false" onAction="#menuAbout" text="Sobre"/>
       </Menu>
     </MenuBar>
