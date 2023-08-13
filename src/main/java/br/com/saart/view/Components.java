@@ -27,7 +27,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,14 +34,14 @@ public class Components {
 
     public static final ClassPathResource icon = new ClassPathResource("/view/img/ico.png");
 
-    public static final List<Charset> standardCharsets = new ArrayList<Charset>() {{
-        add(StandardCharsets.ISO_8859_1);
-        add(StandardCharsets.US_ASCII);
-        add(StandardCharsets.UTF_8);
-        add(StandardCharsets.UTF_16BE);
-        add(StandardCharsets.UTF_16LE);
-        add(StandardCharsets.UTF_16);
-    }};
+    public static final List<Charset> standardCharsets = List.of(
+            StandardCharsets.ISO_8859_1,
+            StandardCharsets.US_ASCII,
+            StandardCharsets.UTF_8,
+            StandardCharsets.UTF_16BE,
+            StandardCharsets.UTF_16LE,
+            StandardCharsets.UTF_16
+    );
 
     public static FileChooser fileChooser(String initialFile, String title,
                                           String... descriptionAndExtension) {
@@ -203,7 +202,7 @@ public class Components {
     }
 
     public static void autoCompleteComboBox(ComboBox<?> comboBox) {
-        StringConverter converter = new StringConverter<Object>() {
+        StringConverter converter = new StringConverter<>() {
             @Override
             public String toString(Object object) {
                 return object != null ? object.toString() : "";

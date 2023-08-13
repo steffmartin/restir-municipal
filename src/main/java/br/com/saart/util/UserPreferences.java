@@ -39,11 +39,11 @@ public class UserPreferences {
 
         TEMA("tema", "PrimerLight"),
 
-        IMP_DIRF_INPUT("impSpedDir", SystemUtils.USER_DIR + "\\SPED Originais"),
+        IMP_DIRF_INPUT("impSpedDir", SystemUtils.USER_DIR + "\\SAART\\DIRFs"),
         IMP_DIRF_INPUT_CHARSET("impSpedCharset", StandardCharsets.ISO_8859_1.name()),
 
         REPORT_NAME("reportName", null),
-        REPORT_OUTPUT("reportOutput", SystemUtils.USER_DIR + "\\Relatórios"),
+        REPORT_OUTPUT("reportOutput", SystemUtils.USER_DIR + "\\SAART\\Relatórios"),
         REPORT_FORMAT("reportFormat", ReportFormat.PDF.name());
 
         private final String key;

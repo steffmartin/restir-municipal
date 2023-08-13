@@ -31,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -160,7 +161,7 @@ public class PrimaryController implements Initializable {
 
     @SneakyThrows
     private void changeTheme(String tema) {
-        if ("CASPIAN".equals(tema) || "MODENA".equals(tema)) {
+        if (List.of("CASPIAN", "MODENA").contains(tema)) {
             Application.setUserAgentStylesheet(tema);
         } else {
             Application.setUserAgentStylesheet(((Theme) Class.forName("atlantafx.base.theme." + tema).getDeclaredConstructor().newInstance()).getUserAgentStylesheet());

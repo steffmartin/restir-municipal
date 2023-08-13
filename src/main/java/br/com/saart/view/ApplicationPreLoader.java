@@ -6,7 +6,7 @@ import javafx.application.Preloader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -22,12 +22,12 @@ public class ApplicationPreLoader extends Preloader {
 
         this.stage = stage;
 
-        VBox v = new VBox(10, new ProgressBar(), new Label("Iniciando..."));
+        VBox v = new VBox(10, new ImageView("view/img/ico.png"), new Label("Iniciando..."));
         v.setAlignment(Pos.CENTER);
 
         BorderPane p = new BorderPane(v);
 
-        stage.setScene(new Scene(p, 200, 100));
+        stage.setScene(new Scene(p, 200, 200));
         stage.initStyle(StageStyle.UNDECORATED);
 
         stage.show();
@@ -42,8 +42,7 @@ public class ApplicationPreLoader extends Preloader {
 
     @Override
     public void handleApplicationNotification(PreloaderNotification info) {
-        if (info instanceof ProgressNotification && 100D == ((ProgressNotification) info)
-                .getProgress()) {
+        if (info instanceof ProgressNotification pn && 100D == pn.getProgress()) {
             stage.hide();
         }
     }
