@@ -17,12 +17,13 @@
 
     <properties>
         <java.version>20</java.version>
-        <javafx.version>20.0.2</javafx.version>
+        <openjfx.version>20.0.2</openjfx.version>
+        <atlantafx.version>2.0.1</atlantafx.version>
         <jasperreports.version>6.20.5</jasperreports.version>
     </properties>
 
     <dependencies>
-        <dependency>
+        <dependency> <!-- banco de dados -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <exclusions>
@@ -45,72 +46,84 @@
             </exclusions>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- Anotações Lombok -->
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- banco de dados -->
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- banco de dados -->
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- interface visual -->
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
+            <version>${openjfx.version}</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- interface visual -->
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
+            <version>${openjfx.version}</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- interface visual -->
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>${javafx.version}</version>
+            <version>${openjfx.version}</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- interface visual -->
             <groupId>io.github.mkpaz</groupId>
             <artifactId>atlantafx-base</artifactId>
-            <version>2.0.1</version>
+            <version>${atlantafx.version}</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- interface visual -->
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>12.3.1</version>
+        </dependency>
+
+        <dependency> <!-- interface visual -->
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-material2-pack</artifactId>
+            <version>12.3.1</version>
+        </dependency>
+
+        <dependency> <!-- métodos utilitários -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- métodos utilitários -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.13.0</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- métodos utilitários -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>4.4</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- métodos utilitários -->
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.13.0</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- relatórios -->
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>${jasperreports.version}</version>
@@ -130,28 +143,22 @@
             </exclusions>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- relatórios -->
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-fonts</artifactId>
             <version>${jasperreports.version}</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- relatórios -->
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-functions</artifactId>
             <version>${jasperreports.version}</version>
         </dependency>
 
-        <dependency>
+        <dependency> <!-- charset/encoding -->
             <groupId>com.ibm.icu</groupId>
             <artifactId>icu4j</artifactId>
             <version>73.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>br.com.caelum.stella</groupId>
-            <artifactId>caelum-stella-core</artifactId>
-            <version>2.1.6</version>
         </dependency>
 
     </dependencies>

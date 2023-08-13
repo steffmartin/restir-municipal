@@ -1,7 +1,8 @@
 package br.com.saart.util;
 
-import br.com.caelum.stella.format.CNPJFormatter;
 import br.com.saart.task.exportreport.ReportName;
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 import lombok.SneakyThrows;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
@@ -41,7 +42,6 @@ public class Util {
     public static final DateTimeFormatter YM_FMT = DateTimeFormatter.ofPattern("uuuu-MM");
     public static final DateTimeFormatter DATE_TIME_OPTIONAL_TMZ = DateTimeFormatter.ofPattern(
             "yyyy-MM-dd[[ ]['T']HH:mm[:ss][XXX]]");
-    public static final CNPJFormatter CNPJ_FMT = new CNPJFormatter();
     public static final DecimalFormat SPED_NUMBER_FMT;
 
     static {
@@ -55,10 +55,6 @@ public class Util {
     public static TemporalAccessor parseBest(String temporalStr) {
         return DATE_TIME_OPTIONAL_TMZ.parseBest(temporalStr, OffsetDateTime::from, LocalDateTime::from,
                 LocalDate::from);
-    }
-
-    public static String formatCNPJ(String cnpj) {
-        return StringUtils.isNotBlank(cnpj) ? CNPJ_FMT.format(cnpj) : cnpj;
     }
 
     public static String toHMS(LocalTime time) {
@@ -85,10 +81,6 @@ public class Util {
         } catch (DateTimeParseException | NullPointerException e) {
             return false;
         }
-    }
-
-    public static boolean isCNPJ(String str) {
-        return CNPJ_FMT.canBeFormatted(str);
     }
 
     public static String toAMY(String str) {
@@ -158,6 +150,19 @@ public class Util {
             }
         }
         return defaultValue;
+    }
+
+    @SneakyThrows
+    public static BufferedReader getReader(String path) {
+        BufferedInputStream is = new BufferedInputStream(new FileInputStream(path));
+
+        CharsetDetector detector = new CharsetDetector();
+        detector.setText(is);
+        CharsetMatch charset = detector.detect();
+        is.reset();
+
+        return new BufferedReader(new InputStreamReader(is, charset.getName()));
+
     }
 
     public static BufferedReader getReader(ClassPathResource resource, Charset charset)

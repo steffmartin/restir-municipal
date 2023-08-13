@@ -15,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ public class ImportDirfTask extends GenericTask {
 
     //Inputs
     private final String inputDir;
-    private final Charset inputCharset;
 
     //Repository
     @Autowired
@@ -63,7 +61,7 @@ public class ImportDirfTask extends GenericTask {
     }
 
     private void importDirf(String fileName) {
-        try (BufferedReader dirfFile = Util.getReader(inputDir + fileName, inputCharset)) {
+        try (BufferedReader dirfFile = Util.getReader(inputDir + fileName)) {
 
             validaArquivoDirf(dirfFile);
 

@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="br.com.saart.controller.PrimaryController">
   <top>
@@ -12,28 +13,28 @@
       </Menu>
       <Menu mnemonicParsing="false" text="Ajuda">
         <Menu fx:id="menuTemas" mnemonicParsing="false" text="Tema">
-          <RadioMenuItem fx:id="PrimerLight" mnemonicParsing="false" text="Primer Light" selected="true"
-                         onAction="#menuTemas">
+          <RadioMenuItem fx:id="PrimerLight" mnemonicParsing="false" onAction="#menuTemas" selected="true"
+                         text="Primer Light">
             <toggleGroup>
               <ToggleGroup fx:id="temas"/>
             </toggleGroup>
           </RadioMenuItem>
-          <RadioMenuItem fx:id="PrimerDark" mnemonicParsing="false" text="Primer Dark" toggleGroup="$temas"
-                         onAction="#menuTemas"/>
-          <RadioMenuItem fx:id="NordLight" mnemonicParsing="false" text="Nord Light" toggleGroup="$temas"
-                         onAction="#menuTemas"/>
-          <RadioMenuItem fx:id="NordDark" mnemonicParsing="false" text="Nord Dark" toggleGroup="$temas"
-                         onAction="#menuTemas"/>
-          <RadioMenuItem fx:id="CupertinoLight" mnemonicParsing="false" text="Cupertino Light" toggleGroup="$temas"
-                         onAction="#menuTemas"/>
-          <RadioMenuItem fx:id="CupertinoDark" mnemonicParsing="false" text="Cupertino Dark" toggleGroup="$temas"
-                         onAction="#menuTemas"/>
-          <RadioMenuItem fx:id="Dracula" mnemonicParsing="false" text="Dracula" toggleGroup="$temas"
-                         onAction="#menuTemas"/>
-          <RadioMenuItem fx:id="MODENA" mnemonicParsing="false" text="Modena" toggleGroup="$temas"
-                         onAction="#menuTemas"/>
-          <RadioMenuItem fx:id="CASPIAN" mnemonicParsing="false" text="Caspian" toggleGroup="$temas"
-                         onAction="#menuTemas"/>
+          <RadioMenuItem fx:id="PrimerDark" mnemonicParsing="false" onAction="#menuTemas" text="Primer Dark"
+                         toggleGroup="$temas"/>
+          <RadioMenuItem fx:id="NordLight" mnemonicParsing="false" onAction="#menuTemas" text="Nord Light"
+                         toggleGroup="$temas"/>
+          <RadioMenuItem fx:id="NordDark" mnemonicParsing="false" onAction="#menuTemas" text="Nord Dark"
+                         toggleGroup="$temas"/>
+          <RadioMenuItem fx:id="CupertinoLight" mnemonicParsing="false" onAction="#menuTemas" text="Cupertino Light"
+                         toggleGroup="$temas"/>
+          <RadioMenuItem fx:id="CupertinoDark" mnemonicParsing="false" onAction="#menuTemas" text="Cupertino Dark"
+                         toggleGroup="$temas"/>
+          <RadioMenuItem fx:id="Dracula" mnemonicParsing="false" onAction="#menuTemas" text="Dracula"
+                         toggleGroup="$temas"/>
+          <RadioMenuItem fx:id="MODENA" mnemonicParsing="false" onAction="#menuTemas" text="Modena"
+                         toggleGroup="$temas"/>
+          <RadioMenuItem fx:id="CASPIAN" mnemonicParsing="false" onAction="#menuTemas" text="Caspian"
+                         toggleGroup="$temas"/>
         </Menu>
         <MenuItem mnemonicParsing="false" onAction="#menuAbout" text="Sobre"/>
       </Menu>
@@ -66,10 +67,9 @@
                 </VBox.margin>
               </Label>
               <HBox layoutX="20.0" layoutY="109.0" spacing="10.0">
-                <TextField fx:id="impDirfInput" prefWidth="420.0"/>
+                <TextField fx:id="impDirfInput" prefWidth="550.0"/>
                 <Button fx:id="impDirfInputButton" mnemonicParsing="false" onAction="#impDirfInputButtonAction"
                         prefWidth="120.0" text="Selecionar"/>
-                <ChoiceBox fx:id="impDirfInputCharset" prefWidth="120.0"/>
               </HBox>
             </VBox>
             <VBox spacing="10.0">
@@ -79,7 +79,11 @@
                   <HBox alignment="BOTTOM_RIGHT" HBox.hgrow="ALWAYS">
                     <children>
                       <Button fx:id="impDirfStartButton" defaultButton="true" mnemonicParsing="false"
-                              onAction="#impDirfStartButtonAction" prefWidth="120.0" text="Iniciar"/>
+                              onAction="#impDirfStartButtonAction" prefWidth="120.0" text="Importar">
+                        <graphic>
+                          <FontIcon iconLiteral="mdmz-play_for_work"/>
+                        </graphic>
+                      </Button>
                     </children>
                   </HBox>
                 </HBox>

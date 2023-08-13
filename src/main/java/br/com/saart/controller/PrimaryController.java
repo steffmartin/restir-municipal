@@ -30,7 +30,6 @@ import org.springframework.stereotype.Controller;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -57,7 +56,6 @@ public class PrimaryController implements Initializable {
     //Tab Importar DIRF
     public TextField impDirfInput;
     public Button impDirfInputButton;
-    public ChoiceBox<Charset> impDirfInputCharset;
     public Button impDirfStartButton;
 
     //Tab Relatórios
@@ -75,7 +73,6 @@ public class PrimaryController implements Initializable {
     public void initialize(URL url, ResourceBundle resource) {
 
         //Init Enums
-        impDirfInputCharset.setItems(FXCollections.observableList(Components.standardCharsets));
         reportNames.setItems(FXCollections.observableArrayList(ReportName.values()));
         reportFormats.setItems(FXCollections.observableArrayList(ReportFormat.values()));
 
@@ -113,7 +110,7 @@ public class PrimaryController implements Initializable {
         if (isValidImpDirfStart()) {
             saveImpDirfPreferences();
 
-            ImportDirfTask task = new ImportDirfTask(impDirfInput.getText(), impDirfInputCharset.getValue());
+            ImportDirfTask task = new ImportDirfTask(impDirfInput.getText());
 
             task.startInNewThread(getAw(), progressController);
         }
@@ -169,8 +166,6 @@ public class PrimaryController implements Initializable {
     }
 
     private void loadImpDirfPreferences() {
-        impDirfInputCharset
-                .setValue(Charset.forName(userPreferences.get(Preference.IMP_DIRF_INPUT_CHARSET)));
         impDirfInput.setText(userPreferences.get(Preference.IMP_DIRF_INPUT));
     }
 
@@ -186,7 +181,6 @@ public class PrimaryController implements Initializable {
     }
 
     private void saveImpDirfPreferences() {
-        userPreferences.set(Preference.IMP_DIRF_INPUT_CHARSET, impDirfInputCharset.getValue().name());
         userPreferences.set(Preference.IMP_DIRF_INPUT, impDirfInput.getText());
     }
 
@@ -198,9 +192,7 @@ public class PrimaryController implements Initializable {
 
 
     private boolean isValidImpDirfStart() {
-        boolean valid =
-                StringUtils.isNoneBlank(impDirfInput.getText()) && ObjectUtils
-                        .allNotNull(impDirfInputCharset.getValue());
+        boolean valid = StringUtils.isNoneBlank(impDirfInput.getText());
 
         if (!valid) {
             Components.alert(AlertType.ERROR, "Erro", "Não é possível iniciar",
