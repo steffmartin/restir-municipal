@@ -160,7 +160,11 @@ public class PrimaryController implements Initializable {
 
     @SneakyThrows
     private void changeTheme(String tema) {
-        Application.setUserAgentStylesheet("Java".equals(tema) ? null : ((Theme) Class.forName("atlantafx.base.theme." + tema).getDeclaredConstructor().newInstance()).getUserAgentStylesheet());
+        if ("CASPIAN".equals(tema) || "MODENA".equals(tema)) {
+            Application.setUserAgentStylesheet(tema);
+        } else {
+            Application.setUserAgentStylesheet(((Theme) Class.forName("atlantafx.base.theme." + tema).getDeclaredConstructor().newInstance()).getUserAgentStylesheet());
+        }
     }
 
     private void loadImpDirfPreferences() {

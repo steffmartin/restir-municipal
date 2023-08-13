@@ -30,7 +30,10 @@
                          onAction="#menuTemas"/>
           <RadioMenuItem fx:id="Dracula" mnemonicParsing="false" text="Dracula" toggleGroup="$temas"
                          onAction="#menuTemas"/>
-          <RadioMenuItem fx:id="Java" mnemonicParsing="false" text="Java" toggleGroup="$temas" onAction="#menuTemas"/>
+          <RadioMenuItem fx:id="MODENA" mnemonicParsing="false" text="Modena" toggleGroup="$temas"
+                         onAction="#menuTemas"/>
+          <RadioMenuItem fx:id="CASPIAN" mnemonicParsing="false" text="Caspian" toggleGroup="$temas"
+                         onAction="#menuTemas"/>
         </Menu>
         <MenuItem mnemonicParsing="false" onAction="#menuAbout" text="Sobre"/>
       </Menu>
