@@ -1,11 +1,10 @@
 package br.com.saart.entity;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-
-import javax.persistence.*;
 
 @Data
 @Entity

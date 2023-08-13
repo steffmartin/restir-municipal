@@ -1,7 +1,8 @@
 package br.com.saart.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+
 import java.time.Year;
 
 @Converter(autoApply = true)

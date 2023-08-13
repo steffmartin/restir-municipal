@@ -1,12 +1,12 @@
 package br.com.saart.entity;
 
 import br.com.saart.util.Util;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.HashSet;
