@@ -169,6 +169,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <finalName>SAART</finalName>
                     <executable>true</executable>
                     <excludes>
                         <exclude>

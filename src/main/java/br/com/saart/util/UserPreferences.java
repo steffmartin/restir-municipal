@@ -7,7 +7,6 @@ import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -38,12 +37,13 @@ public class UserPreferences {
     public enum Preference {
 
         TEMA("tema", "PrimerLight"),
+        SERIAL("serialNumber", null),
+        ORGANIZACAO("organizacao", null),
 
-        IMP_DIRF_INPUT("impSpedDir", SystemUtils.USER_DIR + "\\SAART\\DIRFs"),
-        IMP_DIRF_INPUT_CHARSET("impSpedCharset", StandardCharsets.ISO_8859_1.name()),
+        IMP_DIRF_INPUT("impSpedDir", SystemUtils.USER_DIR),
 
         REPORT_NAME("reportName", null),
-        REPORT_OUTPUT("reportOutput", SystemUtils.USER_DIR + "\\SAART\\Relatórios"),
+        REPORT_OUTPUT("reportOutput", SystemUtils.USER_DIR),
         REPORT_FORMAT("reportFormat", ReportFormat.PDF.name());
 
         private final String key;
