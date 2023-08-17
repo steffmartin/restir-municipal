@@ -32,56 +32,76 @@ WizardStyle=modern
 RestartIfNeededByRun=yes
 UserInfoPage=yes
 UsePreviousUserInfo=no
-
-[Languages]
-Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-
-[Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Components: SistemaSAART
+ShowLanguageDialog=no
+UninstallDisplayName=Sistema SAART
 
 [Files]
-Source: "{#MyLicenseFile}"; DestDir: "{app}"; Flags: ignoreversion; DestName: "Licença.rtf"; Components: SistemaSAART 
-;Source: "C:\Users\steff\Workspace\restir-municipal\setup\config\*"; DestDir: "{app}\config\"; Flags: ignoreversion recursesubdirs createallsubdirs;  Components: SistemaSAART
-Source: "IconeInstalador.ico"; DestDir: "{app}"; DestName: "{#MyAppName}.ico"; Flags: ignoreversion; Components: SistemaSAART
-Source: "{tmp}\{#MyAppExeName}"; DestDir: "{app}"; Flags: external ignoreversion; ExternalSize: 110748; Components: SistemaSAART
-Source: "{tmp}\postgresql.exe"; Flags: external dontcopy deleteafterinstall; ExternalSize: 324336; Components: PostgreSQL
-Source: "{tmp}\java.exe"; Flags: external dontcopy deleteafterinstall; ExternalSize: 157290; Components: Java20
-Source: "{tmp}\dbeaver.exe"; Flags: external dontcopy deleteafterinstall; ExternalSize: 115564; Components: DBeaverCommunity
+;APP
+Source: "{tmp}\{#MyAppExeName}"; DestDir: "{app}"; Flags: external ignoreversion; ExternalSize: 113405952
+Source: "IconeInstalador.ico"; DestDir: "{app}"; DestName: "{#MyAppName}.ico"; Flags: ignoreversion
+Source: "{#MyLicenseFile}"; DestDir: "{app}"; DestName: "Licença.rtf"; Flags: ignoreversion
+;JAVA
+Source: "{tmp}\java.exe"; Flags: external dontcopy deleteafterinstall; ExternalSize: 161067008; Components: Java20
+;DBEAVER
+Source: "{tmp}\dbeaver.exe"; Flags: external dontcopy deleteafterinstall; ExternalSize: 118337536; Components: DBeaverCommunity
+Source: "{tmp}\dbeaverdata.exe"; Flags: external dontcopy deleteafterinstall; ExternalSize: 3809280; Components: DBeaverCommunity
+;POSTGRESQL
+Source: "{tmp}\postgresql.exe"; Flags: external dontcopy deleteafterinstall; ExternalSize: 332120064; Components: PostgreSQL
+
+[Icons]
+;DESKTOP
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"; Tasks: desktopicon
+;START MENU
+Name: "{group}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"
+Name: "{group}\{#MyAppName} com Logs"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runmaximized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/K java {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART com janela de Logs"
+Name: "{group}\Licença de uso"; Filename: "{app}\Licença.rtf"; Comment: "Ler os termos de uso do sistema"
+Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"; Comment: "Acessar o site da desenvolvedora do sistema na WEB"
+Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; Comment: "Desinstalar o sistema e todos os seus componentes"
 
 [INI]
+;config\application.properties [DATABASE]
 Filename: "{app}\config\application.properties"; Section: "DATABASE"; Key: "spring.datasource.url"; String: "jdbc:postgresql://localhost:5432/postgres"; Flags: uninsdeleteentry
 Filename: "{app}\config\application.properties"; Section: "DATABASE"; Key: "spring.datasource.username"; String: "postgres"; Flags: uninsdeleteentry
 Filename: "{app}\config\application.properties"; Section: "DATABASE"; Key: "spring.datasource.password"; String: "postgres"; Flags: uninsdeleteentry
 
-[Icons]
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"; Components: SistemaSAART; Tasks: desktopicon
-Name: "{group}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"; Components: SistemaSAART
-Name: "{group}\{#MyAppName} com Logs"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runmaximized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/K java {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"; Components: SistemaSAART
-Name: "{group}\Licença de uso"; Filename: "{app}\Licença.rtf"; Components: SistemaSAART
-Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"; Components: SistemaSAART
-Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; Components: SistemaSAART
-
 [Registry]
-Root: "HKCU"; Subkey: "Environment"; ValueType: string; ValueName: "JAVA_HOME"; ValueData: "{commonpf}\Java\openjdk"; Components: Java20;
-Root: "HKCU"; Subkey: "Environment"; ValueType: string; ValueName: "Path"; ValueData: "{olddata};{commonpf}\Java\openjdk\bin"; Components: Java20;
-Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "serialNumber"; ValueData: "{userinfoserial}"; ValueType: "string"; Components: SistemaSAART
-Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "organizacao"; ValueData: "{userinfoorg}"; ValueType: "string"; Components: SistemaSAART
-Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; Flags: dontcreatekey uninsdeletekey; Components: SistemaSAART
+;APP
+Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "serialNumber"; ValueData: "{userinfoserial}"; ValueType: "string"
+Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "organizacao"; ValueData: "{userinfoorg}"; ValueType: "string"
+;JAVA
+Root: "HKCU"; Subkey: "Environment"; ValueType: string; ValueName: "JAVA_HOME"; ValueData: "{commonpf}\Open JDK 20"; Components: Java20;
+Root: "HKCU"; Subkey: "Environment"; ValueType: string; ValueName: "Path"; ValueData: "{olddata};{commonpf}\Open JDK 20\bin"; Components: Java20;
+Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "Java20"; ValueType: "string"; ValueData: ""; Components: Java20
+;POSTGRESQL
+Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "PostgreSQL"; ValueType: "string"; ValueData: ""; Components: PostgreSQL
+;DBEAVER
+Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "DBeaverCommunity"; ValueType: "string"; ValueData: ""; Components: DBeaverCommunity
+
+[Components]
+Name: "SistemaSAART"; Description: "Instalar a aplicação principal do SAART"; ExtraDiskSpaceRequired: 113405952; Types: full custom compact; Flags: fixed
+Name: "Java20"; Description: "Instalar o Open JDK Java 20 gratuitamente (necessário)"; ExtraDiskSpaceRequired: 328454144; Types: compact full; Flags: restart disablenouninstallwarning; Check: InstallJava
+Name: "PostgreSQL"; Description: "Instalar o PostgreSQL 15 gratuitamente (necessário)"; ExtraDiskSpaceRequired: 340008960; Types: compact full; Flags: disablenouninstallwarning; Check: InstallPostgreSQL
+Name: "DBeaverCommunity"; Description: "Instalar o DBeaver Community gratuitamente (opcional)"; ExtraDiskSpaceRequired: 155156480; Types: full; Flags: disablenouninstallwarning; Check: InstallDbeaver
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+
+[Languages]
+Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 
 [Run]
-Filename: "{tmp}\java.exe"; Parameters: "-o""{commonpf}\Java\openjdk"" -y -bd"; Flags: runhidden waituntilterminated; StatusMsg: "Instalando Open JDK"; Components: Java20
-Filename: "{tmp}\postgresql.exe"; Parameters: "--unattendedmodeui minimal --mode unattended --disable-components ""pgAdmin,stackbuilder"" --locale ""pt-BR-x-icu"" --superaccount ""postgres"" --superpassword ""postgres"" --serverport 5432"; Flags: waituntilterminated; StatusMsg: "Instalando o banco de dados"; Components: PostgreSQL
-Filename: "{tmp}\dbeaver.exe"; Parameters: "/allusers /S"; Flags: waituntilterminated; StatusMsg: "Instalando o DBeaver"; Components: DBeaverCommunity
-Filename: "{cmd}"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; WorkingDir: "{app}"; Flags: shellexec postinstall skipifsilent runminimized; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Components: SistemaSAART
+;JAVA
+Filename: "{tmp}\java.exe"; Parameters: "-o""{commonpf}\Open JDK 20"" -y -bd"; Flags: runhidden waituntilterminated; StatusMsg: "Instalando Open JDK Java 20"; Components: Java20
+;POSTGRESQL
+Filename: "{tmp}\postgresql.exe"; Parameters: "--unattendedmodeui minimal --mode unattended --disable-components ""pgAdmin,stackbuilder"" --superaccount ""postgres"" --superpassword ""postgres"" --serverport 5432"; Flags: waituntilterminated; StatusMsg: "Instalando o banco de dados"; Components: PostgreSQL
+;DBEAVER
+Filename: "{tmp}\dbeaver.exe"; Parameters: "/allusers /S"; Flags: waituntilterminated; StatusMsg: "Instalando o DBeaver Community"; Components: DBeaverCommunity
+Filename: "{tmp}\dbeaverdata.exe"; Parameters: "-o""{userappdata}"" -y -bd"; Flags: runhidden waituntilterminated; StatusMsg: "Configurando o DBeaver Community"; Components: DBeaverCommunity
+;POST INSTALL
+Filename: "{cmd}"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; WorkingDir: "{app}"; Flags: shellexec postinstall skipifsilent runhidden; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
-
-[Components]
-Name: "SistemaSAART"; Description: "Instala a aplicação principal do SAART"; ExtraDiskSpaceRequired: 113405952; Types: full custom compact; Flags: fixed
-Name: "Java20"; Description: "Instalar o Java 20 gratuitamente (necessário)"; ExtraDiskSpaceRequired: 328454144; Types: compact full; Flags: restart; Check: InstallJava
-Name: "PostgreSQL"; Description: "Instala o PostgreSQL 15 gratuitamente (necessário)"; ExtraDiskSpaceRequired: 340008960; Types: compact full; Check: InstallPostgreSQL
-Name: "DBeaverCommunity"; Description: "Instalar o DBeaver Community gratuitamente (opcional)"; ExtraDiskSpaceRequired: 148824064; Types: full; Check: InstallDbeaver
 
 [Code]
 var
@@ -250,14 +270,32 @@ begin
   Result := CompareVersion(GetJavaVersionInfo(), '20.0.0') < 0;
 end;
 
+function UninstallJava(): Boolean;
+  var S: String;
+begin
+  Result := RegQueryStringValue(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br\com\saart', 'Java20', S);
+end;
+
 function InstallPostgreSQL(): Boolean;
 begin
   Result := CompareVersion(GetPgVersionInfo(), '15.0-0') < 0;
 end;
 
+function UninstallPostgreSQL(): Boolean;
+  var S: String;
+begin
+  Result := RegQueryStringValue(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br\com\saart', 'PostgreSQL', S);
+end;
+
 function InstallDbeaver(): Boolean;
 begin
   Result := not RegKeyExists(HKEY_CURRENT_USER, 'SOFTWARE\DBeaver');
+end;
+
+function UninstallDbeaver(): Boolean;
+  var S: String;
+begin
+  Result := RegQueryStringValue(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br\com\saart', 'DBeaverCommunity', S);
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
@@ -283,6 +321,7 @@ begin
     if IsComponentSelected('DBeaverCommunity') then
     begin
       DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197493&authkey=!AKkQyhGXBbMoz-w', 'dbeaver.exe', '');
+      DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197620&authkey=!AKmoi21U45PSSuM', 'dbeaverdata.exe', '');
     end;
 
     DownloadPage.Show;
@@ -370,5 +409,126 @@ end;
 
 function CheckSerial(Serial: String): Boolean;
 begin
-    Result := True;
+    Result := Length(Trim(Serial)) > 0;
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  OldState: Boolean;
+  ResultCode: Integer;
+  WizardForm: TSetupForm;
+  StatusMemo: TMemo;
+  Exibido: Boolean;
+begin
+  WizardForm := CreateCustomForm;
+  WizardForm.Caption := 'Desinstalação de componentes';
+  WizardForm.ClientWidth := ScaleX(500);
+  WizardForm.ClientHeight := ScaleY(200);
+
+  StatusMemo := TMemo.Create(WizardForm);
+  StatusMemo.Parent := WizardForm;
+  StatusMemo.Align := alClient;
+  StatusMemo.ScrollBars := ssVertical;
+  StatusMemo.ReadOnly := True;
+
+  Exibido := False;
+
+  if CurUninstallStep = usPostUninstall then
+  begin
+    if UninstallDbeaver() then
+    begin
+      if MsgBox('Você também deseja desinstalar o Dbeaver Community?', mbConfirmation, MB_YESNO) = IDYES then
+      begin
+        if not Exibido then
+        begin
+          WizardForm.Show;
+        end;
+        OldState := EnableFsRedirection(False);
+        try
+          StatusMemo.Lines.Add('Desinstalando o Dbeaver Community, aguarde...');
+          if Exec(ExpandConstant('{commonpf}\DBeaver\Uninstall.exe'), '/allusers /S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) and DelTree(ExpandConstant('{userappdata}\DBeaverData'), True, True, True) then
+          begin
+            StatusMemo.Lines.Add('DBeaver Community foi desinstalado com sucesso.');
+          end
+          else
+          begin
+            StatusMemo.Lines.Add('Erro ao desinstalar o DBeaver Community.');
+          end;
+        finally
+          EnableFsRedirection(OldState);
+        end;
+      end;
+    end;
+
+    if UninstallPostgreSQL() then
+    begin
+      if MsgBox('Você também deseja desinstalar o PostgreSQL 15?', mbConfirmation, MB_YESNO) = IDYES then
+      begin
+        if not Exibido then
+        begin
+          WizardForm.Show;
+        end;
+        OldState := EnableFsRedirection(False);
+        try
+          StatusMemo.Lines.Add('Desinstalando o PostgreSQL 15, aguarde...');
+          if Exec(ExpandConstant('{commonpf}\PostgreSQL\15\uninstall-postgresql.exe'), '--mode unattended --unattendedmodeui none', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+          begin
+            StatusMemo.Lines.Add('PostgreSQL 15 foi desinstalado com sucesso.');
+          end
+          else
+          begin
+            StatusMemo.Lines.Add('Erro ao desinstalar o PostgreSQL 15.');
+          end;
+          if MsgBox('Você também deseja apagar completamente a pasta da base de dados?', mbConfirmation, MB_YESNO) = IDYES then
+          begin
+            StatusMemo.Lines.Add('Excluindo a pasta da base de dados, aguarde...');
+            if DelTree(ExpandConstant('{commonpf}\PostgreSQL\15\data'), True, True, True) then
+            begin
+              StatusMemo.Lines.Add('Base de dados excluída com sucesso.');
+            end
+            else
+            begin
+              StatusMemo.Lines.Add('Erro ao excluir a pasta da base de dados.');
+            end;
+          end;
+        finally
+          EnableFsRedirection(OldState);
+        end;
+      end;
+    end;
+
+    if UninstallJava() then
+    begin
+      if MsgBox('Você também deseja desinstalar o Open JDK Java 20?', mbConfirmation, MB_YESNO) = IDYES then
+      begin
+        if not Exibido then
+        begin
+          WizardForm.Show;
+        end;
+        OldState := EnableFsRedirection(False);
+        try
+          StatusMemo.Lines.Add('Desinstalando o Open JDK Java 20, aguarde...');
+          if DelTree(ExpandConstant('{commonpf}\Open JDK 20'), True, True, True) then
+          begin
+            StatusMemo.Lines.Add('Open JDK Java 20 foi desinstalado com sucesso.');
+          end
+          else
+          begin
+            StatusMemo.Lines.Add('Erro ao desinstalar o Open JDK Java 20.');
+          end;
+        finally
+          EnableFsRedirection(OldState);
+        end;
+      end;
+    end;
+
+    if Exibido then
+    begin
+      WizardForm.Hide;
+    end;
+
+    RegDeleteKeyIncludingSubkeys(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br\com\saart');
+    RegDeleteKeyIfEmpty(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br\com');
+    RegDeleteKeyIfEmpty(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br');
+  end;
 end;
