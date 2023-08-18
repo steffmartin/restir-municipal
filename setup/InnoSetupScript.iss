@@ -50,7 +50,8 @@ Source: "{tmp}\postgresql.exe"; Flags: external dontcopy deleteafterinstall; Ext
 
 [Icons]
 ;DESKTOP
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"; Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"; Tasks: desktopiconSAART
+Name: "{autodesktop}\DBeaver"; Filename: "{commonpf}\DBeaver\dbeaver.exe"; Flags: uninsneveruninstall; Comment: "Abrir o DBeaver Community"; Tasks: desktopiconDBeaver
 ;START MENU
 Name: "{group}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"
 Name: "{group}\{#MyAppName} com Logs"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runmaximized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/K java {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART com janela de Logs"
@@ -84,7 +85,8 @@ Name: "PostgreSQL"; Description: "Instalar o PostgreSQL 15 gratuitamente (necess
 Name: "DBeaverCommunity"; Description: "Instalar o DBeaver Community gratuitamente (opcional)"; ExtraDiskSpaceRequired: 155156480; Types: full; Flags: disablenouninstallwarning; Check: InstallDbeaver
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+Name: "desktopiconSAART"; Description: "Sistema SAART"; GroupDescription: "Criar ícones na área de trabalho para:"
+Name: "desktopiconDBeaver"; Description: "Dbeaver Community"; GroupDescription: "Criar ícones na área de trabalho para:"; Components: DBeaverCommunity
 
 [Languages]
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
@@ -97,8 +99,11 @@ Filename: "{tmp}\postgresql.exe"; Parameters: "--unattendedmodeui minimal --mode
 ;DBEAVER
 Filename: "{tmp}\dbeaver.exe"; Parameters: "/allusers /S"; Flags: waituntilterminated; StatusMsg: "Instalando o DBeaver Community"; Components: DBeaverCommunity
 Filename: "{tmp}\dbeaverdata.exe"; Parameters: "-o""{userappdata}"" -y -bd"; Flags: runhidden waituntilterminated; StatusMsg: "Configurando o DBeaver Community"; Components: DBeaverCommunity
+;dbeaver-cli.exe -nosplash -q -con "name=postgres3|driver=postgres-jdbc|url=jdbc:postgresql://localhost:5432/postgres|host=localhost|port=5432|database=postgres|user=postgres|password=postgres|auth=native|savePassword=true|connect=false|create=true|save=true"
+;dbeaver-cli.exe --quit
 ;POST INSTALL
 Filename: "{cmd}"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; WorkingDir: "{app}"; Flags: shellexec postinstall skipifsilent runhidden; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
+Filename: "{commonpf}\DBeaver\dbeaver.exe"; Flags: postinstall skipifsilent unchecked; Description: "{cm:LaunchProgram,DBeaver Community}"; Components: DBeaverCommunity
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
@@ -446,8 +451,10 @@ begin
         OldState := EnableFsRedirection(False);
         try
           StatusMemo.Lines.Add('Desinstalando o Dbeaver Community, aguarde...');
-          if Exec(ExpandConstant('{commonpf}\DBeaver\Uninstall.exe'), '/allusers /S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) and DelTree(ExpandConstant('{userappdata}\DBeaverData'), True, True, True) then
+          if Exec(ExpandConstant('{commonpf}\DBeaver\Uninstall.exe'), '/allusers /S', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
           begin
+            DelTree(ExpandConstant('{userappdata}\DBeaverData'), True, True, True);
+            DeleteFile(ExpandConstant('{autodesktop}\DBeaver'));
             StatusMemo.Lines.Add('DBeaver Community foi desinstalado com sucesso.');
           end
           else
@@ -474,22 +481,22 @@ begin
           if Exec(ExpandConstant('{commonpf}\PostgreSQL\15\uninstall-postgresql.exe'), '--mode unattended --unattendedmodeui none', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
           begin
             StatusMemo.Lines.Add('PostgreSQL 15 foi desinstalado com sucesso.');
+            if MsgBox('Você também deseja apagar completamente a pasta da base de dados?', mbConfirmation, MB_YESNO) = IDYES then
+            begin
+              StatusMemo.Lines.Add('Excluindo a pasta da base de dados, aguarde...');
+              if DelTree(ExpandConstant('{commonpf}\PostgreSQL\15\data'), True, True, True) then
+              begin
+                StatusMemo.Lines.Add('Base de dados excluída com sucesso.');
+              end
+              else
+              begin
+                StatusMemo.Lines.Add('Erro ao excluir a pasta da base de dados.');
+              end;
+            end;
           end
           else
           begin
             StatusMemo.Lines.Add('Erro ao desinstalar o PostgreSQL 15.');
-          end;
-          if MsgBox('Você também deseja apagar completamente a pasta da base de dados?', mbConfirmation, MB_YESNO) = IDYES then
-          begin
-            StatusMemo.Lines.Add('Excluindo a pasta da base de dados, aguarde...');
-            if DelTree(ExpandConstant('{commonpf}\PostgreSQL\15\data'), True, True, True) then
-            begin
-              StatusMemo.Lines.Add('Base de dados excluída com sucesso.');
-            end
-            else
-            begin
-              StatusMemo.Lines.Add('Erro ao excluir a pasta da base de dados.');
-            end;
           end;
         finally
           EnableFsRedirection(OldState);
