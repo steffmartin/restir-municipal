@@ -45,8 +45,9 @@ public class ProgressController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         progressBar.progressProperty().addListener((obs, oldProgress, newProgress) ->
         {
-            progressPercent.setText(String.format("%d %%", (int) (newProgress.doubleValue() * 100)));
-            if (newProgress.doubleValue() >= 0.5) {
+            int intProgress = (int) (newProgress.doubleValue() * 100);
+            progressPercent.setText(String.format("%d %%", intProgress));
+            if (intProgress > 50) {
                 progressPercent.setTextFill(Color.WHITE);
             } else {
                 progressPercent.setTextFill(Color.BLACK);

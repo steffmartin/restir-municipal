@@ -2,11 +2,13 @@ package br.com.saart.task;
 
 import br.com.saart.controller.ProgressController;
 import javafx.concurrent.Task;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public abstract class GenericTask extends Task<Map<String, Throwable>> {
 
     protected AutowireCapableBeanFactory aw;
@@ -29,4 +31,9 @@ public abstract class GenericTask extends Task<Map<String, Throwable>> {
         t.start();
     }
 
+    @Override
+    protected void updateMessage(String s) {
+        super.updateMessage(s);
+        log.info(s);
+    }
 }

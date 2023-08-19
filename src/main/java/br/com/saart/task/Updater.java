@@ -31,9 +31,10 @@ public class Updater extends GenericTask {
 
     public boolean temAtualizacao() {
         try {
+            log.info("Obtendo informações de atualização do sistema na internet.");
             infoDto = oneDriveCli.downloadInfo();
         } catch (Exception e) {
-            log.error("Erro ao fazer download das informações de atualização do sistema.");
+            log.error("Erro ao obter informações de atualização do sistema na internet.");
             log.debug("Exception", e);
             return false;
         }
@@ -51,7 +52,7 @@ public class Updater extends GenericTask {
         return String.join("\n",
                 "Versão atual: " + versao,
                 "Nova versão: " + infoDto.getVersao(),
-                "Tamanho do download: " + Util.byteToMb(infoDto.getTamanho()) + " MB");
+                "Tamanho aproximado do download: " + Util.byteToMb(infoDto.getTamanho()) + " MB");
     }
 
     @Override
