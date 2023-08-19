@@ -47,6 +47,7 @@
           <RadioMenuItem fx:id="CASPIAN" mnemonicParsing="false" onAction="#menuTemas" text="Caspian"
                          toggleGroup="$temas"/>
         </Menu>
+        <MenuItem mnemonicParsing="false" text="Atualizar" onAction="#menuUpdate"/>
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem mnemonicParsing="false" onAction="#menuAbout" text="Sobre"/>
       </Menu>

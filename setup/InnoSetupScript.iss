@@ -37,9 +37,10 @@ UninstallDisplayName=Sistema SAART
 
 [Files]
 ;APP
-Source: "{tmp}\{#MyAppExeName}"; DestDir: "{app}"; Flags: external ignoreversion; ExternalSize: 113405952
+Source: "{tmp}\{#MyAppExeName}"; DestDir: "{app}"; Flags: external ignoreversion; ExternalSize: 129589248
 Source: "IconeInstalador.ico"; DestDir: "{app}"; DestName: "{#MyAppName}.ico"; Flags: ignoreversion
 Source: "{#MyLicenseFile}"; DestDir: "{app}"; DestName: "Licença.rtf"; Flags: ignoreversion
+Source: "restart.cmd"; DestDir: "{app}"; Flags: ignoreversion
 ;JAVA
 Source: "{tmp}\java.exe"; Flags: external dontcopy deleteafterinstall; ExternalSize: 161067008; Components: Java20
 ;DBEAVER
@@ -50,16 +51,21 @@ Source: "{tmp}\postgresql.exe"; Flags: external dontcopy deleteafterinstall; Ext
 
 [Icons]
 ;DESKTOP
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"; Tasks: desktopiconSAART
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART"; Tasks: desktopiconSAART; AfterInstall: SetElevationBit('{autodesktop}\{#MyAppName}.lnk')
 Name: "{autodesktop}\DBeaver"; Filename: "{commonpf}\DBeaver\dbeaver.exe"; Flags: uninsneveruninstall; Comment: "Abrir o DBeaver Community"; Tasks: desktopiconDBeaver
 ;START MENU
-Name: "{group}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART"
-Name: "{group}\{#MyAppName} com Logs"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runmaximized; IconFilename: "{app}\{#MyAppName}.ico"; Parameters: "/K java {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; Comment: "Iniciar SAART com janela de Logs"
+Name: "{group}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART"; AfterInstall: SetElevationBit('{group}\{#MyAppName}.lnk')
+Name: "{group}\{#MyAppName} com Logs"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runmaximized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/K java {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART com janela de Logs"; AfterInstall: SetElevationBit('{group}\{#MyAppName} com Logs.lnk')
 Name: "{group}\Licença de uso"; Filename: "{app}\Licença.rtf"; Comment: "Ler os termos de uso do sistema"
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"; Comment: "Acessar o site da desenvolvedora do sistema na WEB"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; Comment: "Desinstalar o sistema e todos os seus componentes"
+;PASTA APP
+Name: "{app}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{#MyAppExeName}"""; Comment: "Iniciar SAART"; AfterInstall: SetElevationBit('{app}\{#MyAppName}.lnk')
+Name: "{app}\restart"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; Parameters: "/C cd ""{app}"" && restart.cmd"; Comment: "Atualizar e reiniciar o SAART"; AfterInstall: SetElevationBit('{app}\restart.lnk')
 
 [INI]
+;config\application.properties [GERAL]
+Filename: "{app}\config\application.properties"; Section: "GERAL"; Key: "spring.application.install-dir"; String: "{code:EscapeBars|{app}}";  Flags: uninsdeleteentry
 ;config\application.properties [DATABASE]
 Filename: "{app}\config\application.properties"; Section: "DATABASE"; Key: "spring.datasource.url"; String: "jdbc:postgresql://localhost:5432/postgres"; Flags: uninsdeleteentry
 Filename: "{app}\config\application.properties"; Section: "DATABASE"; Key: "spring.datasource.username"; String: "postgres"; Flags: uninsdeleteentry
@@ -79,14 +85,14 @@ Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "Postgr
 Root: "HKCU"; Subkey: "SOFTWARE\JavaSoft\Prefs\br\com\saart"; ValueName: "DBeaverCommunity"; ValueType: "string"; ValueData: ""; Components: DBeaverCommunity
 
 [Components]
-Name: "SistemaSAART"; Description: "Instalar a aplicação principal do SAART"; ExtraDiskSpaceRequired: 113405952; Types: full custom compact; Flags: fixed
+Name: "SistemaSAART"; Description: "Instalar a aplicação principal do SAART"; ExtraDiskSpaceRequired: 129589248; Types: full custom compact; Flags: fixed
 Name: "Java20"; Description: "Instalar o Open JDK Java 20 gratuitamente (necessário)"; ExtraDiskSpaceRequired: 328454144; Types: compact full; Flags: restart disablenouninstallwarning; Check: InstallJava
 Name: "PostgreSQL"; Description: "Instalar o PostgreSQL 15 gratuitamente (necessário)"; ExtraDiskSpaceRequired: 340008960; Types: compact full; Flags: disablenouninstallwarning; Check: InstallPostgreSQL
 Name: "DBeaverCommunity"; Description: "Instalar o DBeaver Community gratuitamente (opcional)"; ExtraDiskSpaceRequired: 155156480; Types: full; Flags: disablenouninstallwarning; Check: InstallDbeaver
 
 [Tasks]
 Name: "desktopiconSAART"; Description: "Sistema SAART"; GroupDescription: "Criar ícones na área de trabalho para:"
-Name: "desktopiconDBeaver"; Description: "Dbeaver Community"; GroupDescription: "Criar ícones na área de trabalho para:"; Components: DBeaverCommunity
+Name: "desktopiconDBeaver"; Description: "DBeaver Community"; GroupDescription: "Criar ícones na área de trabalho para:"; Components: DBeaverCommunity
 
 [Languages]
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
@@ -102,7 +108,7 @@ Filename: "{tmp}\dbeaverdata.exe"; Parameters: "-o""{userappdata}"" -y -bd"; Fla
 ;dbeaver-cli.exe -nosplash -q -con "name=postgres3|driver=postgres-jdbc|url=jdbc:postgresql://localhost:5432/postgres|host=localhost|port=5432|database=postgres|user=postgres|password=postgres|auth=native|savePassword=true|connect=false|create=true|save=true"
 ;dbeaver-cli.exe --quit
 ;POST INSTALL
-Filename: "{cmd}"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppName}.jar"""; WorkingDir: "{app}"; Flags: shellexec postinstall skipifsilent runhidden; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
+Filename: "{cmd}"; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; WorkingDir: "{app}"; Flags: shellexec postinstall skipifsilent runhidden; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 Filename: "{commonpf}\DBeaver\dbeaver.exe"; Flags: postinstall skipifsilent unchecked; Description: "{cm:LaunchProgram,DBeaver Community}"; Components: DBeaverCommunity
 
 [UninstallDelete]
@@ -112,6 +118,12 @@ Type: filesandordirs; Name: "{app}"
 var
   DownloadPage: TDownloadWizardPage;
   Xmx: String;
+
+function EscapeBars(Param: String): String;
+begin
+  StringChangeEx(Param, '\', '\\', False);
+  Result := Param;
+end;
 
 function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
 begin
@@ -310,7 +322,7 @@ begin
 
     if IsComponentSelected('SistemaSAART') then
     begin
-      DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197495&authkey=!ACkxNlDrwA5LBjo', 'SAART.jar', '');
+      DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197715&authkey=!AJ2XL1Y3leL-HzQ', 'SAART.jar', '');
     end;
 
     if IsComponentSelected('PostgreSQL') then
@@ -537,5 +549,26 @@ begin
     RegDeleteKeyIncludingSubkeys(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br\com\saart');
     RegDeleteKeyIfEmpty(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br\com');
     RegDeleteKeyIfEmpty(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br');
+  end;
+end;
+
+procedure SetElevationBit(Filename: string);
+var
+  Buffer: string;
+  Stream: TStream;
+begin
+  Filename := ExpandConstant(Filename);
+  Log('Setting elevation bit for ' + Filename);
+
+  Stream := TFileStream.Create(FileName, fmOpenReadWrite);
+  try
+    Stream.Seek(21, soFromBeginning);
+    SetLength(Buffer, 1);
+    Stream.ReadBuffer(Buffer, 1);
+    Buffer[1] := Chr(Ord(Buffer[1]) or $20);
+    Stream.Seek(-1, soFromCurrent);
+    Stream.WriteBuffer(Buffer, 1);
+  finally
+    Stream.Free;
   end;
 end;

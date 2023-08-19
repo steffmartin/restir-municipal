@@ -1,5 +1,6 @@
 package br.com.saart.controller;
 
+import br.com.saart.JavafxApplication;
 import br.com.saart.util.Util;
 import br.com.saart.view.Components;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -9,10 +10,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
@@ -20,14 +23,21 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 public class ProgressController implements Initializable {
 
+    @Autowired
+    private JavafxApplication application;
+
+    @Value("${spring.application.install-dir}")
+    private String installDir;
+
     public ProgressBar progressBar;
-    public ProgressIndicator progressIndicator;
     public Label progressMessage;
     public Button closeButton;
     public Button errorButton;
+    public boolean needRestart = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -35,7 +45,6 @@ public class ProgressController implements Initializable {
 
     public void onScheduled(ReadOnlyDoubleProperty progress, ReadOnlyStringProperty message) {
         progressBar.progressProperty().bind(progress);
-        progressIndicator.progressProperty().bind(progress);
         progressMessage.textProperty().bind(message);
 
         disableClosing();
@@ -73,6 +82,25 @@ public class ProgressController implements Initializable {
     private void enableClosing() {
         closeButton.setDisable(false);
         closeButton.getScene().getWindow().setOnCloseRequest(null);
+
+        if (needRestart) {
+            closeButton.setOnAction(this::restart);
+            closeButton.getScene().getWindow().setOnCloseRequest(this::restart);
+        }
+    }
+
+    private void restart(Event e) {
+        try {
+            //Executa o CMD para abrir o atalho 'restart' da pasta de instalação do APP, este atalho executa um comando para finalizar a atualização
+            //Pois o comando final não pode ser executado por aqui porque o APP precisa estar fechado para que o JAR da versão antiga seja trocado pelo novo
+            new ProcessBuilder("cmd.exe", "/c", "start", "/D", installDir, "restart.lnk").start().waitFor();
+        } catch (Exception ex) {
+            log.error("Erro ao iniciar o processo", ex);
+        }
+        e.consume();
+
+        //Fecha o APP para que o comando consiga apagar este JAR
+        application.stop();
     }
 
     private String parseErrorsToString(Map<String, Throwable> errors) {

@@ -12,7 +12,7 @@
 
     <groupId>br.com</groupId>
     <artifactId>SAART</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.5</version>
     <name>Sistema Avançado de Apuração e Restituição Tributária</name>
 
     <properties>
@@ -20,6 +20,9 @@
         <openjfx.version>20.0.2</openjfx.version>
         <atlantafx.version>2.0.1</atlantafx.version>
         <jasperreports.version>6.20.5</jasperreports.version>
+        <spring-cloud.version>2022.0.4</spring-cloud.version>
+        <pasta-de-instalacao>C:\Users\steff\OneDrive\Documentos\Projetos\Restituição Municipal\Instalação
+        </pasta-de-instalacao>
     </properties>
 
     <dependencies>
@@ -44,6 +47,11 @@
                     <artifactId>snakeyaml</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
         <dependency> <!-- Anotações Lombok -->
@@ -163,13 +171,25 @@
 
     </dependencies>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <finalName>SAART</finalName>
+                    <finalName>${project.artifactId}</finalName>
                     <executable>true</executable>
                     <excludes>
                         <exclude>
@@ -178,6 +198,35 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copiar-jar</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>${project.build.directory}\${project.artifactId}.jar</sourceFile>
+                            <destinationFile>${pasta-de-instalacao}\${project.artifactId}.jar</destinationFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copiar-json-info</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>setup\info.json</sourceFile>
+                            <destinationFile>${pasta-de-instalacao}\info.json</destinationFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

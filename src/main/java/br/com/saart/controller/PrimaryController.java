@@ -2,6 +2,7 @@ package br.com.saart.controller;
 
 import atlantafx.base.theme.Theme;
 import br.com.saart.JavafxApplication;
+import br.com.saart.task.Updater;
 import br.com.saart.task.exportreport.ExportReportTask;
 import br.com.saart.task.exportreport.ReportFormat;
 import br.com.saart.task.exportreport.ReportName;
@@ -82,7 +83,7 @@ public class PrimaryController implements Initializable {
         loadReportPreferences();
 
         //Init Progress Bar
-        progressStage = stageFactory.createStage(progressScene, "Progresso da Tarefa");
+        progressStage = stageFactory.createStage(progressScene, "Progresso");
         progressStage.initModality(Modality.APPLICATION_MODAL);
         progressStage.setResizable(false);
     }
@@ -144,6 +145,20 @@ public class PrimaryController implements Initializable {
         String tema = ((RadioMenuItem) e.getSource()).getId();
         changeTheme(tema);
         userPreferences.set(Preference.TEMA, tema);
+    }
+
+    public void menuUpdate() {
+        Updater task = new Updater();
+        getAw().autowireBean(task);
+
+        if (task.temAtualizacao()) {
+            if (Components.alert(AlertType.CONFIRMATION, "Atualização do sistema", "Há uma nova atualização disponível, gostaria de instalar agora?",
+                    task.getInfo(), true).orElse(ButtonType.NO).equals(ButtonType.OK)) {
+                task.startInNewThread(getAw(), progressController);
+            }
+        } else {
+            Components.alert(AlertType.INFORMATION, "Atualização do sistema", "Você já está usando a versão mais atual do sistema.", "Versão: " + task.getVersao(), false);
+        }
     }
 
     private void loadSystemPreferences() {

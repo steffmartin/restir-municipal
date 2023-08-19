@@ -1,0 +1,9 @@
+@echo off
+timeout /t 5 /nobreak > NUL
+
+set "tempDir=%TEMP%"
+set "sourceFile=%tempDir%\SAART.jar"
+set "destinationFile=.\SAART.jar"
+move /y "%sourceFile%" "%destinationFile%"
+
+start "Sistema SAART" "SAART.lnk"

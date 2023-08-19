@@ -276,4 +276,8 @@ public class Util {
     public static String[] split(String linha) {
         return linha.split("\\|", -1);
     }
+
+    public static Long byteToMb(Long bytes) {
+        return bytes / 1024 / 1024;
+    }
 }
