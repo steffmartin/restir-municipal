@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +35,7 @@ public class ProgressController implements Initializable {
     private String installDir;
 
     public ProgressBar progressBar;
+    public Label progressPercent;
     public Label progressMessage;
     public Button closeButton;
     public Button errorButton;
@@ -41,6 +43,15 @@ public class ProgressController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        progressBar.progressProperty().addListener((obs, oldProgress, newProgress) ->
+        {
+            progressPercent.setText(String.format("%d %%", (int) (newProgress.doubleValue() * 100)));
+            if (newProgress.doubleValue() >= 0.5) {
+                progressPercent.setTextFill(Color.WHITE);
+            } else {
+                progressPercent.setTextFill(Color.BLACK);
+            }
+        });
     }
 
     public void onScheduled(ReadOnlyDoubleProperty progress, ReadOnlyStringProperty message) {

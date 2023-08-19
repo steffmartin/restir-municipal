@@ -51,16 +51,16 @@ Source: "{tmp}\postgresql.exe"; Flags: external dontcopy deleteafterinstall; Ext
 
 [Icons]
 ;DESKTOP
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART"; Tasks: desktopiconSAART; AfterInstall: SetElevationBit('{autodesktop}\{#MyAppName}.lnk')
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART"; Tasks: desktopiconSAART;
 Name: "{autodesktop}\DBeaver"; Filename: "{commonpf}\DBeaver\dbeaver.exe"; Flags: uninsneveruninstall; Comment: "Abrir o DBeaver Community"; Tasks: desktopiconDBeaver
 ;START MENU
-Name: "{group}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART"; AfterInstall: SetElevationBit('{group}\{#MyAppName}.lnk')
-Name: "{group}\{#MyAppName} com Logs"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runmaximized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/K java {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART com janela de Logs"; AfterInstall: SetElevationBit('{group}\{#MyAppName} com Logs.lnk')
+Name: "{group}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART"; 
+Name: "{group}\{#MyAppName} com Logs"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runmaximized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/K java {code:GetXmx} -jar ""{app}\{#MyAppExeName}"""; Comment: "Iniciar SAART com janela de Logs"; 
 Name: "{group}\Licença de uso"; Filename: "{app}\Licença.rtf"; Comment: "Ler os termos de uso do sistema"
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"; Comment: "Acessar o site da desenvolvedora do sistema na WEB"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; Comment: "Desinstalar o sistema e todos os seus componentes"
 ;PASTA APP
-Name: "{app}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{#MyAppExeName}"""; Comment: "Iniciar SAART"; AfterInstall: SetElevationBit('{app}\{#MyAppName}.lnk')
+Name: "{app}\{#MyAppName}"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; IconFilename: "{app}\{#MyAppName}.ico"; IconIndex: 0; Parameters: "/C start javaw {code:GetXmx} -jar ""{#MyAppExeName}"""; Comment: "Iniciar SAART";
 Name: "{app}\restart"; Filename: "{cmd}"; WorkingDir: "{app}"; Flags: runminimized; Parameters: "/C cd ""{app}"" && restart.cmd"; Comment: "Atualizar e reiniciar o SAART"; AfterInstall: SetElevationBit('{app}\restart.lnk')
 
 [INI]

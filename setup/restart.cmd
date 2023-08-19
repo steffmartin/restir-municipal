@@ -1,5 +1,5 @@
 @echo off
-timeout /t 5 /nobreak > NUL
+timeout /t 10 /nobreak > NUL
 
 set "tempDir=%TEMP%"
 set "sourceFile=%tempDir%\SAART.jar"
