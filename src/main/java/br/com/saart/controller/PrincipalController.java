@@ -3,10 +3,12 @@ package br.com.saart.controller;
 import br.com.saart.view.principal.NavTreeCell;
 import br.com.saart.view.principal.Navitem;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
@@ -16,16 +18,23 @@ import java.util.ResourceBundle;
 @Controller
 public class PrincipalController implements Initializable {
 
-    public TreeView<Navitem> navbar;
-    public Label footer;
+    @Autowired
+    private ConfiguracoesController configuracoes;
 
     @Value("${spring.application.ui.version}")
     private String versao;
 
+    public TreeView<Navitem> navbar;
+    public Label footer;
+    public Button configButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         montaMenu();
+
         footer.setText(footer.getText().replace("0.0.0", versao));
+
+        configButton.setOnAction(e -> configuracoes.load());
     }
 
     //Monta Menu
@@ -57,5 +66,4 @@ public class PrincipalController implements Initializable {
         grupo.getChildren().add(item);
     }
 
-    //Botão de Configuração
 }

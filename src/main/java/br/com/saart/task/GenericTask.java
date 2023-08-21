@@ -19,6 +19,8 @@ public abstract class GenericTask extends Task<Map<String, Throwable>> {
 
     public void startInNewThread(AutowireCapableBeanFactory aw, ProgressController pc) {
         this.pc = pc;
+        this.pc.load();
+
         this.setOnScheduled(e -> this.pc.onScheduled(this.progressProperty(), this.messageProperty()));
         this.setOnSucceeded(e -> this.pc.onSucceeded(this.getValue()));
         this.setOnFailed(e -> this.pc.onFailed(this.getException()));

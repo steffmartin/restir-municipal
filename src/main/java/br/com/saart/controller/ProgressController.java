@@ -3,6 +3,7 @@ package br.com.saart.controller;
 import br.com.saart.JavafxApplication;
 import br.com.saart.util.Components;
 import br.com.saart.util.Util;
+import br.com.saart.view.StageFactory;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.event.Event;
@@ -10,13 +11,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
@@ -34,6 +36,13 @@ public class ProgressController implements Initializable {
     @Value("${spring.application.install-dir}")
     private String installDir;
 
+    @Autowired
+    private StageFactory stageFactory;
+
+    @Value("/view/progress.fxml")
+    private ClassPathResource progressScene;
+    Stage stage;
+
     public ProgressBar progressBar;
     public Label progressPercent;
     public Label progressMessage;
@@ -47,22 +56,30 @@ public class ProgressController implements Initializable {
         {
             int intProgress = (int) (newProgress.doubleValue() * 100);
             progressPercent.setText(String.format("%d %%", intProgress));
-            if (intProgress > 50) {
-                progressPercent.setTextFill(Color.WHITE);
-            } else {
-                progressPercent.setTextFill(Color.BLACK);
-            }
+//            if (intProgress > 50) {
+//                progressPercent.setTextFill(Color.WHITE);
+//            } else {
+//                progressPercent.setTextFill(Color.BLACK);
+//            }
         });
+    }
+
+    public void load() {
+        if (stage == null) {
+            stage = stageFactory.createStage(progressScene, "Progresso");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+        }
     }
 
     public void onScheduled(ReadOnlyDoubleProperty progress, ReadOnlyStringProperty message) {
         progressBar.progressProperty().bind(progress);
         progressMessage.textProperty().bind(message);
-        progressPercent.setText("0 %");
+        progressPercent.setText("");
 
         disableClosing();
         errorButton.setVisible(false);
-        ((Stage) closeButton.getScene().getWindow()).show();
+        stage.show();
     }
 
     public void onSucceeded(Map<String, Throwable> errors) {
@@ -76,10 +93,6 @@ public class ProgressController implements Initializable {
         close();
     }
 
-    public void close() {
-        closeButton.getScene().getWindow().hide();
-    }
-
     @SuppressWarnings("unchecked")
     public void showErrors() {
         Map<String, Throwable> errors = (Map<String, Throwable>) errorButton.getUserData();
@@ -89,20 +102,23 @@ public class ProgressController implements Initializable {
 
     private void disableClosing() {
         closeButton.setDisable(true);
-        closeButton.getScene().getWindow().setOnCloseRequest(Event::consume);
+        stage.setOnCloseRequest(Event::consume);
     }
 
     private void enableClosing() {
         closeButton.setDisable(false);
-        closeButton.getScene().getWindow().setOnCloseRequest(null);
+        stage.setOnCloseRequest(e -> close());
+    }
+
+    public void close() {
+        stage.close();
 
         if (needRestart) {
-            closeButton.setOnAction(this::restart);
-            closeButton.getScene().getWindow().setOnCloseRequest(this::restart);
+            restart();
         }
     }
 
-    private void restart(Event e) {
+    private void restart() {
         try {
             //Executa o CMD para abrir o atalho 'restart' da pasta de instalação do APP, este atalho executa um comando para finalizar a atualização
             //Pois o comando final não pode ser executado por aqui porque o APP precisa estar fechado para que o JAR da versão antiga seja trocado pelo novo
@@ -110,7 +126,6 @@ public class ProgressController implements Initializable {
         } catch (Exception ex) {
             log.error("Erro ao iniciar o processo", ex);
         }
-        e.consume();
 
         //Fecha o APP para que o comando consiga apagar este JAR
         application.stop();

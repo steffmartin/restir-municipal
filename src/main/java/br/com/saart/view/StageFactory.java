@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,10 @@ public class StageFactory {
         stage.getIcons().add(new Image(Components.icon.getInputStream()));
         stage.setTitle(title);
         stage.setScene(scene);
+    }
+
+    public AutowireCapableBeanFactory getAw() {
+        return context.getAutowireCapableBeanFactory();
     }
 
 

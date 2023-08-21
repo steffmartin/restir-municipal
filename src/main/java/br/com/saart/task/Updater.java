@@ -2,7 +2,6 @@ package br.com.saart.task;
 
 import br.com.saart.feign.InfoDto;
 import br.com.saart.feign.OneDriveCli;
-import br.com.saart.util.Util;
 import com.fasterxml.jackson.core.Version;
 import feign.FeignException;
 import feign.Response;
@@ -23,10 +22,10 @@ public class Updater extends GenericTask {
     @Autowired
     private OneDriveCli oneDriveCli;
 
-    @Getter
     @Value("${spring.application.ui.version}")
     private String versao;
 
+    @Getter
     private InfoDto infoDto = new InfoDto();
 
     public boolean temAtualizacao() {
@@ -46,13 +45,6 @@ public class Updater extends GenericTask {
         Version versaoCorrente = new Version(Integer.parseInt(corrente[0]), Integer.parseInt(corrente[1]), Integer.parseInt(corrente[2]), null, null, null);
 
         return versaoNova.compareTo(versaoCorrente) > 0;
-    }
-
-    public String getInfo() {
-        return String.join("\n",
-                "Versão atual: " + versao,
-                "Nova versão: " + infoDto.getVersao(),
-                "Tamanho aproximado do download: " + Util.byteToMb(infoDto.getTamanho()) + " MB");
     }
 
     @Override

@@ -23,8 +23,8 @@
                               <Image url="@img/logo.png"/>
                            </image>
                         </ImageView>
-                        <Button id="config" alignment="CENTER" mnemonicParsing="false" prefHeight="40.0"
-                                prefWidth="40.0">
+                        <Button id="config" fx:id="configButton" alignment="CENTER" mnemonicParsing="false"
+                                prefHeight="40.0" prefWidth="40.0">
                            <graphic>
                               <FontIcon iconLiteral="mdmz-settings"/>
                            </graphic>
@@ -35,6 +35,9 @@
                               <String fx:value="button-circle"/>
                               <String fx:value="flat"/>
                            </styleClass>
+                           <tooltip>
+                              <Tooltip text="Configurações"/>
+                           </tooltip>
                         </Button>
                      </children>
                      <VBox.margin>
@@ -55,7 +58,7 @@
                   <String fx:value="alt-icon"/>
                </styleClass>
             </TreeView>
-            <Label fx:id="footer" id="footer" text="Versão: 0.0.0" VBox.vgrow="NEVER">
+            <Label id="footer" fx:id="footer" text="Versão: 0.0.0" VBox.vgrow="NEVER">
                <font>
                   <Font name="System Bold" size="10.0"/>
                </font>
