@@ -1,9 +1,9 @@
 package br.com.saart.controller;
 
-import br.com.saart.JavafxApplication;
 import br.com.saart.util.Util;
 import br.com.saart.view.StageFactory;
 import br.com.saart.view.controls.Components;
+import br.com.saart.view.principal.ProgressFinishedAction;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.event.Event;
@@ -14,6 +14,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -31,17 +32,15 @@ import java.util.stream.Collectors;
 @Controller
 public class ProgressController implements Initializable {
 
-    @Autowired
-    private JavafxApplication application;
-
-    @Value("${spring.application.install-dir}")
-    private String installDir;
+    @Setter
+    private ProgressFinishedAction finishedAction;
 
     @Autowired
     private StageFactory stageFactory;
 
     @Value("/view/progress.fxml")
     private ClassPathResource progressScene;
+
     Stage stage;
 
     public ProgressBar progressBar;
@@ -49,7 +48,6 @@ public class ProgressController implements Initializable {
     public Label progressMessage;
     public Button closeButton;
     public Button errorButton;
-    public boolean needRestart = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -114,22 +112,10 @@ public class ProgressController implements Initializable {
     public void close() {
         stage.close();
 
-        if (needRestart) {
-            restart();
+        if (finishedAction != null) {
+            finishedAction.execute();
+            finishedAction = null;
         }
-    }
-
-    private void restart() {
-        try {
-            //Executa o CMD para abrir o atalho 'restart' da pasta de instalação do APP, este atalho executa um comando para finalizar a atualização
-            //Pois o comando final não pode ser executado por aqui porque o APP precisa estar fechado para que o JAR da versão antiga seja trocado pelo novo
-            new ProcessBuilder("cmd.exe", "/c", "start", "/D", installDir, "restart.lnk").start().waitFor();
-        } catch (Exception ex) {
-            log.error("Erro ao iniciar o processo", ex);
-        }
-
-        //Fecha o APP para que o comando consiga apagar este JAR
-        application.stop();
     }
 
     private String parseErrorsToString(Map<String, Throwable> errors) {

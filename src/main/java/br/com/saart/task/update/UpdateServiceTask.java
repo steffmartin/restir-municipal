@@ -1,5 +1,6 @@
 package br.com.saart.task.update;
 
+import br.com.saart.JavafxApplication;
 import br.com.saart.feign.InfoDto;
 import br.com.saart.feign.OneDriveCli;
 import br.com.saart.task.GenericTask;
@@ -23,8 +24,14 @@ public class UpdateServiceTask extends GenericTask {
     @Autowired
     private OneDriveCli oneDriveCli;
 
+    @Autowired
+    private JavafxApplication application;
+
     @Value("${spring.application.ui.version}")
     private String versao;
+
+    @Value("${spring.application.install-dir}")
+    private String installDir;
 
     @Getter
     private InfoDto infoDto = new InfoDto();
@@ -76,7 +83,21 @@ public class UpdateServiceTask extends GenericTask {
 
             updateProgress(1, 1);
             updateMessage("Atualização concluída! O SAART irá reiniciar.");
-            pc.needRestart = true;
+
+//            pc.needRestart = true;
+            pc.setFinishedAction(() -> {
+                try {
+                    //Executa o CMD para abrir o atalho 'restart' da pasta de instalação do APP, este atalho executa um comando para finalizar a atualização
+                    //Pois o comando final não pode ser executado por aqui porque o APP precisa estar fechado para que o JAR da versão antiga seja trocado pelo novo
+                    new ProcessBuilder("cmd.exe", "/c", "start", "/D", installDir, "restart.lnk").start().waitFor();
+                } catch (Exception ex) {
+                    log.error("Erro ao iniciar o processo", ex);
+                }
+
+                //Fecha o APP para que o comando consiga apagar este JAR
+                application.stop();
+            });
+
         } catch (FeignException e) {
             updateProgress(1, 1);
             updateMessage("Erro ao fazer o download.");
@@ -90,4 +111,5 @@ public class UpdateServiceTask extends GenericTask {
 
         return errors;
     }
+
 }

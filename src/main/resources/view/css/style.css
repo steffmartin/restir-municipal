@@ -65,3 +65,9 @@
 	 -fx-font-size: 0.75em;
 	 -fx-background-color: -color-success-subtle;
 }
+#page #tabela {
+    -color-cell-bg-selected: -color-accent-emphasis;
+    -color-cell-fg-selected: -color-fg-emphasis;
+    -color-cell-bg-selected-focused: -color-accent-emphasis;
+    -color-cell-fg-selected-focused: -color-fg-emphasis;
+}

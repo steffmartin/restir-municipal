@@ -1,9 +1,10 @@
-package br.com.saart.task.importdirf;
+package br.com.saart.task.dirf;
 
 import br.com.saart.entity.*;
 import br.com.saart.repository.DirfRepository;
 import br.com.saart.task.GenericTask;
 import br.com.saart.util.Util;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -60,6 +61,7 @@ public class ImportDirfTask extends GenericTask {
         return errors;
     }
 
+    @Transactional
     private void importDirf(String fileName) {
         try (BufferedReader dirfFile = Util.getReader(inputDir + fileName)) {
 
@@ -84,7 +86,7 @@ public class ImportDirfTask extends GenericTask {
             PlanoSaudeDependente ultimoDependente = null;
             Integer linhaUltimoRPDE = null;
 
-            for (String[] campos : dirfFile.lines().map("|"::concat).map(Util::split).collect(toList())) {
+            for (String[] campos : dirfFile.lines().map("|"::concat).map(Util::split).toList()) {
 
                 if (dirf.getFimdirfLinha() != null) {
                     break;

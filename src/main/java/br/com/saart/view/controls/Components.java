@@ -19,6 +19,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -79,12 +80,16 @@ public class Components {
 
     @SneakyThrows
     public static Optional<ButtonType> alert(AlertType type, String title, String header, String body,
-                                             boolean wait) {
+                                             boolean wait, String... style) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(body);
         ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setPrefWidth(120);
+
+        if (ArrayUtils.isNotEmpty(style)) {
+            alert.getDialogPane().lookupButton(ButtonType.OK).getStyleClass().addAll(style);
+        }
 
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(icon.getInputStream()));
@@ -232,22 +237,20 @@ public class Components {
     public static void configuraColuna(Class<?> clazz, TableView<?> table,
                                        TableColumn<?, String> col, String property, String[] options) {
         col.setCellValueFactory(new PropertyValueFactory<>(property));
-        col.setCellFactory(options == null ?
-                TextFieldTableCell.forTableColumn() :
-                ComboBoxTableCell.forTableColumn(options));
-        Method setter = clazz.getMethod(
-                "set" + org.springframework.util.StringUtils.capitalize(property), String.class);
-        col.setOnEditCommit(e -> {
-            try {
-                setter.invoke(e.getRowValue(), e.getNewValue());
-                table.getFocusModel().focusRightCell();
-            } catch (Exception ex) {
-                Components.alert(AlertType.ERROR, "Erro", "Dados inválidos",
-                        "Verifique o valor inserido.", false);
-                table.refresh();
-            }
-            table.requestFocus();
-        });
+        if (table.isEditable()) {
+            col.setCellFactory(options == null ? TextFieldTableCell.forTableColumn() : ComboBoxTableCell.forTableColumn(options));
+            Method setter = clazz.getMethod("set" + org.springframework.util.StringUtils.capitalize(property), String.class);
+            col.setOnEditCommit(e -> {
+                try {
+                    setter.invoke(e.getRowValue(), e.getNewValue());
+                    table.getFocusModel().focusRightCell();
+                } catch (Exception ex) {
+                    Components.alert(AlertType.ERROR, "Erro", "Dados inválidos", "Verifique o valor inserido.", false);
+                    table.refresh();
+                }
+                table.requestFocus();
+            });
+        }
     }
 
 }
