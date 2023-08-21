@@ -1,6 +1,6 @@
 package br.com.saart;
 
-import br.com.saart.view.Components;
+import br.com.saart.util.Components;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
@@ -17,7 +17,6 @@ public class JavafxApplication extends Application {
 
     @Override
     public void init() {
-
 
         ApplicationContextInitializer<GenericApplicationContext> initializer = springContext -> {
             springContext.registerBean(Application.class, () -> JavafxApplication.this);

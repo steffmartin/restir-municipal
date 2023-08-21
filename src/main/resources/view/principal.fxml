@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.String?>
+<HBox prefHeight="600.0" prefWidth="900.0" styleClass="root" xmlns="http://javafx.com/javafx/20.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.saart.controller.PrincipalController">
+   <children>
+      <VBox id="sidebar" alignment="TOP_CENTER" maxWidth="251.0" prefWidth="251.0" spacing="10.0" HBox.hgrow="NEVER">
+         <children>
+            <VBox id="header" spacing="5.0" VBox.vgrow="NEVER">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="50.0">
+                     <children>
+                        <ImageView id="logo" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/logo.png"/>
+                           </image>
+                        </ImageView>
+                        <Button id="config" alignment="CENTER" mnemonicParsing="false" prefHeight="40.0"
+                                prefWidth="40.0">
+                           <graphic>
+                              <FontIcon iconLiteral="mdmz-settings"/>
+                           </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND"/>
+                           </cursor>
+                           <styleClass>
+                              <String fx:value="button-circle"/>
+                              <String fx:value="flat"/>
+                           </styleClass>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets/>
+                     </VBox.margin>
+                  </HBox>
+                  <Label id="appname" text="Sistema Avançado de Apuração e Restituição Tributária"
+                         textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="10.0"/>
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <TreeView id="navbar" fx:id="navbar" maxWidth="240.0" showRoot="false" VBox.vgrow="ALWAYS">
+               <styleClass>
+                  <String fx:value="edge-to-edge"/>
+                  <String fx:value="alt-icon"/>
+               </styleClass>
+            </TreeView>
+            <Label fx:id="footer" id="footer" text="Versão: 0.0.0" VBox.vgrow="NEVER">
+               <font>
+                  <Font name="System Bold" size="10.0"/>
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="10.0"/>
+         </padding>
+      </VBox>
+      <ScrollPane fx:id="page" prefHeight="-1.0" prefWidth="-1.0" styleClass="page" HBox.hgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </padding>
+      </ScrollPane>
+   </children>
+</HBox>

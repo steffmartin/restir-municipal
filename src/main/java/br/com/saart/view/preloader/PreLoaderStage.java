@@ -1,6 +1,7 @@
-package br.com.saart.view;
+package br.com.saart.view.preloader;
 
 import atlantafx.base.theme.PrimerLight;
+import br.com.saart.util.Components;
 import javafx.application.Application;
 import javafx.application.Preloader;
 import javafx.geometry.Pos;
@@ -12,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class ApplicationPreLoader extends Preloader {
+public class PreLoaderStage extends Preloader {
 
     private Stage stage;
 

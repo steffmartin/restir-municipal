@@ -1,4 +1,4 @@
-package br.com.saart.view;
+package br.com.saart.util;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.*;

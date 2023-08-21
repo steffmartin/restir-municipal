@@ -1,4 +1,4 @@
-package br.com.saart.view;
+package br.com.saart.util;
 
 import br.com.saart.task.TaskParam;
 import br.com.saart.task.exportreport.SQLOperations;
@@ -107,21 +107,21 @@ public class TaskParamComponents {
         boolean hasDefault = param.getDefaultValue() != null;
 
         switch (paramClass) {
-            case DATE_AS_TIMESTAMP: {
+            case DATE_AS_TIMESTAMP -> {
                 DatePicker datePicker = new DatePicker();
                 if (hasDefault) {
                     datePicker.setValue((LocalDate) param.getDefaultValue());
                 }
                 return datePicker;
             }
-            case BOOLEAN: {
+            case BOOLEAN -> {
                 CheckBox checkBox = new CheckBox();
                 if (hasDefault) {
                     checkBox.setSelected((Boolean) param.getDefaultValue());
                 }
                 return checkBox;
             }
-            case DOUBLE_COMPARISON: {
+            case DOUBLE_COMPARISON -> {
                 ChoiceBox<String> choiceBox = new ChoiceBox<>(
                         FXCollections.observableList(SQLOperations.NUMERIC.getLabels()));
                 choiceBox.setStyle("-fx-background-radius: 3 0 0 3");
@@ -137,11 +137,7 @@ public class TaskParamComponents {
 
                 return new HBox(choiceBox, textField);
             }
-            case INT_ARRAY:
-            case STRING_ARRAY:
-            case INT_AS_BIG_DECIMAL_ARRAY:
-            case STRING:
-            default: {
+            default -> {
                 TextField textField = new TextField();
                 if (hasDefault) {
                     textField.setText((String) param.getDefaultValue());

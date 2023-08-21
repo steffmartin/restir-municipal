@@ -1,8 +1,8 @@
 package br.com.saart.controller;
 
 import br.com.saart.JavafxApplication;
+import br.com.saart.util.Components;
 import br.com.saart.util.Util;
-import br.com.saart.view.Components;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.event.Event;
@@ -58,6 +58,7 @@ public class ProgressController implements Initializable {
     public void onScheduled(ReadOnlyDoubleProperty progress, ReadOnlyStringProperty message) {
         progressBar.progressProperty().bind(progress);
         progressMessage.textProperty().bind(message);
+        progressPercent.setText("0 %");
 
         disableClosing();
         errorButton.setVisible(false);

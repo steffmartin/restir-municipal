@@ -1,5 +1,6 @@
 package br.com.saart.view;
 
+import br.com.saart.util.Components;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -20,6 +21,8 @@ public class StageFactory {
     private String version;
     @Value("${spring.application.ui.title}")
     private String title;
+    @Value("/view/style.css")
+    private ClassPathResource css;
 
     @Autowired
     private ApplicationContext context;
@@ -36,6 +39,7 @@ public class StageFactory {
         loader.setControllerFactory(context::getBean);
 
         Scene scene = new Scene(loader.load());
+        scene.getStylesheets().add(css.getURL().toExternalForm());
 
         stage.getIcons().add(new Image(Components.icon.getInputStream()));
         stage.setTitle(title);

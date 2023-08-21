@@ -49,17 +49,6 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-
-        <dependency> <!-- Anotações Lombok -->
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <dependency> <!-- banco de dados -->
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -69,6 +58,17 @@
         <dependency> <!-- banco de dados -->
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency> <!-- Acesso a APIs na web -->
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependency> <!-- Anotações Lombok -->
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency> <!-- interface visual -->
