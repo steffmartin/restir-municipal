@@ -1,7 +1,7 @@
-package br.com.saart.util;
+package br.com.saart.view.controls;
 
-import br.com.saart.task.TaskParam;
 import br.com.saart.task.exportreport.SQLOperations;
+import br.com.saart.task.exportreport.TaskParam;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert.AlertType;

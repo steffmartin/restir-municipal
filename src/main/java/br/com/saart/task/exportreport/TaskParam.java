@@ -1,4 +1,4 @@
-package br.com.saart.task;
+package br.com.saart.task.exportreport;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

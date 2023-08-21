@@ -1,6 +1,6 @@
 package br.com.saart;
 
-import br.com.saart.util.Components;
+import br.com.saart.view.controls.Components;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;

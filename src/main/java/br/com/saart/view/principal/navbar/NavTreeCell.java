@@ -1,4 +1,4 @@
-package br.com.saart.view.principal;
+package br.com.saart.view.principal.navbar;
 
 import atlantafx.base.controls.Spacer;
 import javafx.css.PseudoClass;
@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -22,7 +21,7 @@ public class NavTreeCell extends TreeCell<Navitem> {
     private final Node arrowIcon;
     private final Label tagLabel;
 
-    public NavTreeCell(TreeView<Navitem> treeView) {
+    public NavTreeCell() {
         super();
 
         titleLabel = new Label();
@@ -43,10 +42,13 @@ public class NavTreeCell extends TreeCell<Navitem> {
         root.setMaxWidth(240);
 
         root.setOnMouseClicked(e -> {
-            TreeItem<Navitem> item = getTreeItem();
-
-            if (item.getValue().grupo() && e.getButton() == MouseButton.PRIMARY) {
-                item.setExpanded(!item.isExpanded());
+            if (e.getButton() == MouseButton.PRIMARY) {
+                TreeItem<Navitem> item = getTreeItem();
+                if (item.getValue().grupo()) {
+                    item.setExpanded(!item.isExpanded());
+                } else {
+                    item.getValue().action().execute();
+                }
             }
         });
 

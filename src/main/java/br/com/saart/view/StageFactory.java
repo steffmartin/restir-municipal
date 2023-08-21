@@ -1,8 +1,10 @@
 package br.com.saart.view;
 
-import br.com.saart.util.Components;
+import br.com.saart.view.controls.Components;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -22,11 +24,21 @@ public class StageFactory {
     private String version;
     @Value("${spring.application.ui.title}")
     private String title;
-    @Value("/view/style.css")
+    @Value("/view/css/style.css")
     private ClassPathResource css;
 
     @Autowired
     private ApplicationContext context;
+
+    @SneakyThrows
+    public void updateScrollPane(ClassPathResource view, ScrollPane scrollPane) {
+        FXMLLoader loader = new FXMLLoader(view.getURL());
+        loader.setControllerFactory(context::getBean);
+
+        Parent content = loader.load();
+        content.getStylesheets().add(css.getURL().toExternalForm());
+        scrollPane.setContent(content);
+    }
 
     public Stage createStage(ClassPathResource view, String title) {
         Stage stage = new Stage();

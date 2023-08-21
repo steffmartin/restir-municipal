@@ -1,7 +1,7 @@
 package br.com.saart.view.preloader;
 
 import atlantafx.base.theme.PrimerLight;
-import br.com.saart.util.Components;
+import br.com.saart.view.controls.Components;
 import javafx.application.Application;
 import javafx.application.Preloader;
 import javafx.geometry.Pos;

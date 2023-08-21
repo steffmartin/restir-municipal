@@ -1,6 +1,5 @@
 package br.com.saart.task.exportreport;
 
-import br.com.saart.task.TaskParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,9 +1,9 @@
 package br.com.saart.controller;
 
 import br.com.saart.JavafxApplication;
-import br.com.saart.util.Components;
 import br.com.saart.util.Util;
 import br.com.saart.view.StageFactory;
+import br.com.saart.view.controls.Components;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.event.Event;
@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -56,11 +57,11 @@ public class ProgressController implements Initializable {
         {
             int intProgress = (int) (newProgress.doubleValue() * 100);
             progressPercent.setText(String.format("%d %%", intProgress));
-//            if (intProgress > 50) {
-//                progressPercent.setTextFill(Color.WHITE);
-//            } else {
-//                progressPercent.setTextFill(Color.BLACK);
-//            }
+            if (intProgress > 50) {
+                progressPercent.setTextFill(Color.WHITE);
+            } else {
+                progressPercent.setTextFill(Color.BLACK);
+            }
         });
     }
 

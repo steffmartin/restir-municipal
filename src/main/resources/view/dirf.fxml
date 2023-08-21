@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.String?>
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="629.0" spacing="5.0"
+      xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="br.com.saart.controller.DirfPageController">
+   <children>
+      <Label styleClass="title-3" text="DIRF" VBox.vgrow="NEVER">
+         <graphic>
+            <FontIcon iconLiteral="mdsmz-receipt_long"/>
+         </graphic>
+      </Label>
+      <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
+         <children>
+            <Button fx:id="filtros" mnemonicParsing="false" prefHeight="36.0">
+               <graphic>
+                  <FontIcon iconLiteral="mdral-filter_alt"/>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Filtros"/>
+               </tooltip>
+            </Button>
+            <SplitMenuButton fx:id="importar" mnemonicParsing="false" styleClass="accent" text="Importar"
+                             onAction="#importar">
+               <items>
+                  <MenuItem fx:id="excluir" mnemonicParsing="false" text="Excluir"/>
+               </items>
+            </SplitMenuButton>
+         </children>
+      </HBox>
+      <TableView VBox.vgrow="ALWAYS">
+         <styleClass>
+            <String fx:value="striped"/>
+            <String fx:value="dense"/>
+         </styleClass>
+      </TableView>
+      <Pagination fx:id="paginacao" pageCount="100" style="-fx-page-information-visible: false;" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets bottom="-10.0" top="-15.0"/>
+         </VBox.margin>
+      </Pagination>
+   </children>
+</VBox>

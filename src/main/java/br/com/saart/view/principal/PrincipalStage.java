@@ -36,6 +36,9 @@ public class PrincipalStage implements ApplicationListener<StageReadyEvent> {
     @Override
     public void onApplicationEvent(StageReadyEvent stageReadyEvent) {
         Stage primaryStage = stageReadyEvent.getStage();
+        primaryStage.setMinHeight(600 + 50);
+        primaryStage.setMinWidth(900 + 50);
+
         stageFactory.updateStage(primaryStage, primaryScene, title);
         application.notifyPreloader(new ProgressNotification(100D));
 

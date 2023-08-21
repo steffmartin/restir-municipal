@@ -1,6 +1,6 @@
 package br.com.saart.controller;
 
-import br.com.saart.task.Updater;
+import br.com.saart.task.update.UpdateServiceTask;
 import br.com.saart.util.UserPreferences;
 import br.com.saart.view.StageFactory;
 import br.com.saart.view.configuracoes.Temas;
@@ -69,7 +69,7 @@ public class ConfiguracoesController implements Initializable {
     }
 
     private void verificaAtualizacao() {
-        final Updater updater = new Updater();
+        final UpdateServiceTask updater = new UpdateServiceTask();
         stageFactory.getAw().autowireBean(updater);
 
         if (updater.temAtualizacao()) {

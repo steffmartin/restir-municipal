@@ -1,7 +1,8 @@
-package br.com.saart.task;
+package br.com.saart.task.update;
 
 import br.com.saart.feign.InfoDto;
 import br.com.saart.feign.OneDriveCli;
+import br.com.saart.task.GenericTask;
 import com.fasterxml.jackson.core.Version;
 import feign.FeignException;
 import feign.Response;
@@ -17,7 +18,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 @Slf4j
-public class Updater extends GenericTask {
+public class UpdateServiceTask extends GenericTask {
 
     @Autowired
     private OneDriveCli oneDriveCli;
