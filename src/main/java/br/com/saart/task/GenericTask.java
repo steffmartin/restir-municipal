@@ -12,18 +12,17 @@ import java.util.Map;
 public abstract class GenericTask extends Task<Map<String, Throwable>> {
 
     protected AutowireCapableBeanFactory aw;
-    protected ProgressController pc;
 
     //Output
     protected final Map<String, Throwable> errors = new HashMap<>();
 
-    public void startInNewThread(AutowireCapableBeanFactory aw, ProgressController pc) {
-        this.pc = pc;
-        this.pc.load();
-
-        this.setOnScheduled(e -> this.pc.onScheduled(this.progressProperty(), this.messageProperty()));
-        this.setOnSucceeded(e -> this.pc.onSucceeded(this.getValue()));
-        this.setOnFailed(e -> this.pc.onFailed(this.getException()));
+    public void startInNewThread(AutowireCapableBeanFactory aw, ProgressController progressController) {
+        this.setOnScheduled(e -> {
+            progressController.montar();
+            progressController.abrir(this.progressProperty(), this.messageProperty());
+        });
+        this.setOnSucceeded(e -> progressController.finalizar(this.getValue()));
+        this.setOnFailed(e -> progressController.falhar(this.getException()));
 
         aw.autowireBean(this);
         this.aw = aw;

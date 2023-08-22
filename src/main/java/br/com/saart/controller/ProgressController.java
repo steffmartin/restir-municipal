@@ -3,7 +3,7 @@ package br.com.saart.controller;
 import br.com.saart.util.Util;
 import br.com.saart.view.StageFactory;
 import br.com.saart.view.controls.Components;
-import br.com.saart.view.principal.ProgressFinishedAction;
+import br.com.saart.view.progress.ProgressFinishedAction;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.event.Event;
@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
 @Controller
 public class ProgressController implements Initializable {
 
-    @Setter
-    private ProgressFinishedAction finishedAction;
-
     @Autowired
     private StageFactory stageFactory;
 
     @Value("/view/progress.fxml")
     private ClassPathResource progressScene;
+
+    @Setter
+    private ProgressFinishedAction finishedAction;
 
     Stage stage;
 
@@ -63,7 +63,7 @@ public class ProgressController implements Initializable {
         });
     }
 
-    public void load() {
+    public void montar() {
         if (stage == null) {
             stage = stageFactory.createStage(progressScene, "Progresso");
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -71,7 +71,7 @@ public class ProgressController implements Initializable {
         }
     }
 
-    public void onScheduled(ReadOnlyDoubleProperty progress, ReadOnlyStringProperty message) {
+    public void abrir(ReadOnlyDoubleProperty progress, ReadOnlyStringProperty message) {
         progressBar.progressProperty().bind(progress);
         progressMessage.textProperty().bind(message);
         progressPercent.setText("");
@@ -81,22 +81,15 @@ public class ProgressController implements Initializable {
         stage.show();
     }
 
-    public void onSucceeded(Map<String, Throwable> errors) {
+    public void finalizar(Map<String, Throwable> errors) {
         enableClosing();
         errorButton.setUserData(errors);
         errorButton.setVisible(!errors.isEmpty());
     }
 
-    public void onFailed(Throwable e) {
+    public void falhar(Throwable e) {
         Components.exception(e);
         close();
-    }
-
-    @SuppressWarnings("unchecked")
-    public void showErrors() {
-        Map<String, Throwable> errors = (Map<String, Throwable>) errorButton.getUserData();
-        Components.exception("Os arquivos abaixo causaram erro e não foram considerados.",
-                StringUtils.joinWith(Util.EOL, errors.keySet().toArray()), parseErrorsToString(errors));
     }
 
     private void disableClosing() {
@@ -116,6 +109,13 @@ public class ProgressController implements Initializable {
             finishedAction.execute();
             finishedAction = null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void showErrors() {
+        Map<String, Throwable> errors = (Map<String, Throwable>) errorButton.getUserData();
+        Components.exception("Os arquivos abaixo causaram erro e não foram considerados.",
+                StringUtils.joinWith(Util.EOL, errors.keySet().toArray()), parseErrorsToString(errors));
     }
 
     private String parseErrorsToString(Map<String, Throwable> errors) {

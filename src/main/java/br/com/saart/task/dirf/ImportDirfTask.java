@@ -1,7 +1,7 @@
 package br.com.saart.task.dirf;
 
 import br.com.saart.entity.*;
-import br.com.saart.repository.DirfRepository;
+import br.com.saart.service.DirfService;
 import br.com.saart.task.GenericTask;
 import br.com.saart.util.Util;
 import jakarta.transaction.Transactional;
@@ -25,14 +25,13 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class ImportDirfTask extends GenericTask {
 
-    private static final List<String> leiautesSuportados = List.of("ARNZRXP");
+    private static final List<String> LEIAUTES_SUPORTADOS = List.of("ARNZRXP");
+
+    @Autowired
+    private DirfService dirfService;
 
     //Inputs
     private final String inputDir;
-
-    //Repository
-    @Autowired
-    private DirfRepository dirfRepository;
 
     @Override
     protected Map<String, Throwable> call() {
@@ -197,7 +196,7 @@ public class ImportDirfTask extends GenericTask {
                 }
             }
 
-            dirfRepository.save(dirf);
+            dirfService.save(dirf);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,7 +211,7 @@ public class ImportDirfTask extends GenericTask {
             throw new UnsupportedEncodingException("O arquivo não está no leaiute da DIRF");
         }
 
-        if (!leiautesSuportados.contains(linhaInicial[5])) {
+        if (!LEIAUTES_SUPORTADOS.contains(linhaInicial[5])) {
             throw new UnsupportedEncodingException("O leiaute " + linhaInicial[5] + " não é suportado");
         }
     }

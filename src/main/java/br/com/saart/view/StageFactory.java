@@ -22,8 +22,10 @@ public class StageFactory {
 
     @Value("${spring.application.ui.version}")
     private String version;
+
     @Value("${spring.application.ui.title}")
     private String title;
+
     @Value("/view/css/style.css")
     private ClassPathResource css;
 
@@ -37,6 +39,7 @@ public class StageFactory {
 
         Parent content = loader.load();
         content.getStylesheets().add(css.getURL().toExternalForm());
+
         scrollPane.setContent(content);
     }
 

@@ -1,10 +1,9 @@
 package br.com.saart.task.dirf;
 
-import br.com.saart.repository.DirfRepository;
+import br.com.saart.service.DirfService;
 import br.com.saart.task.GenericTask;
 import br.com.saart.util.Util;
 import br.com.saart.view.dirf.DirfTable;
-import jakarta.transaction.Transactional;
 import javafx.collections.ObservableList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
@@ -15,7 +14,7 @@ import java.util.Map;
 public class DeleteDirfTask extends GenericTask {
 
     @Autowired
-    private DirfRepository dirfRepository;
+    private DirfService dirfService;
 
     //Inputs
     private final List<DirfTable> selectedItems;
@@ -48,10 +47,9 @@ public class DeleteDirfTask extends GenericTask {
         return errors;
     }
 
-    @Transactional
     private void excluiDirf(DirfTable dirf) {
         try {
-            dirfRepository.deleteById(dirf.getId());
+            dirfService.delete(Long.parseLong(dirf.getDirfId()));
         } catch (Exception e) {
             e.printStackTrace();
             errors.put(dirf.getNomeArquivo(), e);

@@ -27,13 +27,16 @@
                 <SplitMenuButton fx:id="importar" mnemonicParsing="false" onAction="#importar" styleClass="accent"
                                  text="Importar">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Excluir" onAction="#excluir"/>
+                        <MenuItem fx:id="excluir" disable="true" mnemonicParsing="false" text="Excluir"
+                                  onAction="#excluir"/>
                     </items>
                 </SplitMenuButton>
             </children>
         </HBox>
         <TableView id="tabela" fx:id="tabela" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
             <columns>
+                <TableColumn fx:id="dirfId" maxWidth="1000.0" minWidth="50.0" prefWidth="50.0" sortable="false"
+                             text="#ID"/>
                 <TableColumn fx:id="cpfCnpj" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false"
                              text="CPF/CNPJ"/>
                 <TableColumn fx:id="nome" maxWidth="1000.0" minWidth="100.0" prefWidth="400.0" sortable="false"

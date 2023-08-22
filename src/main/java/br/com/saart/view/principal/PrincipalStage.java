@@ -22,13 +22,16 @@ public class PrincipalStage implements ApplicationListener<StageReadyEvent> {
 
     @Autowired
     private JavafxApplication application;
+
     @Autowired
     private StageFactory stageFactory;
+
     @Autowired
     private UserPreferences preferences;
 
     @Value("/view/principal.fxml")
     private ClassPathResource primaryScene;
+
     @Value("${spring.application.ui.title}")
     private String title;
 
@@ -36,6 +39,7 @@ public class PrincipalStage implements ApplicationListener<StageReadyEvent> {
     @Override
     public void onApplicationEvent(StageReadyEvent stageReadyEvent) {
         Stage primaryStage = stageReadyEvent.getStage();
+
         primaryStage.setMinHeight(600 + 50);
         primaryStage.setMinWidth(900 + 50);
 

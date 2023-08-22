@@ -5,6 +5,7 @@ import br.com.saart.view.principal.navbar.NavTreeCell;
 import br.com.saart.view.principal.navbar.Navitem;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import lombok.extern.slf4j.Slf4j;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+@Slf4j
 @Controller
 public class PrincipalController implements Initializable {
 
@@ -33,11 +35,12 @@ public class PrincipalController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        configButton.setOnAction(e -> {
+            configuracoes.montar();
+            configuracoes.abrir();
+        });
         montaMenu();
-
         footer.setText(footer.getText().replace("0.0.0", versao));
-
-        configButton.setOnAction(e -> configuracoes.load());
     }
 
     //Monta Menu
@@ -60,6 +63,7 @@ public class PrincipalController implements Initializable {
 
     private TreeItem<Navitem> criaGrupoMenu(String label, String iconCode) {
         TreeItem<Navitem> item = new TreeItem<>(new Navitem(label, new FontIcon(iconCode), true, false, null));
+        item.setExpanded(true);
         navbar.getRoot().getChildren().add(item);
         return item;
     }
