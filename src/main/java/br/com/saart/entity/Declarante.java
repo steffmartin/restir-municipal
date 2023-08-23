@@ -18,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Declarante {
 
-    public Declarante(Integer linha, String[] campo) {
+    public Declarante(Integer linha, String[] campo, Integer anoLayout) {
         this.decLinha = linha;
         this.cpfCnpj = campo[2];
         this.nome = campo[3];
@@ -26,15 +26,23 @@ public class Declarante {
             this.rendimentoExterior = Util.toBoolean(campo[4]);
             this.servicosNotoriais = Util.toBoolean(campo[5]);
             this.planoSaude = Util.toBoolean(campo[6]);
-            this.socioOstensivo = Util.toBoolean(campo[7]);
-            this.sitEspecial = Util.toBoolean(campo[8]);
-            this.dataSitEspecial = Util.parseIsoDate(campo[9]);
-            this.decpfTipoEvento = Util.toShort(campo[10]);
-            this.falecido = Util.toBoolean(campo[11]);
-            this.dataObito = Util.parseIsoDate(campo[12]);
-            this.sitEspolio = Util.toShort(campo[13]);
-            this.cpfInventariante = campo[14];
-            this.nomeInventariante = campo[15];
+            if (anoLayout >= 2017) {
+                this.socioOstensivo = Util.toBoolean(campo[7]);
+                this.sitEspecial = Util.toBoolean(campo[8]);
+                this.dataSitEspecial = Util.parseIsoDate(campo[9]);
+                this.decpfTipoEvento = Util.toShort(campo[10]);
+                if (anoLayout >= 2019) {
+                    this.falecido = Util.toBoolean(campo[11]);
+                    this.dataObito = Util.parseIsoDate(campo[12]);
+                    this.sitEspolio = Util.toShort(campo[13]);
+                    this.cpfInventariante = campo[14];
+                    this.nomeInventariante = campo[15];
+                }
+            } else {
+                this.sitEspecial = Util.toBoolean(campo[7]);
+                this.dataSitEspecial = Util.parseIsoDate(campo[8]);
+                this.decpfTipoEvento = Util.toShort(campo[9]);
+            }
         } else {
             this.decpjNatureza = Util.toShort(campo[4]);
             this.cpfResponsavelPj = campo[5];
@@ -43,10 +51,25 @@ public class Declarante {
             this.fundoClubeInvestimento = Util.toBoolean(campo[8]);
             this.rendimentoExterior = Util.toBoolean(campo[9]);
             this.planoSaude = Util.toBoolean(campo[10]);
-            this.pgtoIsentasImunes = Util.toBoolean(campo[11]);
-            this.fundPublicaDirPrivado = Util.toBoolean(campo[12]);
-            this.sitEspecial = Util.toBoolean(campo[13]);
-            this.dataSitEspecial = Util.parseIsoDate(campo[14]);
+            if (anoLayout >= 2018) {
+                this.pgtoIsentasImunes = Util.toBoolean(campo[11]);
+                this.fundPublicaDirPrivado = Util.toBoolean(campo[12]);
+                this.sitEspecial = Util.toBoolean(campo[13]);
+                this.dataSitEspecial = Util.parseIsoDate(campo[14]);
+            } else if (anoLayout == 2017) {
+                this.pgtoOlimpiadas = Util.toBoolean(campo[11]);
+                this.sitEspecial = Util.toBoolean(campo[12]);
+                this.dataSitEspecial = Util.parseIsoDate(campo[13]);
+            } else if (anoLayout == 2016) {
+                this.pgtoCopa = Util.toBoolean(campo[11]);
+                this.pgtoOlimpiadas = Util.toBoolean(campo[12]);
+                this.sitEspecial = Util.toBoolean(campo[13]);
+                this.dataSitEspecial = Util.parseIsoDate(campo[14]);
+            } else {
+                this.pgtoCopa = Util.toBoolean(campo[11]);
+                this.sitEspecial = Util.toBoolean(campo[12]);
+                this.dataSitEspecial = Util.parseIsoDate(campo[13]);
+            }
         }
     }
 
@@ -114,6 +137,10 @@ public class Declarante {
     Boolean fundoClubeInvestimento;
 
     Boolean pgtoIsentasImunes;
+
+    Boolean pgtoCopa;
+
+    Boolean pgtoOlimpiadas;
 
     Boolean fundPublicaDirPrivado;
 

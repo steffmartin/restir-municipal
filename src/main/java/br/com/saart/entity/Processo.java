@@ -18,14 +18,16 @@ import java.util.Set;
 @NoArgsConstructor
 public class Processo {
 
-    public Processo(Integer linha, String[] campo) {
+    public Processo(Integer linha, String[] campo, Integer anoLayout) {
         this.procLinha = linha;
         this.tipoJustica = Util.toShort(campo[2]);
         this.numProc = campo[3];
         this.tipoAdv = Util.toShort(campo[4]);
         this.cpfCnpjAdv = campo[5];
         this.nomeAdv = campo[6];
-        this.vlrAdv = Util.toBigDecimal(campo[7]);
+        if (anoLayout >= 2017) {
+            this.vlrAdv = Util.toBigDecimal(campo[7]);
+        }
     }
 
     @Id

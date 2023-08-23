@@ -19,11 +19,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class Beneficiario {
 
-    public Beneficiario(Integer linha, String[] campo) {
-        this(linha, campo, null);
+    public Beneficiario(Integer linha, String[] campo, Integer anoLayout) {
+        this(linha, campo, anoLayout, null);
     }
 
-    public Beneficiario(Integer linha, String[] campo, Integer rpdeLinha) {
+    public Beneficiario(Integer linha, String[] campo, Integer anoLayout, Integer rpdeLinha) {
         this.benefLinha = linha;
         this.codigoRegistro = campo[1];
         if ("BRPDE".equalsIgnoreCase(campo[1])) {
@@ -48,28 +48,22 @@ public class Beneficiario {
             this.cpfCnpj = campo[2];
             this.nome = campo[3];
             switch (campo[1]) {
-                case "BPFDEC": {
+                case "BPFDEC" -> {
                     this.dataLaudo = Util.parseIsoDate(campo[4]);
-                    this.alimentado = Util.toBoolean(campo[5]);
-                    this.prevCompl = Util.toBoolean(campo[6]);
-                    break;
+                    if (anoLayout >= 2018) {
+                        this.alimentado = Util.toBoolean(campo[5]);
+                        this.prevCompl = Util.toBoolean(campo[6]);
+                    }
                 }
-                case "BPFPROC":
-                case "BPFFCI": {
-                    this.dataLaudo = Util.parseIsoDate(campo[4]);
-                    break;
-                }
-                case "BPFRRA": {
+                case "BPFPROC", "BPFFCI" -> this.dataLaudo = Util.parseIsoDate(campo[4]);
+                case "BPFRRA" -> {
                     this.rraNatureza = campo[4];
                     this.dataLaudo = Util.parseIsoDate(campo[5]);
-                    this.alimentado = Util.toBoolean(campo[6]);
-                    break;
+                    if (anoLayout >= 2018) {
+                        this.alimentado = Util.toBoolean(campo[6]);
+                    }
                 }
-                case "BPJSCP":
-                case "BPFSCP": {
-                    this.participacao = Util.toFloat(campo[4]);
-                    break;
-                }
+                case "BPJSCP", "BPFSCP" -> this.participacao = Util.toFloat(campo[4]);
             }
         }
     }

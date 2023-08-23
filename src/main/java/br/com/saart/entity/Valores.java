@@ -26,21 +26,16 @@ public class Valores {
         this.idrecLinha = idrecLinha;
         this.idrecCodigo = idrecCodigo;
         switch (campo[1]) {
-            case "RIL96":
-            case "RIPTS":
-            case "RIJMRE":
-            case "RIRSR": {
+            case "RIL96", "RIPTS", "RIJMRE", "RIRSR" -> {
                 this.tipoValor = TipoValor.ANUAL;
                 this.vlrAno = Util.toBigDecimal(campo[2]);
-                break;
             }
-            case "RIO": {
+            case "RIO" -> {
                 this.tipoValor = TipoValor.ANUAL;
                 this.vlrAno = Util.toBigDecimal(campo[2]);
                 this.descricao = campo[3];
-                break;
             }
-            case "QTMESES": {
+            case "QTMESES" -> {
                 this.tipoValor = TipoValor.QUANT;
                 this.jan = Util.toBigDecimal(campo[2]);
                 this.fev = Util.toBigDecimal(campo[3]);
@@ -54,9 +49,8 @@ public class Valores {
                 this.out = Util.toBigDecimal(campo[11]);
                 this.nov = Util.toBigDecimal(campo[12]);
                 this.dez = Util.toBigDecimal(campo[13]);
-                break;
             }
-            default: {
+            default -> {
                 this.tipoValor = TipoValor.MENSAL;
                 this.jan = Util.toBigDecimal(campo[2]);
                 this.fev = Util.toBigDecimal(campo[3]);
@@ -71,7 +65,6 @@ public class Valores {
                 this.nov = Util.toBigDecimal(campo[12]);
                 this.dez = Util.toBigDecimal(campo[13]);
                 this.decTer = Util.toBigDecimal(campo[14]);
-                break;
             }
         }
     }

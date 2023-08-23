@@ -25,7 +25,16 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class ImportDirfTask extends GenericTask {
 
-    private static final List<String> LEIAUTES_SUPORTADOS = List.of("ARNZRXP");
+    private static final Map<String, Integer> LEIAUTES_SUPORTADOS = Map.of(
+            "M1LB5V2", 2015,
+            "L35QJS2", 2016,
+            "P49VS72", 2017,
+            "Q84FV63", 2018,
+            "T17BS45", 2019,
+            "AT65HD8", 2020,
+            "VR4QLM8", 2021,
+            "XJFSFHB", 2022,
+            "ARNZRXP", 2023);
 
     @Autowired
     private DirfService dirfService;
@@ -70,6 +79,7 @@ public class ImportDirfTask extends GenericTask {
             int numLinha = 0;
 
             //Últimos
+            Integer anoLayout = null;
             Integer linhaUltimoIDREC = null;
             String codigoUltimoIDREC = null;
             Beneficiario ultimoBeneficiario = null;
@@ -94,16 +104,19 @@ public class ImportDirfTask extends GenericTask {
                 numLinha++;
 
                 switch (campos[1].toUpperCase()) {
-                    case "DIRF" -> dirf.initDirf(numLinha, campos);
+                    case "DIRF" -> {
+                        dirf.initDirf(numLinha, campos);
+                        anoLayout = LEIAUTES_SUPORTADOS.get(dirf.getCodigoLeiaute());
+                    }
                     case "FIMDIRF" -> dirf.setFimdirfLinha(numLinha);
                     case "RESPO" -> dirf.setResponsavel(new Responsavel(numLinha, campos));
-                    case "DECPF", "DECPJ" -> dirf.setDeclarante(new Declarante(numLinha, campos));
+                    case "DECPF", "DECPJ" -> dirf.setDeclarante(new Declarante(numLinha, campos, anoLayout));
                     case "IDREC" -> {
                         linhaUltimoIDREC = numLinha;
                         codigoUltimoIDREC = campos[2];
                     }
                     case "BPFDEC", "BPJDEC", "VPEIM" -> {
-                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos, anoLayout);
                         dirf.getDeclarante().getBeneficiarios().add(ultimoBeneficiario);
                         ultimoInfAlimentado = null;
                         ultimoInfPrevCompl = null;
@@ -113,25 +126,25 @@ public class ImportDirfTask extends GenericTask {
                         dirf.getFcis().add(ultimoFCI);
                     }
                     case "BPFFCI", "BPJFCI" -> {
-                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos, anoLayout);
                         ultimoFCI.getBeneficiarios().add(ultimoBeneficiario);
                     }
                     case "PROC" -> {
-                        ultimoPROC = new Processo(numLinha, campos);
+                        ultimoPROC = new Processo(numLinha, campos, anoLayout);
                         dirf.getProcs().add(ultimoPROC);
                     }
                     case "BPFPROC", "BPJPROC" -> {
-                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos, anoLayout);
                         ultimoPROC.getBeneficiarios().add(ultimoBeneficiario);
                         ultimoInfAlimentado = null;
                         ultimoInfPrevCompl = null;
                     }
                     case "RRA" -> {
-                        ultimoRRA = new RendAcumulados(numLinha, campos);
+                        ultimoRRA = new RendAcumulados(numLinha, campos, anoLayout);
                         dirf.getRras().add(ultimoRRA);
                     }
                     case "BPFRRA" -> {
-                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos, anoLayout);
                         ultimoRRA.getBeneficiarios().add(ultimoBeneficiario);
                     }
                     case "INFPC" -> {
@@ -163,7 +176,7 @@ public class ImportDirfTask extends GenericTask {
                         codigoUltimoIDREC = null;
                     }
                     case "BPFSCP", "BPJSCP" -> {
-                        ultimoBeneficiario = new Beneficiario(numLinha, campos);
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos, anoLayout);
                         ultimoSCP.getBeneficiarios().add(ultimoBeneficiario);
                     }
                     case "PSE" -> linhaUltimoPSE = numLinha;
@@ -186,11 +199,13 @@ public class ImportDirfTask extends GenericTask {
                     case "RDTPSE" -> ultimoDependente.getReembolsos().add(new PlanoSaudeInfReembolso(numLinha, campos));
                     case "RPDE" -> linhaUltimoRPDE = numLinha;
                     case "BRPDE" -> {
-                        ultimoBeneficiario = new Beneficiario(numLinha, campos, linhaUltimoRPDE);
+                        ultimoBeneficiario = new Beneficiario(numLinha, campos, anoLayout, linhaUltimoRPDE);
                         dirf.getDeclarante().getBeneficiarios().add(ultimoBeneficiario);
                     }
                     case "VRPDE" -> ultimoBeneficiario.getValoresExterior().add(new ValoresExterior(numLinha, campos));
                     case "INF" -> dirf.getInfs().add(new Informacoes(numLinha, campos));
+                    case "RISCP" ->
+                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos));
                     default ->
                             ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
                 }
@@ -211,7 +226,7 @@ public class ImportDirfTask extends GenericTask {
             throw new UnsupportedEncodingException("O arquivo não está no leaiute da DIRF");
         }
 
-        if (!LEIAUTES_SUPORTADOS.contains(linhaInicial[5])) {
+        if (!LEIAUTES_SUPORTADOS.containsKey(linhaInicial[5])) {
             throw new UnsupportedEncodingException("O leiaute " + linhaInicial[5] + " não é suportado");
         }
     }
