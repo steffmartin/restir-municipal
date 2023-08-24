@@ -25,7 +25,8 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class ImportDirfTask extends GenericTask {
 
-    private static final Map<String, Integer> LEIAUTES_SUPORTADOS = Map.of(
+    public static final String[] EXTENSOES_SUPORTADAS = new String[]{"txt", "TXT", "dec", "DEC"};
+    public static final Map<String, Integer> LEIAUTES_SUPORTADOS = Map.of(
             "M1LB5V2", 2015,
             "L35QJS2", 2016,
             "P49VS72", 2017,
@@ -34,7 +35,8 @@ public class ImportDirfTask extends GenericTask {
             "AT65HD8", 2020,
             "VR4QLM8", 2021,
             "XJFSFHB", 2022,
-            "ARNZRXP", 2023);
+            "ARNZRXP", 2023
+    );
 
     @Autowired
     private DirfService dirfService;
@@ -235,7 +237,7 @@ public class ImportDirfTask extends GenericTask {
         File inputPath = new File(inputDir);
 
         if (inputPath.isDirectory()) {
-            return FileUtils.listFiles(inputPath, new String[]{"txt", "TXT", "dec", "DEC"}, true)
+            return FileUtils.listFiles(inputPath, EXTENSOES_SUPORTADAS, true)
                     .stream().map(file -> StringUtils.removeStart(file.getAbsolutePath(), inputDir))
                     .sorted().collect(toList());
         } else {

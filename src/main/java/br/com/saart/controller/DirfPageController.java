@@ -23,11 +23,14 @@ import org.springframework.stereotype.Controller;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static br.com.saart.view.controls.Components.alert;
 import static br.com.saart.view.controls.Components.configuraColuna;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 @Controller
 public class DirfPageController implements Initializable {
@@ -72,6 +75,15 @@ public class DirfPageController implements Initializable {
     }
 
     public void importar() {
+
+        String formatos = Arrays.stream(ImportDirfTask.EXTENSOES_SUPORTADAS).map(String::toUpperCase)
+                .distinct().map("*."::concat).collect(Collectors.joining(" "));
+        Integer menorAno = ImportDirfTask.LEIAUTES_SUPORTADOS.values().stream().mapToInt(Integer::intValue).min().getAsInt();
+        Integer maiorAno = ImportDirfTask.LEIAUTES_SUPORTADOS.values().stream().mapToInt(Integer::intValue).max().getAsInt();
+
+        alert(INFORMATION, "Importação de registros", "Selecione uma pasta contendo uma ou mais declarações.",
+                String.format("O sistema suporta declarações com leiautes dos anos de %d a %d nos seguintes formatos: %s.", menorAno, maiorAno, formatos), true);
+
         File selectedDir = Components
                 .directoryChooser(preferences.get(UserPreferences.Preference.IMP_DIRF_INPUT), "Selecione a pasta de origem")
                 .showDialog(importar.getScene().getWindow());
