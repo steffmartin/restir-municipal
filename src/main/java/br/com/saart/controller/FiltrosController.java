@@ -23,6 +23,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static br.com.saart.task.filtros.Juncao.*;
+import static br.com.saart.task.filtros.TipoFlow.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+
 @Slf4j
 @Controller
 public class FiltrosController implements Initializable {
@@ -95,7 +99,7 @@ public class FiltrosController implements Initializable {
     public void ordenar(ActionEvent actionEvent) {
         if (actionEvent.getSource() instanceof SplitMenuButton) {
             if (!ordem.getChildren().isEmpty()) {
-                addJuncao(ordem, Juncao.AND);
+                addJuncao(ordem, AND);
             }
             addColuna(ordem, colunaOrdem);
             addOrdem(ordem, operadorOrdem);
@@ -109,27 +113,27 @@ public class FiltrosController implements Initializable {
     private void addColuna(TextFlow flow, ChoiceBox<Coluna> colunaChoiceBox) {
         Coluna coluna = colunaChoiceBox.getSelectionModel().getSelectedItem();
         Label label = new Label(coluna.label());
-        label.setUserData(new FiltroOrdemUserData(TipoFlow.COL, coluna, null, null, null, null));
+        label.setUserData(new FiltroOrdemUserData(COL, coluna, null, null, null, null));
         flow.getChildren().add(label);
     }
 
     private void addOperador(TextFlow flow, ChoiceBox<Operador> operadorChoiceBox) {
         Operador operador = operadorChoiceBox.getSelectionModel().getSelectedItem();
         Label label = new Label(operador.getLabel());
-        label.setUserData(new FiltroOrdemUserData(TipoFlow.OPR, null, operador, null, null, null));
+        label.setUserData(new FiltroOrdemUserData(OPR, null, operador, null, null, null));
         label.getStyleClass().add(Styles.ACCENT);
         flow.getChildren().add(label);
     }
 
     private void addValor(TextFlow flow, String valor) {
         Label label = new Label(valor);
-        label.setUserData(new FiltroOrdemUserData(TipoFlow.VLR, null, null, valor, null, null));
+        label.setUserData(new FiltroOrdemUserData(VLR, null, null, valor, null, null));
         flow.getChildren().add(label);
     }
 
     private void addJuncao(TextFlow flow, Juncao juncao) {
         Label label = new Label(juncao.getLabel());
-        label.setUserData(new FiltroOrdemUserData(TipoFlow.LIG, null, null, null, juncao, null));
+        label.setUserData(new FiltroOrdemUserData(LIG, null, null, null, juncao, null));
         label.getStyleClass().add(Styles.DANGER);
         flow.getChildren().add(label);
     }
@@ -137,7 +141,7 @@ public class FiltrosController implements Initializable {
     private void addOrdem(TextFlow flow, ChoiceBox<Ordem> operadorChoiceBox) {
         Ordem ordem = operadorChoiceBox.getSelectionModel().getSelectedItem();
         Label label = new Label(ordem.getLabel());
-        label.setUserData(new FiltroOrdemUserData(TipoFlow.ORD, null, null, null, null, ordem));
+        label.setUserData(new FiltroOrdemUserData(ORD, null, null, null, null, ordem));
         label.getStyleClass().add(Styles.ACCENT);
         flow.getChildren().add(label);
     }
@@ -147,7 +151,7 @@ public class FiltrosController implements Initializable {
         List<FiltroOrdemUserData> ordemList = ordem.getChildren().stream().map(n -> (FiltroOrdemUserData) n.getUserData()).toList();
 
         if (!validaFiltro(filtroList)) {
-            Components.alert(Alert.AlertType.ERROR, stage.getTitle(), "Filtro inválido.",
+            Components.alert(ERROR, stage.getTitle(), "Filtro inválido.",
                     erroValidacao, false);
         } else {
             // aplicar filtro e ordenação e fechar
@@ -156,7 +160,6 @@ public class FiltrosController implements Initializable {
     }
 
     private boolean validaFiltro(List<FiltroOrdemUserData> operationList) {
-
         Deque<FiltroOrdemUserData> parentesesStack = new LinkedList<>();
         Deque<FiltroOrdemUserData> operacoesStack = new LinkedList<>();
 
@@ -164,17 +167,20 @@ public class FiltrosController implements Initializable {
         boolean juncaoEmParenteses = false;
 
         for (FiltroOrdemUserData token : operationList) {
-            if (TipoFlow.COL.equals(token.tipo()) || TipoFlow.VLR.equals(token.tipo())) {
+            if (COL.equals(token.tipo()) || VLR.equals(token.tipo())) {
+                // Ignora colunas e valores
                 continue;
-            } else if (TipoFlow.LIG.equals(token.tipo())) {
-                if (Juncao.OPEN.equals(token.ligacao())) {
+            } else if (LIG.equals(token.tipo())) {
+                if (OPEN.equals(token.ligacao())) {
+                    // Abertura de parênteses
                     if (!operacoesStack.isEmpty()) {
                         erroValidacao = "Verifique os parênteses abertos. Só é permitido abrir parênteses no início do filtro ou após um operador 'E' ou 'Ou'.";
                         return false;
                     }
                     parentesesStack.push(token);
                     juncaoEmParenteses = false;
-                } else if (Juncao.CLOSE.equals(token.ligacao())) {
+                } else if (CLOSE.equals(token.ligacao())) {
+                    // Fechamento de parênteses
                     if (parentesesStack.isEmpty()) {
                         erroValidacao = "Verifique os parênteses. Há mais parênteses fechados do que abertos.";
                         return false; // Parenteses não correspondentes ou antes da hora
@@ -184,6 +190,7 @@ public class FiltrosController implements Initializable {
                     }
                     parentesesStack.pop();
                 } else { //AND,OR
+                    // Operadores de junção
                     if (operacoesStack.isEmpty()) {
                         erroValidacao = "Verifique as operações de 'E' ou 'Ou'. Só é possível usá-las após uma comparação ou um fechamento de parênteses.";
                         return false; // Falta de operandos para o operador
@@ -193,14 +200,17 @@ public class FiltrosController implements Initializable {
                     juncaoEmParenteses = !parentesesStack.isEmpty();
                 }
             } else if (!operacoesStack.isEmpty()) {
+                // Comparações consecutivas
                 erroValidacao = "Verifique as comparações realizadas. Não é permitido realizar comparações consecutivas sem o uso de um operador 'E' ou 'Ou' para interligá-las.";
-                return false; //Operações consecutivas
+                return false;
             } else {
+                // Adiciona operações
                 operacoesStack.push(token);
                 ultimoEhJuncao = false;
             }
         }
 
+        // Validações finais
         if (!parentesesStack.isEmpty()) {
             erroValidacao = "Verifique os parênteses. Há mais parênteses abertos do que fechados.";
             return false;
