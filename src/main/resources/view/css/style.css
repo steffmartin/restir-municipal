@@ -71,3 +71,11 @@
     -color-cell-bg-selected-focused: -color-accent-emphasis;
     -color-cell-fg-selected-focused: -color-fg-emphasis;
 }
+#page .border-radius {
+    -fx-border-radius: 5px;
+}
+
+#page #text-flow .label {
+    -fx-padding: 0px 10px 0px 0px;
+    -fx-font-weight: bold;
+}

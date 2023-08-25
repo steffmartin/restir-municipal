@@ -51,7 +51,7 @@
             </Label>
             <Hyperlink fx:id="updateLink" text="Atualizar agora." visible="false"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="fechar" mnemonicParsing="false" prefWidth="100.0" styleClass="accent" text="Fechar"
+            <Button onAction="#fechar" mnemonicParsing="false" prefWidth="100.0" styleClass="accent" text="Fechar"
                     HBox.hgrow="NEVER"/>
          </children>
       </HBox>

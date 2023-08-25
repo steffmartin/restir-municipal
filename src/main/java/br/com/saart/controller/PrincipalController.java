@@ -4,7 +4,10 @@ import br.com.saart.view.StageFactory;
 import br.com.saart.view.principal.navbar.NavTreeCell;
 import br.com.saart.view.principal.navbar.Navitem;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import lombok.extern.slf4j.Slf4j;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +33,17 @@ public class PrincipalController implements Initializable {
 
     public TreeView<Navitem> navbar;
     public Label footer;
-    public Button configButton;
     public ScrollPane page;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        configButton.setOnAction(e -> {
-            configuracoes.montar();
-            configuracoes.abrir();
-        });
         montaMenu();
         footer.setText(footer.getText().replace("0.0.0", versao));
+    }
+
+    public void abrirConfig() {
+        configuracoes.montar();
+        configuracoes.abrir();
     }
 
     //Monta Menu

@@ -16,7 +16,7 @@
         </Label>
         <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
             <children>
-                <Button fx:id="filtros" mnemonicParsing="false" prefHeight="36.0">
+                <Button onAction="#abrirFiltros" mnemonicParsing="false" prefHeight="36.0">
                     <graphic>
                         <FontIcon iconLiteral="mdral-filter_alt"/>
                     </graphic>
@@ -36,7 +36,7 @@
         <TableView id="tabela" fx:id="tabela" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="dirfId" maxWidth="1000.0" minWidth="50.0" prefWidth="50.0" sortable="false"
-                             text="#ID"/>
+                             text="# ID"/>
                 <TableColumn fx:id="cpfCnpj" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false"
                              text="CPF/CNPJ"/>
                 <TableColumn fx:id="nome" maxWidth="1000.0" minWidth="100.0" prefWidth="400.0" sortable="false"
@@ -57,7 +57,7 @@
                 <String fx:value="striped"/>
             </styleClass>
         </TableView>
-        <Pagination fx:id="paginacao" currentPageIndex="0" maxPageIndicatorCount="10" pageCount="1"
+        <Pagination fx:id="paginacao" pageCount="1"
                     style="-fx-page-information-visible: false;" VBox.vgrow="NEVER">
             <VBox.margin>
                 <Insets/>

@@ -2,7 +2,7 @@ package br.com.saart.controller;
 
 import atlantafx.base.theme.Styles;
 import br.com.saart.entity.Dirf;
-import br.com.saart.repository.DirfRepository;
+import br.com.saart.service.DirfService;
 import br.com.saart.task.dirf.DeleteDirfTask;
 import br.com.saart.task.dirf.ImportDirfTask;
 import br.com.saart.util.UserPreferences;
@@ -47,7 +47,10 @@ public class DirfPageController implements Initializable {
     private ProgressController progressController;
 
     @Autowired
-    private DirfRepository dirfRepository;
+    private FiltrosController filtrosController;
+
+    @Autowired
+    private DirfService dirfService;
 
     public SplitMenuButton importar;
     public MenuItem excluir;
@@ -66,8 +69,13 @@ public class DirfPageController implements Initializable {
         Platform.runLater(() -> lerPagina(0, PAGE_SIZE));
     }
 
+    public void abrirFiltros() {
+        filtrosController.montar();
+        filtrosController.abrir(DirfTable.COLUNAS);
+    }
+
     private void lerPagina(int pageNumber, int pageSize) {
-        Page<DirfTable> pagina = dirfRepository.findAll(Pageable.ofSize(pageSize).withPage(pageNumber)).map(DirfTable::new);
+        Page<DirfTable> pagina = dirfService.findAll(Pageable.ofSize(pageSize).withPage(pageNumber)).map(DirfTable::new);
         tabela.setItems(FXCollections.observableList(pagina.toList()));
 
         paginacao.setCurrentPageIndex(pagina.getNumber());
