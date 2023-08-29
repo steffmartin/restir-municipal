@@ -3,6 +3,7 @@ package br.com.saart.controller;
 import atlantafx.base.theme.Styles;
 import br.com.saart.entity.Dirf;
 import br.com.saart.service.DirfService;
+import br.com.saart.specification.CustomSpecification;
 import br.com.saart.task.dirf.DeleteDirfTask;
 import br.com.saart.task.dirf.ImportDirfTask;
 import br.com.saart.util.UserPreferences;
@@ -14,11 +15,15 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 
 import java.io.File;
@@ -52,34 +57,47 @@ public class DirfPageController implements Initializable {
     @Autowired
     private DirfService dirfService;
 
+    @Autowired
+    private CustomSpecification<Dirf> dirfCustomSpecification;
+
     public SplitMenuButton importar;
     public MenuItem excluir;
     public TableView<DirfTable> tabela;
     public Pagination paginacao;
+
+    private Specification<Dirf> currentSpecification = null;
+    private Sort currentSort = Sort.unsorted();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         excluir.disableProperty().bind(Bindings.isNotEmpty(tabela.getSelectionModel().getSelectedIndices()).not());
         tabela.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tabela.getColumns().forEach(coluna -> configuraColuna(Dirf.class, tabela, (TableColumn<DirfTable, String>) coluna, coluna.getId()));
-        paginacao.setPageFactory(pageIndex -> {
-            lerPagina(pageIndex, PAGE_SIZE);
-            return new Region();
-        });
-        Platform.runLater(() -> lerPagina(0, PAGE_SIZE));
+        paginacao.setPageFactory(i -> lerPagina());
+        Platform.runLater(this::lerPagina);
     }
 
     public void abrirFiltros() {
         filtrosController.montar();
-        filtrosController.abrir(DirfTable.COLUNAS);
+
+        filtrosController.abrir(DirfTable.COLUNAS, dirfCustomSpecification, (specification, sort) -> {
+            currentSpecification = (Specification<Dirf>) specification;
+            currentSort = sort;
+            lerPagina();
+        });
     }
 
-    private void lerPagina(int pageNumber, int pageSize) {
-        Page<DirfTable> pagina = dirfService.findAll(Pageable.ofSize(pageSize).withPage(pageNumber)).map(DirfTable::new);
+    private Node lerPagina() {
+        Pageable pageable = PageRequest.of(paginacao.getCurrentPageIndex(), PAGE_SIZE, currentSort);
+
+        Page<DirfTable> pagina = dirfService.findAll(pageable, currentSpecification).map(DirfTable::new);
+
         tabela.setItems(FXCollections.observableList(pagina.toList()));
 
         paginacao.setCurrentPageIndex(pagina.getNumber());
         paginacao.setPageCount(pagina.getTotalPages());
+
+        return new Region();
     }
 
     public void importar() {
@@ -98,9 +116,7 @@ public class DirfPageController implements Initializable {
 
         if (selectedDir != null) {
             preferences.set(UserPreferences.Preference.IMP_DIRF_INPUT, selectedDir.getAbsolutePath());
-
-            progressController.setFinishedAction(() -> lerPagina(paginacao.getCurrentPageIndex(), PAGE_SIZE));
-
+            progressController.setFinishedAction(this::lerPagina);
             ImportDirfTask task = new ImportDirfTask(selectedDir.getAbsolutePath());
             task.startInNewThread(stageFactory.getAw(), progressController);
         }
@@ -110,8 +126,7 @@ public class DirfPageController implements Initializable {
         ObservableList<DirfTable> selectedItems = tabela.getSelectionModel().getSelectedItems();
 
         if (confirmarExclusao(selectedItems.size())) {
-            progressController.setFinishedAction(() -> lerPagina(paginacao.getCurrentPageIndex(), PAGE_SIZE));
-
+            progressController.setFinishedAction(this::lerPagina);
             DeleteDirfTask deleteDirfTask = new DeleteDirfTask(selectedItems);
             deleteDirfTask.startInNewThread(stageFactory.getAw(), progressController);
         }

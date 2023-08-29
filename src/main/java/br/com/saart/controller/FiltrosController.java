@@ -1,9 +1,11 @@
 package br.com.saart.controller;
 
 import atlantafx.base.theme.Styles;
+import br.com.saart.specification.CustomSpecification;
 import br.com.saart.task.filtros.*;
 import br.com.saart.view.StageFactory;
 import br.com.saart.view.controls.Components;
+import br.com.saart.view.filtro.FiltroCallback;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -15,13 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URL;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static br.com.saart.task.filtros.Juncao.*;
 import static br.com.saart.task.filtros.TipoFlow.*;
@@ -49,6 +51,9 @@ public class FiltrosController implements Initializable {
     public TextFlow ordem;
 
     private String erroValidacao = null;
+    private CustomSpecification<?> customSpecification = null;
+    private FiltroCallback callback = null;
+    private String lastCallerClass = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -70,12 +75,24 @@ public class FiltrosController implements Initializable {
         }
     }
 
-    public void abrir(List<Coluna> colunas) {
+    public void abrir(List<Coluna> colunas, CustomSpecification<?> customSpecification, FiltroCallback callback) {
+        String callerClass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass().getName();
+        if (!callerClass.equals(lastCallerClass)) {
+            this.lastCallerClass = callerClass;
+            this.filtro.getChildren().clear();
+            this.ordem.getChildren().clear();
+        }
+
+        this.customSpecification = customSpecification;
+        this.callback = callback;
+        this.erroValidacao = null;
+
         colunaFiltro.setItems(FXCollections.observableList(colunas));
         colunaFiltro.getSelectionModel().select(0);
+
         colunaOrdem.setItems(FXCollections.observableList(colunas));
         colunaOrdem.getSelectionModel().select(0);
-        erroValidacao = null;
+
         stage.showAndWait();
     }
 
@@ -133,7 +150,7 @@ public class FiltrosController implements Initializable {
 
     private void addJuncao(TextFlow flow, Juncao juncao) {
         Label label = new Label(juncao.getLabel());
-        label.setUserData(new FiltroOrdemUserData(LIG, null, null, null, juncao, null));
+        label.setUserData(new FiltroOrdemUserData(JUN, null, null, null, juncao, null));
         label.getStyleClass().add(Styles.DANGER);
         flow.getChildren().add(label);
     }
@@ -151,11 +168,13 @@ public class FiltrosController implements Initializable {
         List<FiltroOrdemUserData> ordemList = ordem.getChildren().stream().map(n -> (FiltroOrdemUserData) n.getUserData()).toList();
 
         if (!validaFiltro(filtroList)) {
-            Components.alert(ERROR, stage.getTitle(), "Filtro inválido.",
-                    erroValidacao, false);
+            Components.alert(ERROR, stage.getTitle(), "Filtro inválido.", erroValidacao, false);
         } else {
-            // aplicar filtro e ordenação e fechar
+            Specification<?> specification = customSpecification.criarSpecification(filtroList);
+            Sort sort = criaSort(ordemList);
+
             stage.close();
+            callback.execute(specification, sort);
         }
     }
 
@@ -170,29 +189,29 @@ public class FiltrosController implements Initializable {
             if (COL.equals(token.tipo()) || VLR.equals(token.tipo())) {
                 // Ignora colunas e valores
                 continue;
-            } else if (LIG.equals(token.tipo())) {
-                if (OPEN.equals(token.ligacao())) {
+            } else if (JUN.equals(token.tipo())) {
+                if (OPEN.equals(token.juncao())) {
                     // Abertura de parênteses
                     if (!operacoesStack.isEmpty()) {
-                        erroValidacao = "Verifique os parênteses abertos. Só é permitido abrir parênteses no início do filtro ou após um operador 'E' ou 'Ou'.";
+                        erroValidacao = "Certifique-se de que os parênteses estejam corretamente abertos. Você pode abrir parênteses apenas no início do filtro ou após um operador 'E' ou 'Ou'.";
                         return false;
                     }
                     parentesesStack.push(token);
                     juncaoEmParenteses = false;
-                } else if (CLOSE.equals(token.ligacao())) {
+                } else if (CLOSE.equals(token.juncao())) {
                     // Fechamento de parênteses
                     if (parentesesStack.isEmpty()) {
-                        erroValidacao = "Verifique os parênteses. Há mais parênteses fechados do que abertos.";
-                        return false; // Parenteses não correspondentes ou antes da hora
+                        erroValidacao = "Verifique os parênteses. Certifique-se de que o número de parênteses fechados seja igual ao número de parênteses abertos.";
+                        return false; // Parenteses não correspondentes
                     } else if (!juncaoEmParenteses) {
-                        erroValidacao = "Verifique as operações dentro dos parênteses. Não é permitido usar parênteses sem um operador 'E' ou 'Ou' ocorrer dentro.";
-                        return false; // Parenteses não correspondentes ou antes da hora
+                        erroValidacao = "Confira as operações dentro dos parênteses. É preciso ter no mínimo uma operação 'E' ou 'Ou' dentro dos parênteses.";
+                        return false; // Parenteses fechando antes da hora
                     }
                     parentesesStack.pop();
                 } else { //AND,OR
                     // Operadores de junção
                     if (operacoesStack.isEmpty()) {
-                        erroValidacao = "Verifique as operações de 'E' ou 'Ou'. Só é possível usá-las após uma comparação ou um fechamento de parênteses.";
+                        erroValidacao = "Revise as operações com 'E' ou 'Ou'. Lembre-se de usá-las somente após uma comparação ou após fechar um parêntese.";
                         return false; // Falta de operandos para o operador
                     }
                     operacoesStack.clear();
@@ -201,7 +220,7 @@ public class FiltrosController implements Initializable {
                 }
             } else if (!operacoesStack.isEmpty()) {
                 // Comparações consecutivas
-                erroValidacao = "Verifique as comparações realizadas. Não é permitido realizar comparações consecutivas sem o uso de um operador 'E' ou 'Ou' para interligá-las.";
+                erroValidacao = "Analise as comparações realizadas. Evite fazer comparações seguidas sem usar um operador 'E' ou 'Ou' para conectá-las.";
                 return false;
             } else {
                 // Adiciona operações
@@ -212,16 +231,35 @@ public class FiltrosController implements Initializable {
 
         // Validações finais
         if (!parentesesStack.isEmpty()) {
-            erroValidacao = "Verifique os parênteses. Há mais parênteses abertos do que fechados.";
+            erroValidacao = "Verifique os parênteses. Garanta que todos os parênteses abertos tenham seu correspondente fechamento.";
             return false;
         }
 
         if (ultimoEhJuncao) {
-            erroValidacao = "Verifique os operadores 'E' ou 'Ou'. Não é permitido finalizar o filtro com um operador.";
+            erroValidacao = "Verifique os operadores 'E' ou 'Ou'. Não termine o filtro com um desses operadores; sempre finalize com uma comparação.";
             return false;
         }
 
         return true;
+    }
+
+    private Sort criaSort(List<FiltroOrdemUserData> ordemList) {
+        if (CollectionUtils.isEmpty(ordemList)) {
+            return Sort.unsorted();
+        }
+
+        FiltroOrdemUserData ultimaColuna = null;
+        List<Sort.Order> ordenacao = new ArrayList<>();
+
+        for (FiltroOrdemUserData ordem : ordemList) {
+            if (TipoFlow.COL.equals(ordem.tipo())) {
+                ultimaColuna = ordem;
+            } else if (TipoFlow.ORD.equals(ordem.tipo())) {
+                ordenacao.add(new Sort.Order(ordem.ordem().getDirecao(), ultimaColuna.coluna().nome()));
+            }
+        }
+
+        return Sort.by(ordenacao);
     }
 }
 

@@ -41,7 +41,10 @@ public class Util {
     public static final DateTimeFormatter DMY_FMT = DateTimeFormatter.ofPattern("dd/MM/uuuu");
     public static final DateTimeFormatter YM_FMT = DateTimeFormatter.ofPattern("uuuu-MM");
     public static final DateTimeFormatter DATE_TIME_OPTIONAL_TMZ = DateTimeFormatter.ofPattern(
-            "yyyy-MM-dd[[ ]['T']HH:mm[:ss][XXX]]");
+            "yyyy-MM-dd[[' ']['T']HH:mm[:ss][XXX]]");
+    public static final DateTimeFormatter DATE_OPTIONAL_TIME_AND_TMZ_BR_FMT = DateTimeFormatter.ofPattern(
+            "[dd-MM-uuuu][dd/MM/uuuu][[' ']['T']HH:mm[:ss][XXX]]"
+    );
     public static final DecimalFormat SPED_NUMBER_FMT;
 
     static {
@@ -262,15 +265,27 @@ public class Util {
     }
 
     public static Year toYear(String s) {
-        return Year.of(Integer.parseInt(s));
+        return StringUtils.isBlank(s) ? null : Year.of(toBigDecimal(s).intValue());
     }
 
     public static Short toShort(String s) {
-        return StringUtils.isBlank(s) ? null : Short.parseShort(s);
+        return StringUtils.isBlank(s) ? null : toBigDecimal(s).shortValue();
     }
 
     public static Float toFloat(String s) {
-        return StringUtils.isBlank(s) ? null : Float.parseFloat(s);
+        return StringUtils.isBlank(s) ? null : toBigDecimal(s).floatValue();
+    }
+
+    public static Double toDouble(String s) {
+        return StringUtils.isBlank(s) ? null : toBigDecimal(s).doubleValue();
+    }
+
+    public static Integer toInteger(String s) {
+        return StringUtils.isBlank(s) ? null : toBigDecimal(s).intValue();
+    }
+
+    public static Long toLong(String s) {
+        return StringUtils.isBlank(s) ? null : toBigDecimal(s).longValue();
     }
 
     public static String[] split(String linha) {
@@ -279,5 +294,41 @@ public class Util {
 
     public static Long byteToMb(Long bytes) {
         return bytes / 1024 / 1024;
+    }
+
+    public static Object toObj(Class tipo, String valor) {
+        return switch (tipo.getSimpleName()) {
+            case "Integer" -> toInteger(limpar(valor));
+            case "BigDecimal" -> toBigDecimal(limpar(valor));
+            case "Double" -> toDouble(limpar(valor));
+            case "Float" -> toFloat(limpar(valor));
+            case "Long" -> toLong(limpar(valor));
+            case "Year" -> toYear(limpar(valor));
+            case "Boolean" -> toBoolean(valor);
+            case "LocalDate" -> toLocalDate(valor);
+            case "LocalDateTime" -> toLocalDateTime(valor);
+            default -> valor;
+        };
+    }
+
+    public static LocalDate toLocalDate(String str) {
+        return LocalDate.from(toTemporalAccessor(str));
+    }
+
+    public static LocalDateTime toLocalDateTime(String str) {
+        TemporalAccessor temporalAccessor = toTemporalAccessor(str);
+        if (temporalAccessor instanceof LocalDate result) {
+            return result.atStartOfDay();
+        }
+        return LocalDateTime.from(temporalAccessor);
+    }
+
+    public static TemporalAccessor toTemporalAccessor(String temporalStr) {
+        return DATE_OPTIONAL_TIME_AND_TMZ_BR_FMT.parseBest(temporalStr, OffsetDateTime::from, LocalDateTime::from,
+                LocalDate::from);
+    }
+
+    public static String limpar(String s) {
+        return s.replace(",", ".").replaceAll("[^0-9.-]", "");
     }
 }

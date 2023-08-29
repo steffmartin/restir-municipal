@@ -5,7 +5,7 @@ public enum TipoFlow {
     COL,
     OPR,
     VLR,
-    LIG,
+    JUN,
     ORD
 
 }
