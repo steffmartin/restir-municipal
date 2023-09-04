@@ -315,49 +315,80 @@ begin
   Result := RegQueryStringValue(HKEY_CURRENT_USER, 'SOFTWARE\JavaSoft\Prefs\br\com\saart', 'DBeaverCommunity', S);
 end;
 
+function RobustDownload(Url, BaseName, RequiredSHA256OfFile: String): Boolean;
+var
+  Retry: Boolean;
+  Answer: Integer;
+begin
+  repeat
+    try
+      DownloadPage.Clear;
+      DownloadPage.Add(Url, BaseName, RequiredSHA256OfFile);
+      DownloadPage.Download;
+      Retry := False;
+      Result := True;
+    except
+      if DownloadPage.AbortedByUser then
+      begin
+        Log('Aborted by user.')
+        Result := False;
+        Retry := False;
+      end
+        else
+      begin
+        // Make sure the page displays the URL that fails to download
+        DownloadPage.Msg2Label.Caption := Url;
+        Answer :=
+          SuppressibleMsgBox(
+            AddPeriod(GetExceptionMessage),
+            mbCriticalError, MB_ABORTRETRYIGNORE, IDABORT);
+        Retry := (Answer = IDRETRY);
+        Result := (Answer <> IDABORT);
+      end;
+    end;
+  until not Retry;
+end;
+
 function NextButtonClick(CurPageID: Integer): Boolean;
 begin
-  if CurPageID = wpReady then begin
-    DownloadPage.Clear;
-
-    if IsComponentSelected('SistemaSAART') then
-    begin
-      DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197715&authkey=!AJ2XL1Y3leL-HzQ', 'SAART.jar', '');
-    end;
-
-    if IsComponentSelected('PostgreSQL') then
-    begin
-      DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197494&authkey=!AHuo2fgqpGDXyyI', 'postgresql.exe', '');
-    end;
-
-    if IsComponentSelected('Java20') then
-    begin
-      DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197492&authkey=!ANo00QF1cQPRRxs', 'java.exe', '');
-    end;
-
-    if IsComponentSelected('DBeaverCommunity') then
-    begin
-      DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197493&authkey=!AKkQyhGXBbMoz-w', 'dbeaver.exe', '');
-      DownloadPage.Add('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197620&authkey=!AKmoi21U45PSSuM', 'dbeaverdata.exe', '');
-    end;
-
-    DownloadPage.Show;
+  if CurPageID = wpReady then
+  begin
     try
-      try
-        DownloadPage.Download; // This downloads the files to {tmp}
-        Result := True;
-      except
-        if DownloadPage.AbortedByUser then
-          Log('Aborted by user.')
-        else
-          SuppressibleMsgBox(AddPeriod(GetExceptionMessage), mbCriticalError, MB_OK, IDOK);
-        Result := False;
+      DownloadPage :=
+        CreateDownloadPage(
+          SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc),
+          @OnDownloadProgress);
+
+      DownloadPage.Show;
+
+      Result := True;
+
+      if IsComponentSelected('SistemaSAART') then
+      begin
+        Result := Result and RobustDownload('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197715&authkey=!AJ2XL1Y3leL-HzQ', 'SAART.jar', '');
       end;
+
+      if IsComponentSelected('PostgreSQL') then
+      begin
+        Result := Result and RobustDownload('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197494&authkey=!AHuo2fgqpGDXyyI', 'postgresql.exe', '');
+      end;
+
+      if IsComponentSelected('Java20') then
+      begin
+        Result := Result and RobustDownload('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197492&authkey=!ANo00QF1cQPRRxs', 'java.exe', '');
+      end;
+
+      if IsComponentSelected('DBeaverCommunity') then
+      begin
+        Result := Result and RobustDownload('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197493&authkey=!AKkQyhGXBbMoz-w', 'dbeaver.exe', '');
+        Result := Result and RobustDownload('https://onedrive.live.com/download?resid=AC0B91CB7D1F730D%2197620&authkey=!AKmoi21U45PSSuM', 'dbeaverdata.exe', '');
+      end;
+
     finally
       DownloadPage.Hide;
     end;
-  end else
-    Result := True;
+  end
+    else Result := True;
 end;
 
 function ExtractNumerics(Lines: TArrayOfString): String;

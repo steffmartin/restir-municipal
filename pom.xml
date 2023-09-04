@@ -12,7 +12,7 @@
 
     <groupId>br.com</groupId>
     <artifactId>SAART</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.11</version>
     <name>Sistema Avançado de Apuração e Restituição Tributária</name>
 
     <properties>
@@ -42,12 +42,22 @@
                     <artifactId>tomcat-embed-websocket</artifactId>
                     <groupId>org.apache.tomcat.embed</groupId>
                 </exclusion>
+                <!--                <exclusion>-->
+                <!--                    <groupId>org.springframework.boot</groupId>-->
+                <!--                    <artifactId>spring-boot-starter-jdbc</artifactId>-->
+                <!--                </exclusion>-->
                 <exclusion><!-- Remover exclusion caso não funcione corretamente -->
                     <groupId>org.yaml</groupId>
                     <artifactId>snakeyaml</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!--        <dependency> &lt;!&ndash; banco de dados &ndash;&gt;-->
+        <!--            <groupId>org.springframework.data</groupId>-->
+        <!--            <artifactId>spring-data-jdbc</artifactId>-->
+        <!--            <version>3.2.0-M2</version>-->
+        <!--        </dependency>-->
 
         <dependency> <!-- banco de dados -->
             <groupId>org.postgresql</groupId>
