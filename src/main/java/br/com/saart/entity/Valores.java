@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
+import java.time.Year;
 
 @Data
 @Entity
@@ -16,15 +17,16 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Valores {
 
-    public Valores(Integer linha, String[] campo) {
-        this(linha, campo, null, null);
+    public Valores(Year anoReferencia, Integer linha, String[] campo) {
+        this(anoReferencia, linha, campo, null, null);
     }
 
-    public Valores(Integer linha, String[] campo, Integer idrecLinha, String idrecCodigo) {
+    public Valores(Year anoReferencia, Integer linha, String[] campo, Integer idrecLinha, String idrecCodigo) {
         this.registroLinha = linha;
         this.codRegistro = campo[1];
         this.idrecLinha = idrecLinha;
         this.idrecCodigo = idrecCodigo;
+        this.anoReferencia = anoReferencia;
         switch (campo[1]) {
             case "RIL96", "RIPTS", "RIJMRE", "RIRSR" -> {
                 this.tipoValor = TipoValor.ANUAL;
@@ -76,6 +78,8 @@ public class Valores {
     @Column(length = 6, nullable = false)
     @Enumerated(EnumType.STRING)
     TipoValor tipoValor;
+
+    Year anoReferencia;
 
     Integer registroLinha;
 

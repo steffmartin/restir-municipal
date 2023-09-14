@@ -72,7 +72,7 @@ public class ImportDirfTask extends GenericTask {
     }
 
     @Transactional
-    private void importDirf(String fileName) {
+    public void importDirf(String fileName) {
         try (BufferedReader dirfFile = Util.getReader(inputDir + fileName)) {
 
             validaArquivoDirf(dirfFile);
@@ -155,9 +155,9 @@ public class ImportDirfTask extends GenericTask {
                     }
                     case "RTPP", "RTFA", "RTSP", "RTEP", "ESPP", "ESFA", "ESSP", "ESEP" -> {
                         if (BooleanUtils.isTrue(ultimoBeneficiario.getPrevCompl()) && ultimoInfPrevCompl != null) {
-                            ultimoInfPrevCompl.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                            ultimoInfPrevCompl.getValoresPorRegistro().put(campos[1], new Valores(dirf.getAnoReferencia(), numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
                         } else {
-                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(dirf.getAnoReferencia(), numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
                         }
                     }
                     case "INFPA" -> {
@@ -166,9 +166,9 @@ public class ImportDirfTask extends GenericTask {
                     }
                     case "RTPA", "ESPA" -> {
                         if (BooleanUtils.isTrue(ultimoBeneficiario.getAlimentado()) && ultimoInfAlimentado != null) {
-                            ultimoInfAlimentado.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                            ultimoInfAlimentado.getValoresPorRegistro().put(campos[1], new Valores(dirf.getAnoReferencia(), numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
                         } else {
-                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(dirf.getAnoReferencia(), numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
                         }
                     }
                     case "SCP" -> {
@@ -207,9 +207,9 @@ public class ImportDirfTask extends GenericTask {
                     case "VRPDE" -> ultimoBeneficiario.getValoresExterior().add(new ValoresExterior(numLinha, campos));
                     case "INF" -> dirf.getInfs().add(new Informacoes(numLinha, campos));
                     case "RISCP" ->
-                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos));
+                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(dirf.getAnoReferencia(), numLinha, campos));
                     default ->
-                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
+                            ultimoBeneficiario.getValoresPorRegistro().put(campos[1], new Valores(dirf.getAnoReferencia(), numLinha, campos, linhaUltimoIDREC, codigoUltimoIDREC));
                 }
             }
 
