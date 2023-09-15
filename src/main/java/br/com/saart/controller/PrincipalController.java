@@ -53,7 +53,7 @@ public class PrincipalController implements Initializable {
 
         //Grupo Declarações
         TreeItem<Navitem> declaracoes = criaGrupoMenu("Declarações", "mdsmz-receipt_long");
-        criaItemMenu(declaracoes, "DIRF", "dirf", true);
+        criaItemMenu(declaracoes, "DIRF", "dirf", false);
 
         //Grupo Arquivos
         TreeItem<Navitem> arquivos = criaGrupoMenu("Arquivos", "mdoal-description");
@@ -62,6 +62,10 @@ public class PrincipalController implements Initializable {
         //Grupos Relatórios
         TreeItem<Navitem> relatorios = criaGrupoMenu("Relatórios", "mdsmz-picture_as_pdf");
         criaItemMenu(relatorios, "Restituição IRRF", "restituicao_irrf", false);
+
+        //Grupo Tabelas
+        TreeItem<Navitem> tabelas = criaGrupoMenu("Tabelas", "mdomz-table_rows");
+        criaItemMenu(tabelas, "Taxa de Juros Selic", "selic", true);
     }
 
     private TreeItem<Navitem> criaGrupoMenu(String label, String iconCode) {

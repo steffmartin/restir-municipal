@@ -2,7 +2,7 @@ truncate table public.selic;
 
 alter sequence public.selic_id_seq restart with 1;
 
-insert into public.selic (mes, valor)
+insert into public.selic (periodo, valor)
 values
     ('2015-01-01', 0.94),
     ('2015-02-01', 0.82),

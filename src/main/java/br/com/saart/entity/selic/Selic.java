@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -20,7 +20,7 @@ public class Selic {
     Long id;
 
     @Column(nullable = false, unique = true)
-    LocalDateTime mes;
+    LocalDate periodo;
 
     @Column(nullable = false)
     BigDecimal valor;

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.String?>
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="629.0" spacing="5.0"
+      xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="br.com.saart.controller.SelicPageController">
+   <children>
+      <Label styleClass="title-3" text="Taxa de Juros Selic" VBox.vgrow="NEVER">
+         <graphic>
+            <FontIcon iconLiteral="mdomz-table_rows"/>
+         </graphic>
+      </Label>
+      <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
+         <children>
+            <Button onAction="#abrirFiltros" mnemonicParsing="false" prefHeight="36.0">
+               <graphic>
+                  <FontIcon iconLiteral="mdral-filter_alt"/>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Filtros"/>
+               </tooltip>
+            </Button>
+            <SplitMenuButton fx:id="adicionar" mnemonicParsing="false" onAction="#adicionar" styleClass="accent"
+                             text="Adicionar">
+               <items>
+                  <MenuItem fx:id="alterar" disable="true" mnemonicParsing="false" text="Alterar"
+                            onAction="#alterar"/>
+                  <SeparatorMenuItem/>
+                  <MenuItem fx:id="excluir" disable="true" mnemonicParsing="false" text="Excluir"
+                            onAction="#excluir"/>
+               </items>
+            </SplitMenuButton>
+         </children>
+      </HBox>
+      <TableView id="tabela" fx:id="tabela" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="selicId" maxWidth="1000.0" minWidth="50.0" prefWidth="50.0" sortable="false"
+                         text="# ID"/>
+            <TableColumn fx:id="periodo" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false"
+                         text="Período"/>
+            <TableColumn fx:id="valor" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false"
+                         text="Valor da SELIC"/>
+         </columns>
+         <styleClass>
+            <String fx:value="dense"/>
+            <String fx:value="striped"/>
+         </styleClass>
+      </TableView>
+      <Pagination fx:id="paginacao" currentPageIndex="0" pageCount="1"
+                  style="-fx-page-information-visible: false;" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets/>
+         </VBox.margin>
+      </Pagination>
+   </children>
+</VBox>
