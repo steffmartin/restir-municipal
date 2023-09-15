@@ -1,7 +1,7 @@
 package br.com.saart.controller;
 
 import atlantafx.base.theme.Styles;
-import br.com.saart.entity.Dirf;
+import br.com.saart.entity.dirf.Dirf;
 import br.com.saart.service.DirfService;
 import br.com.saart.specification.CustomSpecification;
 import br.com.saart.task.dirf.DeleteDirfTask;

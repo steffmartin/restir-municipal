@@ -1,6 +1,6 @@
 package br.com.saart.task.dirf;
 
-import br.com.saart.entity.*;
+import br.com.saart.entity.dirf.*;
 import br.com.saart.service.DirfService;
 import br.com.saart.task.GenericTask;
 import br.com.saart.util.Util;

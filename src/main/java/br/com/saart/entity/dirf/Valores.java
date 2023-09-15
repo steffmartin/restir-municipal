@@ -1,4 +1,4 @@
-package br.com.saart.entity;
+package br.com.saart.entity.dirf;
 
 import br.com.saart.util.Util;
 import jakarta.persistence.*;

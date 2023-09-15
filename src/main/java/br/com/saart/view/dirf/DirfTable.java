@@ -1,6 +1,6 @@
 package br.com.saart.view.dirf;
 
-import br.com.saart.entity.Dirf;
+import br.com.saart.entity.dirf.Dirf;
 import br.com.saart.task.filtros.Coluna;
 import br.com.saart.util.Util;
 import lombok.Getter;

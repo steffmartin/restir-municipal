@@ -1,4 +1,4 @@
-package br.com.saart.entity;
+package br.com.saart.entity.dirf;
 
 import br.com.saart.util.Util;
 import jakarta.persistence.*;
@@ -13,15 +13,15 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "dirf_acum")
-@EqualsAndHashCode(of = {"id", "rraLinha"})
+@Table(name = "dirf_proc")
+@EqualsAndHashCode(of = {"id", "procLinha"})
 @NoArgsConstructor
-public class RendAcumulados {
+public class Processo {
 
-    public RendAcumulados(Integer linha, String[] campo, Integer anoLayout) {
-        this.rraLinha = linha;
-        this.tipoRra = Util.toShort(campo[2]);
-        this.numeroRequerimento = campo[3];
+    public Processo(Integer linha, String[] campo, Integer anoLayout) {
+        this.procLinha = linha;
+        this.tipoJustica = Util.toShort(campo[2]);
+        this.numProc = campo[3];
         this.tipoAdv = Util.toShort(campo[4]);
         this.cpfCnpjAdv = campo[5];
         this.nomeAdv = campo[6];
@@ -34,18 +34,19 @@ public class RendAcumulados {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    Integer rraLinha;
-
     @ManyToOne
     @JoinColumn(name = "dirf_id", referencedColumnName = "id", nullable = false)
     Dirf dirf;
 
-    Short tipoRra;
-    //1 – Pago pelo declarante
-    //2 – Pago pela justiça
+    Integer procLinha;
+
+    Short tipoJustica;
+    //1 – Justiça federal
+    //2 – Justiça do trabalho
+    //3 – Justiça estadual/Distrito Federal
 
     @Column(length = 20)
-    String numeroRequerimento;
+    String numProc;
 
     Short tipoAdv;
     //1 – Pessoa física
@@ -61,10 +62,11 @@ public class RendAcumulados {
     BigDecimal vlrAdv;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "dirf_acum_beneficiario",
-            joinColumns = {@JoinColumn(name = "acum_id", referencedColumnName = "id")},
+    @JoinTable(name = "dirf_proc_beneficiario",
+            joinColumns = {@JoinColumn(name = "proc_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "beneficiario_id", referencedColumnName = "id")})
     Set<Beneficiario> beneficiarios = new HashSet<>();
-    //BPFRRA
+    //BPFPROC
+    //BPJPROC
 
 }
