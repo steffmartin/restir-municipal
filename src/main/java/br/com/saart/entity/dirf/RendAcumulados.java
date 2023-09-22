@@ -26,7 +26,7 @@ public class RendAcumulados {
         this.cpfCnpjAdv = campo[5];
         this.nomeAdv = campo[6];
         if (anoLayout >= 2017) {
-            this.vlrAdv = Util.toBigDecimal(campo[7]);
+            this.vlrAdv = Util.toBigDecimal(campo[7]).movePointLeft(2);
         }
     }
 

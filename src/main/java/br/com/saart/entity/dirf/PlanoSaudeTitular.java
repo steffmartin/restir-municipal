@@ -22,7 +22,7 @@ public class PlanoSaudeTitular {
         this.tpseLinha = linha;
         this.cpf = campo[2];
         this.nome = campo[3];
-        this.vlrAno = Util.toBigDecimal(campo[4]);
+        this.vlrAno = Util.toBigDecimal(campo[4]).movePointLeft(2);
     }
 
     @Id

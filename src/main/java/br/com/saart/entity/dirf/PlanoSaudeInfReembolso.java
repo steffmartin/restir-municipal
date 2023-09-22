@@ -21,8 +21,8 @@ public class PlanoSaudeInfReembolso {
         this.codRegistro = campo[1];
         this.cpfCnpj = campo[2];
         this.nome = campo[3];
-        this.vlrAnoCal = Util.toBigDecimal(campo[4]);
-        this.vlrAnosAnt = Util.toBigDecimal(campo[5]);
+        this.vlrAnoCal = Util.toBigDecimal(campo[4]).movePointLeft(2);
+        this.vlrAnosAnt = Util.toBigDecimal(campo[5]).movePointLeft(2);
     }
 
     @Id

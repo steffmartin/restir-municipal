@@ -22,8 +22,8 @@ public class ValoresExterior {
         this.dataPgto = Util.parseIsoDate(campo[2]);
         this.codRec = campo[3];
         this.tipoRendimento = Util.toShort(campo[4]);
-        this.vlrRendimento = Util.toBigDecimal(campo[5]);
-        this.vlrRetido = Util.toBigDecimal(campo[6]);
+        this.vlrRendimento = Util.toBigDecimal(campo[5]).movePointLeft(2);
+        this.vlrRetido = Util.toBigDecimal(campo[6]).movePointLeft(2);
         this.formaTribut = Util.toShort(campo[7]);
     }
 

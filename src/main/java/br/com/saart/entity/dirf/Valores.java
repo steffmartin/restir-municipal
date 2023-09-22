@@ -17,24 +17,26 @@ import java.time.Year;
 @NoArgsConstructor
 public class Valores {
 
-    public Valores(Year anoReferencia, Integer linha, String[] campo) {
-        this(anoReferencia, linha, campo, null, null);
+    public Valores(Year anoCalendario, Integer linha, String[] campo) {
+        this(anoCalendario, linha, campo, null, null);
     }
 
-    public Valores(Year anoReferencia, Integer linha, String[] campo, Integer idrecLinha, String idrecCodigo) {
+    //TODO geração do relatorio: notificar anos calendario ausentes ou duplicados
+    //TODO geração do relatorio: notificar tabela selic incompleta
+    public Valores(Year anoCalendario, Integer linha, String[] campo, Integer idrecLinha, String idrecCodigo) {
         this.registroLinha = linha;
         this.codRegistro = campo[1];
         this.idrecLinha = idrecLinha;
         this.idrecCodigo = idrecCodigo;
-        this.anoReferencia = anoReferencia;
+        this.anoCalendario = anoCalendario;
         switch (campo[1]) {
             case "RIL96", "RIPTS", "RIJMRE", "RIRSR" -> {
                 this.tipoValor = TipoValor.ANUAL;
-                this.vlrAno = Util.toBigDecimal(campo[2]);
+                this.vlrAno = Util.toBigDecimal(campo[2]).movePointLeft(2);
             }
             case "RIO" -> {
                 this.tipoValor = TipoValor.ANUAL;
-                this.vlrAno = Util.toBigDecimal(campo[2]);
+                this.vlrAno = Util.toBigDecimal(campo[2]).movePointLeft(2);
                 this.descricao = campo[3];
             }
             case "QTMESES" -> {
@@ -54,19 +56,19 @@ public class Valores {
             }
             default -> {
                 this.tipoValor = TipoValor.MENSAL;
-                this.jan = Util.toBigDecimal(campo[2]);
-                this.fev = Util.toBigDecimal(campo[3]);
-                this.mar = Util.toBigDecimal(campo[4]);
-                this.abr = Util.toBigDecimal(campo[5]);
-                this.mai = Util.toBigDecimal(campo[6]);
-                this.jun = Util.toBigDecimal(campo[7]);
-                this.jul = Util.toBigDecimal(campo[8]);
-                this.ago = Util.toBigDecimal(campo[9]);
-                this.set = Util.toBigDecimal(campo[10]);
-                this.out = Util.toBigDecimal(campo[11]);
-                this.nov = Util.toBigDecimal(campo[12]);
-                this.dez = Util.toBigDecimal(campo[13]);
-                this.decTer = Util.toBigDecimal(campo[14]);
+                this.jan = Util.toBigDecimal(campo[2]).movePointLeft(2);
+                this.fev = Util.toBigDecimal(campo[3]).movePointLeft(2);
+                this.mar = Util.toBigDecimal(campo[4]).movePointLeft(2);
+                this.abr = Util.toBigDecimal(campo[5]).movePointLeft(2);
+                this.mai = Util.toBigDecimal(campo[6]).movePointLeft(2);
+                this.jun = Util.toBigDecimal(campo[7]).movePointLeft(2);
+                this.jul = Util.toBigDecimal(campo[8]).movePointLeft(2);
+                this.ago = Util.toBigDecimal(campo[9]).movePointLeft(2);
+                this.set = Util.toBigDecimal(campo[10]).movePointLeft(2);
+                this.out = Util.toBigDecimal(campo[11]).movePointLeft(2);
+                this.nov = Util.toBigDecimal(campo[12]).movePointLeft(2);
+                this.dez = Util.toBigDecimal(campo[13]).movePointLeft(2);
+                this.decTer = Util.toBigDecimal(campo[14]).movePointLeft(2);
             }
         }
     }
@@ -79,7 +81,7 @@ public class Valores {
     @Enumerated(EnumType.STRING)
     TipoValor tipoValor;
 
-    Year anoReferencia;
+    Year anoCalendario;
 
     Integer registroLinha;
 

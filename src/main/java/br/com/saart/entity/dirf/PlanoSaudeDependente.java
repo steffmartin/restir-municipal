@@ -25,7 +25,7 @@ public class PlanoSaudeDependente {
         this.dataNascimento = Util.parseIsoDate(campo[3]);
         this.nome = campo[4];
         this.relDependencia = Util.toShort(campo[5]);
-        this.vlrAno = Util.toBigDecimal(campo[6]);
+        this.vlrAno = Util.toBigDecimal(campo[6]).movePointLeft(2);
     }
 
     @Id
