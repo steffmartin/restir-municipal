@@ -44,6 +44,8 @@
                          text="Período"/>
             <TableColumn fx:id="valor" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false"
                          text="Valor da SELIC"/>
+            <TableColumn fx:id="valorAcumulado" maxWidth="1000.0" minWidth="100.0" prefWidth="200.0" sortable="false"
+                         text="Valor Acumulado da SELIC"/>
          </columns>
          <styleClass>
             <String fx:value="dense"/>

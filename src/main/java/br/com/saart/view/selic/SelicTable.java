@@ -19,16 +19,19 @@ public class SelicTable {
         COLUNAS.add(new Coluna("id", "# ID", Long.class));
         COLUNAS.add(new Coluna("periodo", "Período", LocalDate.class));
         COLUNAS.add(new Coluna("valor", "Valor da SELIC", BigDecimal.class));
+        COLUNAS.add(new Coluna("valorAcumulado", "Valor Acumulado da SELIC", BigDecimal.class));
     }
 
     public SelicTable(Selic selic) {
         this.selicId = selic.getId().toString();
         this.periodo = Util.toDMY(selic.getPeriodo());
         this.valor = Util.toNumberString(selic.getValor());
+        this.valorAcumulado = Util.toNumberString(selic.getValorAcumulado());
     }
 
     private String selicId;
     private String periodo;
     private String valor;
+    private String valorAcumulado;
 
 }

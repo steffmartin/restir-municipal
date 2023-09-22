@@ -25,4 +25,6 @@ public class Selic {
     @Column(nullable = false)
     BigDecimal valor;
 
+    BigDecimal valorAcumulado;
+
 }
