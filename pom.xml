@@ -12,7 +12,7 @@
 
     <groupId>br.com</groupId>
     <artifactId>SAART</artifactId>
-    <version>0.0.12</version>
+    <version>0.0.13</version>
     <name>Sistema Avançado de Apuração e Restituição Tributária</name>
 
     <properties>
