@@ -9,6 +9,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.Year;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -56,19 +58,25 @@ public class Valores {
             }
             default -> {
                 this.tipoValor = TipoValor.MENSAL;
-                this.jan = Util.toBigDecimal(campo[2]).movePointLeft(2);
-                this.fev = Util.toBigDecimal(campo[3]).movePointLeft(2);
-                this.mar = Util.toBigDecimal(campo[4]).movePointLeft(2);
-                this.abr = Util.toBigDecimal(campo[5]).movePointLeft(2);
-                this.mai = Util.toBigDecimal(campo[6]).movePointLeft(2);
-                this.jun = Util.toBigDecimal(campo[7]).movePointLeft(2);
-                this.jul = Util.toBigDecimal(campo[8]).movePointLeft(2);
-                this.ago = Util.toBigDecimal(campo[9]).movePointLeft(2);
-                this.set = Util.toBigDecimal(campo[10]).movePointLeft(2);
-                this.out = Util.toBigDecimal(campo[11]).movePointLeft(2);
-                this.nov = Util.toBigDecimal(campo[12]).movePointLeft(2);
-                this.dez = Util.toBigDecimal(campo[13]).movePointLeft(2);
-                this.decTer = Util.toBigDecimal(campo[14]).movePointLeft(2);
+                for (int mes = 1; mes <= 13; mes++) {
+                    BigDecimal valor = Util.toBigDecimal(campo[mes + 1]).movePointLeft(2);
+                    this.valoresMensais.add(new ValoresMensais(linha, anoCalendario, mes, this.codRegistro, valor, idrecCodigo, idrecLinha));
+                    switch (mes) {
+                        case 1 -> this.jan = valor;
+                        case 2 -> this.fev = valor;
+                        case 3 -> this.mar = valor;
+                        case 4 -> this.abr = valor;
+                        case 5 -> this.mai = valor;
+                        case 6 -> this.jun = valor;
+                        case 7 -> this.jul = valor;
+                        case 8 -> this.ago = valor;
+                        case 9 -> this.set = valor;
+                        case 10 -> this.out = valor;
+                        case 11 -> this.nov = valor;
+                        case 12 -> this.dez = valor;
+                        case 13 -> this.decTer = valor;
+                    }
+                }
             }
         }
     }
@@ -158,12 +166,20 @@ public class Valores {
     @Column(length = 60)
     String descricao;
 
+    @OneToMany(mappedBy = "valores", cascade = CascadeType.ALL)
+    Set<ValoresMensais> valoresMensais = new HashSet<>();
+
     //DADOS IDREC
 
     @Column(length = 4)
     String idrecCodigo;
 
     Integer idrecLinha;
+
+    @PrePersist
+    private void prePersist() {
+        valoresMensais.forEach(vlr -> vlr.setValores(this));
+    }
 
     public enum TipoValor {
         MENSAL,
