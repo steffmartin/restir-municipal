@@ -123,6 +123,10 @@ order by
 		<variableExpression><![CDATA[$V{SomaValorIRFAtualizadoAno}]]></variableExpression>
 		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
+	<variable name="ano_COUNT_geral" class="java.lang.Integer" incrementType="Group" incrementGroup="ano" calculation="Sum">
+		<variableExpression><![CDATA[1]]></variableExpression>
+		<initialValueExpression><![CDATA[-1]]></initialValueExpression>
+	</variable>
 	<group name="ano" preventOrphanFooter="true">
 		<groupExpression><![CDATA[$F{ano}]]></groupExpression>
 		<groupFooter>
@@ -390,7 +394,7 @@ order by
 				<text><![CDATA[Cód. Receita]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="140" y="0" width="80" height="20" uuid="f0672458-7674-4f13-b3c8-2702c401271e">
+				<reportElement x="140" y="0" width="100" height="20" uuid="f0672458-7674-4f13-b3c8-2702c401271e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6e992ca2-bb60-4d83-b05e-b26c573db48b"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -399,7 +403,7 @@ order by
 				<text><![CDATA[CPF/CNPJ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="220" y="0" width="340" height="20" uuid="a3288508-ddbb-4a6a-a46c-f85e4ca9a4d3">
+				<reportElement x="240" y="0" width="320" height="20" uuid="a3288508-ddbb-4a6a-a46c-f85e4ca9a4d3">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7f3bd8b7-6c20-4e52-89c9-f819e941d2f3"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
@@ -460,13 +464,13 @@ order by
 				<textFieldExpression><![CDATA[$F{cod_receita}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="140" y="0" width="80" height="15" uuid="825dadde-d051-4b26-941b-e3e13c2d8a72">
+				<reportElement x="140" y="0" width="100" height="15" uuid="825dadde-d051-4b26-941b-e3e13c2d8a72">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6e992ca2-bb60-4d83-b05e-b26c573db48b"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{doc_beneficiario}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{doc_beneficiario}.length()==14?String.format("%s.%s.%s/%s-%s",$F{doc_beneficiario}.substring(0, 2),$F{doc_beneficiario}.substring(2, 5),$F{doc_beneficiario}.substring(5, 8),$F{doc_beneficiario}.substring(8, 12),$F{doc_beneficiario}.substring(12)):String.format("%s.%s.%s-%s",$F{doc_beneficiario}.substring(0, 3),$F{doc_beneficiario}.substring(3, 6),$F{doc_beneficiario}.substring(6, 9),$F{doc_beneficiario}.substring(9)))]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="220" y="0" width="340" height="15" uuid="8aa1a828-6b3e-49ae-bdba-5cd7a517c0b8">
+				<reportElement x="240" y="0" width="320" height="15" uuid="8aa1a828-6b3e-49ae-bdba-5cd7a517c0b8">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7f3bd8b7-6c20-4e52-89c9-f819e941d2f3"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{nome_beneficiario}]]></textFieldExpression>
@@ -528,7 +532,7 @@ order by
 		<band height="15">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.spreadsheet.SpreadsheetLayout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[NOT($P{ANO_INICIAL}.equals($P{ANO_FINAL}))]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$V{ano_COUNT_geral}>1]]></printWhenExpression>
 			<frame>
 				<reportElement x="0" y="0" width="800" height="15" uuid="2ab68ef5-0282-48f0-a833-fbcdf0e9dc55">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.spreadsheet.SpreadsheetLayout"/>

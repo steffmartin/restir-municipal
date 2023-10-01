@@ -332,7 +332,7 @@ order by
 						<textElement>
 							<font isBold="true"/>
 						</textElement>
-						<textFieldExpression><![CDATA["Beneficiário: "+$F{doc_beneficiario}+" - "+$F{nome_beneficiario}]]></textFieldExpression>
+						<textFieldExpression><![CDATA["Beneficiário: "+($F{doc_beneficiario}.length()==14?String.format("%s.%s.%s/%s-%s",$F{doc_beneficiario}.substring(0, 2),$F{doc_beneficiario}.substring(2, 5),$F{doc_beneficiario}.substring(5, 8),$F{doc_beneficiario}.substring(8, 12),$F{doc_beneficiario}.substring(12)):String.format("%s.%s.%s-%s",$F{doc_beneficiario}.substring(0, 3),$F{doc_beneficiario}.substring(3, 6),$F{doc_beneficiario}.substring(6, 9),$F{doc_beneficiario}.substring(9)))+" - "+$F{nome_beneficiario}]]></textFieldExpression>
 					</textField>
 				</frame>
 			</band>
@@ -383,9 +383,9 @@ order by
 				</frame>
 				<frame>
 					<reportElement x="0" y="15" width="800" height="15" uuid="70482579-e493-4efd-bafe-82dfca607ae7">
-						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.spreadsheet.SpreadsheetLayout"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.spreadsheet.SpreadsheetLayout"/>
 					</reportElement>
 					<staticText>
 						<reportElement x="625" y="0" width="108" height="15" uuid="426516fc-b796-496e-90aa-7fb2f3665b55">
@@ -407,22 +407,12 @@ order by
 						</textElement>
 						<textFieldExpression><![CDATA[$V{SomaValorIRFBeneficiario}]]></textFieldExpression>
 					</textField>
-					<textField textAdjust="StretchHeight">
-						<reportElement x="0" y="0" width="625" height="15" uuid="10dc98ca-0bf2-4182-bacf-54c003ad356f">
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						</reportElement>
-						<textElement textAlignment="Right" verticalAlignment="Top">
-							<font isBold="true"/>
-						</textElement>
-						<textFieldExpression><![CDATA[$F{doc_beneficiario}]]></textFieldExpression>
-					</textField>
 				</frame>
 				<frame>
 					<reportElement x="0" y="30" width="800" height="15" uuid="f981ea59-6ce6-4cc2-ba09-ac47f1f2b2ea">
-						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.spreadsheet.SpreadsheetLayout"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.spreadsheet.SpreadsheetLayout"/>
 					</reportElement>
 					<box>
 						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
@@ -448,16 +438,6 @@ order by
 							<font isBold="true"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$V{SomaValorIRFAtualizadoBeneficiario}]]></textFieldExpression>
-					</textField>
-					<textField textAdjust="StretchHeight">
-						<reportElement x="0" y="0" width="625" height="15" uuid="1811c125-7892-4f6d-ba70-ac9d54cadf6d">
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						</reportElement>
-						<textElement textAlignment="Right" verticalAlignment="Top">
-							<font isBold="true"/>
-						</textElement>
-						<textFieldExpression><![CDATA[$F{nome_beneficiario}]]></textFieldExpression>
 					</textField>
 				</frame>
 			</band>
