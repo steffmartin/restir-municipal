@@ -58,7 +58,7 @@ public class ExportReportTask extends GenericTask {
         addExtraParams();
         prepareSubtasks();
 
-        JasperReport report = Util.loadReportTemplate(reportName);
+        JasperReport report = Util.loadReport(reportName);
 
         updateMessage("Executando consulta ao banco de dados...");
 

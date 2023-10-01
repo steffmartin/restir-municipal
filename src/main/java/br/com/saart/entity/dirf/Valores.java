@@ -77,6 +77,7 @@ public class Valores {
                         case 13 -> this.decTer = valor;
                     }
                 }
+                this.vlrAno = jan.add(fev).add(mar).add(abr).add(mai).add(jun).add(jul).add(ago).add(set).add(out).add(nov).add(dez).add(decTer);
             }
         }
     }

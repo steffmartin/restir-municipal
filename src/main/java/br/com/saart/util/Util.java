@@ -4,6 +4,7 @@ import br.com.saart.task.exportreport.ReportName;
 import com.ibm.icu.text.CharsetDetector;
 import com.ibm.icu.text.CharsetMatch;
 import lombok.SneakyThrows;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import org.apache.commons.lang3.StringUtils;
@@ -227,10 +228,20 @@ public class Util {
                 .map(String::toUpperCase);
     }
 
+    public static JasperReport loadReport(ReportName reportName) {
+        return reportName.isCompilado() ? loadReportTemplate(reportName) : compileReportTemplate(reportName);
+    }
+
     @SneakyThrows
     public static JasperReport loadReportTemplate(ReportName reportName) {
         return (JasperReport) JRLoader.loadObject(
                 new ClassPathResource("/reports/" + reportName.name() + ".jasper").getInputStream());
+    }
+
+    @SneakyThrows
+    public static JasperReport compileReportTemplate(ReportName reportName) {
+        return JasperCompileManager.compileReport(
+                new ClassPathResource("/reports/" + reportName.name() + ".jrxml").getInputStream());
     }
 
     @SneakyThrows

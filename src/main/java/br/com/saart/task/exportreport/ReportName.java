@@ -11,11 +11,12 @@ public enum ReportName {
 
 
     AQS_EGA_CTB("1", ReportParam.params(ReportParam.DT_ES_INI, ReportParam.DT_ES_FIN, ReportParam.ONLY_TOTAL),
-            "Aquisição de Energia, Gás ou Água - SPED Contribuições");
+            "Aquisição de Energia, Gás ou Água - SPED Contribuições", false);
 
     private final String subItem;
     private final List<TaskParam> params;
     private final String description;
+    private final boolean compilado;
 
     @Override
     public String toString() {
