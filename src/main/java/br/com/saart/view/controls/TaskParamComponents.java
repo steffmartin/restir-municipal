@@ -172,6 +172,7 @@ public class TaskParamComponents {
                         : Arrays.stream(StringUtils.split(((TextField) region).getText(), LIST_SEPARATOR))
                         .mapToInt(Integer::parseInt).toArray();
             }
+            case INT_AS_STRING_ARRAY:
             case STRING_ARRAY: {
                 String text = ((TextField) region).getText();
                 return isBlank(text) ? ArrayUtils.EMPTY_STRING_ARRAY
@@ -183,6 +184,10 @@ public class TaskParamComponents {
                 return isBlank(text) ? new BigDecimal[0]
                         : Arrays.stream(StringUtils.split(((TextField) region).getText(), LIST_SEPARATOR))
                         .map(BigDecimal::new).toArray(BigDecimal[]::new);
+            }
+            case INT: {
+                String text = ((TextField) region).getText();
+                return isBlank(text) ? 0 : Integer.parseInt(text);
             }
             case STRING:
             default:
@@ -201,6 +206,7 @@ public class TaskParamComponents {
             case BOOLEAN:
                 return true;
             case INT_AS_BIG_DECIMAL_ARRAY:
+            case INT_AS_STRING_ARRAY:
             case INT_ARRAY: {
                 String text = ((TextField) region).getText();
                 return (isBlank(text) && !required) ||
@@ -214,6 +220,10 @@ public class TaskParamComponents {
                 String text = ((TextField) box.getChildren().get(1)).getText();
                 return (isBlank(text) && !required) ||
                         (selected && isNotBlank(text) && text.matches("\\d+([.,]\\d+)?"));
+            }
+            case INT: {
+                String text = ((TextField) region).getText();
+                return (isBlank(text) && !required) || (isNotBlank(text) && text.matches("\\d+"));
             }
             case STRING:
             case STRING_ARRAY:

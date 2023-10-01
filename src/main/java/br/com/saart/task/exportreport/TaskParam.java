@@ -24,8 +24,10 @@ public class TaskParam {
 
         STRING(false),
         STRING_ARRAY(false),
+        INT_AS_STRING_ARRAY(false),
         DATE_AS_TIMESTAMP(false),
         BOOLEAN(false),
+        INT(false),
         INT_ARRAY(false),
         INT_AS_BIG_DECIMAL_ARRAY(false),
         DOUBLE_COMPARISON(true);

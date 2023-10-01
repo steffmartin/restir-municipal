@@ -15,73 +15,85 @@
 	<parameter name="CNPJ_DECLARANTE" class="java.lang.String"/>
 	<parameter name="NOME_DECLARANTE" class="java.lang.String"/>
 	<parameter name="ANO_INICIAL" class="java.lang.Integer"/>
+	<parameter name="MES_INICIAL" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
 	<parameter name="ANO_FINAL" class="java.lang.Integer"/>
+	<parameter name="MES_FINAL" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[12]]></defaultValueExpression>
+	</parameter>
 	<parameter name="CODIGOS_RECEITA" class="java.lang.String[]" nestedType="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[select
-	beneficiario.cpf_cnpj doc_beneficiario,
-	beneficiario.nome nome_beneficiario,
-	dirf.ano_calendario ano,
-	rend_trib.idrec_codigo cod_receita,
-	rend_trib.jan rt_jan,
-	imp_retido.jan irf_jan,
-	aplicar_selic(imp_retido.jan, 1, dirf.ano_calendario) jan_atualizado,
-	rend_trib.fev rt_fev,
-	imp_retido.fev irf_fev,
-	aplicar_selic(imp_retido.fev, 2, dirf.ano_calendario) fev_atualizado,
-	rend_trib.mar rt_mar,
-	imp_retido.mar irf_mar,
-	aplicar_selic(imp_retido.mar, 3, dirf.ano_calendario) mar_atualizado,
-	rend_trib.abr rt_abr,
-	imp_retido.abr irf_abr,
-	aplicar_selic(imp_retido.abr, 4, dirf.ano_calendario) abr_atualizado,
-	rend_trib.mai rt_mai,
-	imp_retido.mai irf_mai,
-	aplicar_selic(imp_retido.mai, 5, dirf.ano_calendario) mai_atualizado,
-	rend_trib.jun rt_jun,
-	imp_retido.jun irf_jun,
-	aplicar_selic(imp_retido.jun, 6, dirf.ano_calendario) jun_atualizado,
-	rend_trib.jul rt_jul,
-	imp_retido.jul irf_jul,
-	aplicar_selic(imp_retido.jul, 7, dirf.ano_calendario) jul_atualizado,
-	rend_trib.ago rt_ago,
-	imp_retido.ago irf_ago,
-	aplicar_selic(imp_retido.ago, 8, dirf.ano_calendario) ago_atualizado,
-	rend_trib.set rt_set,
-	imp_retido.set irf_set,
-	aplicar_selic(imp_retido.set, 9, dirf.ano_calendario) set_atualizado,
-	rend_trib.out rt_out,
-	imp_retido.out irf_out,
-	aplicar_selic(imp_retido.out, 10, dirf.ano_calendario) out_atualizado,
-	rend_trib.nov rt_nov,
-	imp_retido.nov irf_nov,
-	aplicar_selic(imp_retido.nov, 11, dirf.ano_calendario) nov_atualizado,
-	rend_trib.dez rt_dez,
-	imp_retido.dez irf_dez,
-	aplicar_selic(imp_retido.dez, 12, dirf.ano_calendario) dez_atualizado,
-	rend_trib.vlr_ano rt_ano,
-	imp_retido.vlr_ano irf_ano
-from
-	dirf
-	-- JOIN DECLARANTE
-	join dirf_declarante declarante on declarante.id = dirf.id_declarante
-	-- JOIN BENEFICIARIO
-	join dirf_declarante_beneficiario join_benef on join_benef.declarante_id = declarante.id
-	join dirf_beneficiario beneficiario on beneficiario.id = join_benef.beneficiario_id 
-	-- JOIN RENDIMENTO TRIBUTÁVEL
-	join dirf_beneficiario_valores join_rt on join_rt.beneficiario_id = beneficiario.id and join_rt.cod_registro like '%RT'
-	join dirf_valores rend_trib on rend_trib.id = join_rt.valor_id 
-	-- JOIN IMPOSTO RETIDO
-	join dirf_beneficiario_valores join_ir on join_ir.beneficiario_id = beneficiario.id and join_ir.cod_registro like '%IRF'
-	join dirf_valores imp_retido on imp_retido.id = join_ir.valor_id 
+		<![CDATA[select 
+	*,
+	(rt_jan + rt_fev + rt_mar + rt_abr + rt_mai + rt_jun + rt_jul + rt_ago + rt_set + rt_out + rt_nov + rt_dez) rt_ano,
+	(irf_jan + irf_fev + irf_mar + irf_abr + irf_mai + irf_jun + irf_jul + irf_ago + irf_set + irf_out + irf_nov + irf_dez) irf_ano,
+	(jan_atualizado + fev_atualizado + mar_atualizado + abr_atualizado + mai_atualizado + jun_atualizado + jul_atualizado + ago_atualizado + set_atualizado + out_atualizado + nov_atualizado + dez_atualizado) ano_atualizado
+from (
+	select
+		beneficiario.cpf_cnpj doc_beneficiario,
+		beneficiario.nome nome_beneficiario,
+		dirf.ano_calendario ano,
+		rend_trib.idrec_codigo cod_receita,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 1 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 1 <= $P{MES_FINAL}) then rend_trib.jan else 0 end rt_jan,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 1 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 1 <= $P{MES_FINAL}) then imp_retido.jan else 0 end irf_jan,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 1 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 1 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.jan, 1, dirf.ano_calendario) else 0 end jan_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 2 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 2 <= $P{MES_FINAL}) then rend_trib.fev else 0 end rt_fev,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 2 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 2 <= $P{MES_FINAL}) then imp_retido.fev else 0 end irf_fev,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 2 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 2 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.fev, 2, dirf.ano_calendario) else 0 end fev_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 3 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 3 <= $P{MES_FINAL}) then rend_trib.mar else 0 end rt_mar,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 3 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 3 <= $P{MES_FINAL}) then imp_retido.mar else 0 end irf_mar,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 3 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 3 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.mar, 3, dirf.ano_calendario) else 0 end mar_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 4 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 4 <= $P{MES_FINAL}) then rend_trib.abr else 0 end rt_abr,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 4 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 4 <= $P{MES_FINAL}) then imp_retido.abr else 0 end irf_abr,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 4 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 4 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.abr, 4, dirf.ano_calendario) else 0 end abr_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 5 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 5 <= $P{MES_FINAL}) then rend_trib.mai else 0 end rt_mai,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 5 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 5 <= $P{MES_FINAL}) then imp_retido.mai else 0 end irf_mai,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 5 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 5 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.mai, 5, dirf.ano_calendario) else 0 end mai_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 6 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 6 <= $P{MES_FINAL}) then rend_trib.jun else 0 end rt_jun,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 6 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 6 <= $P{MES_FINAL}) then imp_retido.jun else 0 end irf_jun,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 6 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 6 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.jun, 6, dirf.ano_calendario) else 0 end jun_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 7 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 7 <= $P{MES_FINAL}) then rend_trib.jul else 0 end rt_jul,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 7 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 7 <= $P{MES_FINAL}) then imp_retido.jul else 0 end irf_jul,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 7 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 7 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.jul, 7, dirf.ano_calendario) else 0 end jul_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 8 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 8 <= $P{MES_FINAL}) then rend_trib.ago else 0 end rt_ago,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 8 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 8 <= $P{MES_FINAL}) then imp_retido.ago else 0 end irf_ago,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 8 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 8 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.ago, 8, dirf.ano_calendario) else 0 end ago_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 9 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 9 <= $P{MES_FINAL}) then rend_trib.set else 0 end rt_set,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 9 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 9 <= $P{MES_FINAL}) then imp_retido.set else 0 end irf_set,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 9 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 9 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.set, 9, dirf.ano_calendario) else 0 end set_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 10 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 10 <= $P{MES_FINAL}) then rend_trib.out else 0 end rt_out,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 10 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 10 <= $P{MES_FINAL}) then imp_retido.out else 0 end irf_out,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 10 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 10 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.out, 10, dirf.ano_calendario) else 0 end out_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 11 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 11 <= $P{MES_FINAL}) then rend_trib.nov else 0 end rt_nov,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 11 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 11 <= $P{MES_FINAL}) then imp_retido.nov else 0 end irf_nov,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 11 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 11 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.nov, 11, dirf.ano_calendario) else 0 end nov_atualizado,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 12 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 12 <= $P{MES_FINAL}) then rend_trib.dez else 0 end rt_dez,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 12 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 12 <= $P{MES_FINAL}) then imp_retido.dez else 0 end irf_dez,
+		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 12 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 12 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.dez, 12, dirf.ano_calendario) else 0 end dez_atualizado
+	from
+		dirf
+		-- JOIN DECLARANTE
+		join dirf_declarante declarante on declarante.id = dirf.id_declarante
+		-- JOIN BENEFICIARIO
+		join dirf_declarante_beneficiario join_benef on join_benef.declarante_id = declarante.id
+		join dirf_beneficiario beneficiario on beneficiario.id = join_benef.beneficiario_id 
+		-- JOIN RENDIMENTO TRIBUTÁVEL
+		join dirf_beneficiario_valores join_rt on join_rt.beneficiario_id = beneficiario.id and join_rt.cod_registro like '%RT'
+		join dirf_valores rend_trib on rend_trib.id = join_rt.valor_id 
+		-- JOIN IMPOSTO RETIDO
+		join dirf_beneficiario_valores join_ir on join_ir.beneficiario_id = beneficiario.id and join_ir.cod_registro like '%IRF'
+		join dirf_valores imp_retido on imp_retido.id = join_ir.valor_id 
+	where
+		dirf.ano_calendario between $P{ANO_INICIAL} and $P{ANO_FINAL}
+		and declarante.cpf_cnpj = $P{CNPJ_DECLARANTE}
+		and $X{IN, imp_retido.idrec_codigo, CODIGOS_RECEITA}
+		and imp_retido.tipo_valor = 'MENSAL'
+) as subconsulta
 where
-	dirf.ano_calendario between $P{ANO_INICIAL} and $P{ANO_FINAL}
-	and declarante.cpf_cnpj = $P{CNPJ_DECLARANTE}
-	and $X{IN, imp_retido.idrec_codigo, CODIGOS_RECEITA}
-	and imp_retido.tipo_valor = 'MENSAL'
-	and rend_trib.vlr_ano > 0
+	rt_jan + rt_fev + rt_mar + rt_abr + rt_mai + rt_jun + rt_jul + rt_ago + rt_set + rt_out + rt_nov + rt_dez > 0
 order by
-	beneficiario.cpf_cnpj, dirf.ano_calendario, rend_trib.idrec_codigo]]>
+	doc_beneficiario, ano, cod_receita]]>
 	</queryString>
 	<field name="doc_beneficiario" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="doc_beneficiario"/>
@@ -274,16 +286,15 @@ order by
 	<field name="rt_ano" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="rt_ano"/>
 		<property name="com.jaspersoft.studio.field.label" value="rt_ano"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="dirf_valores"/>
 	</field>
 	<field name="irf_ano" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="irf_ano"/>
 		<property name="com.jaspersoft.studio.field.label" value="irf_ano"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="dirf_valores"/>
 	</field>
-	<variable name="ano_atualizado" class="java.math.BigDecimal" resetType="None">
-		<variableExpression><![CDATA[$F{jan_atualizado}.add($F{fev_atualizado}).add($F{mar_atualizado}).add($F{abr_atualizado}).add($F{mai_atualizado}).add($F{jun_atualizado}).add($F{jul_atualizado}).add($F{ago_atualizado}).add($F{set_atualizado}).add($F{out_atualizado}).add($F{nov_atualizado}).add($F{dez_atualizado})]]></variableExpression>
-	</variable>
+	<field name="ano_atualizado" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ano_atualizado"/>
+		<property name="com.jaspersoft.studio.field.label" value="ano_atualizado"/>
+	</field>
 	<variable name="SomaRendimentoTributadoBeneficiario" class="java.math.BigDecimal" resetType="Group" resetGroup="beneficiario" calculation="Sum">
 		<variableExpression><![CDATA[$F{rt_ano}]]></variableExpression>
 		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
@@ -293,7 +304,7 @@ order by
 		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
 	<variable name="SomaValorIRFAtualizadoBeneficiario" class="java.math.BigDecimal" resetType="Group" resetGroup="beneficiario" calculation="Sum">
-		<variableExpression><![CDATA[$V{ano_atualizado}]]></variableExpression>
+		<variableExpression><![CDATA[$F{ano_atualizado}]]></variableExpression>
 		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
 	<variable name="SomaRendimentoTributadoGeral" class="java.math.BigDecimal" incrementType="Group" incrementGroup="beneficiario" calculation="Sum">
@@ -997,7 +1008,7 @@ order by
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{ano_atualizado}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ano_atualizado}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

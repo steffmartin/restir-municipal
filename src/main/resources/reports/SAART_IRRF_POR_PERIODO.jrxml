@@ -15,7 +15,13 @@
 	<parameter name="CNPJ_DECLARANTE" class="java.lang.String"/>
 	<parameter name="NOME_DECLARANTE" class="java.lang.String"/>
 	<parameter name="ANO_INICIAL" class="java.lang.Integer"/>
+	<parameter name="MES_INICIAL" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
 	<parameter name="ANO_FINAL" class="java.lang.Integer"/>
+	<parameter name="MES_FINAL" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[12]]></defaultValueExpression>
+	</parameter>
 	<parameter name="CODIGOS_RECEITA" class="java.lang.String[]" nestedType="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[select
@@ -42,6 +48,8 @@ from
 	join dirf_valores_mensais imp_retido on imp_retido.dirf_valores_id = join_ir.valor_id and imp_retido.mes = rend_trib.mes
 where
 	dirf.ano_calendario between $P{ANO_INICIAL} and $P{ANO_FINAL}
+	and (dirf.ano_calendario > $P{ANO_INICIAL} or rend_trib.mes >= $P{MES_INICIAL})
+	and (dirf.ano_calendario < $P{ANO_FINAL} or rend_trib.mes <= $P{MES_FINAL})
 	and declarante.cpf_cnpj = $P{CNPJ_DECLARANTE}
 	and $X{IN, imp_retido.idrec_codigo, CODIGOS_RECEITA}
 	and rend_trib.valor > 0

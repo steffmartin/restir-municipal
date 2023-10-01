@@ -5,13 +5,18 @@ import lombok.Getter;
 
 import java.util.List;
 
+import static br.com.saart.task.exportreport.ReportParam.*;
+
 @AllArgsConstructor
 @Getter
 public enum ReportName {
 
 
-    AQS_EGA_CTB("1", ReportParam.params(ReportParam.DT_ES_INI, ReportParam.DT_ES_FIN, ReportParam.ONLY_TOTAL),
-            "Aquisição de Energia, Gás ou Água - SPED Contribuições", false);
+    SAART_IRRF_POR_BENEFICIARIO("DIRF", ReportParam.params(MES_INICIAL, ANO_INICIAL, MES_FINAL, ANO_FINAL, CODIGOS_RECEITA),
+            "Relatório de Restituição de IRRF por Beneficiário - DIRF", false),
+
+    SAART_IRRF_POR_PERIODO("DIRF", ReportParam.params(MES_INICIAL, ANO_INICIAL, MES_FINAL, ANO_FINAL, CODIGOS_RECEITA),
+            "Relatório de Restituição de IRRF por Período - DIRF", false);
 
     private final String subItem;
     private final List<TaskParam> params;
