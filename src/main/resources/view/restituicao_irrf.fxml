@@ -1,19 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import atlantafx.base.controls.Message?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-<VBox fx:controller="br.com.saart.controller.RestituicaoIrrfPageController" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="580.0" prefWidth="629.0" spacing="5.0" xmlns="http://javafx.com/javafx/20.0.1"
-      xmlns:fx="http://javafx.com/fxml/1">
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="629.0" spacing="5.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.saart.controller.RestituicaoIrrfPageController">
    <children>
-      <Label styleClass="title-3" text="Restituição IRRF">
+      <Label prefWidth="629.0" styleClass="title-3" text="Restituição IRRF" VBox.vgrow="NEVER">
          <graphic>
-            <FontIcon iconLiteral="mdsmz-picture_as_pdf"/>
+            <FontIcon iconLiteral="mdsmz-picture_as_pdf" />
          </graphic>
       </Label>
-      <Separator prefWidth="200.0" styleClass="small"/>
+      <VBox fx:id="msgBox" spacing="5.0" VBox.vgrow="NEVER">
+         <children>
+            <Message fx:id="msgSelic" description="A tabela 'Taxa de Juros Selic' está desatualizada, ajuste-a antes de gerar o relatório!" styleClass="danger" title="Atenção!">
+               <graphic>
+                  <FontIcon iconLiteral="mdal-error_outline" />
+               </graphic>
+            </Message>
+            <Message fx:id="msgDirfDuplicada" description="Na empresa selecionada existem DIRFs duplicadas para estes anos, apague-as antes de gerar o relatório!" styleClass="danger" title="Atenção!">
+               <graphic>
+                  <FontIcon iconLiteral="mdal-error_outline" />
+               </graphic>
+            </Message>
+            <Message fx:id="msgDirfAusente" description="Na empresa selecionada existem DIRFs ausentes para estes anos. Isto não é impeditivo, mas verifique antes de gerar o relatório." styleClass="warning" title="Atenção!">
+               <graphic>
+                  <FontIcon iconLiteral="mdral-help_outline" />
+               </graphic>
+            </Message>
+         </children>
+      </VBox>
+      <HBox spacing="5.0" VBox.vgrow="NEVER">
+         <children>
+            <FontIcon iconLiteral="mdal-label" textOrigin="CENTER" HBox.hgrow="NEVER" />
+            <Label text="Este relatório traz uma visão consolidada dos valores de Imposto de Renda Retidos na Fonte declarados na DIRF e atualizados pela Selic." textAlignment="JUSTIFY" wrapText="true" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <GridPane fx:id="parametrosGrid" hgap="5.0" vgap="5.0" VBox.vgrow="NEVER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+      </GridPane>
+      <Region VBox.vgrow="ALWAYS" />
+      <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
+         <children>
+            <SplitMenuButton mnemonicParsing="false" styleClass="accent" text="Exportar como PDF">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Exportar como XLS" />
+                  <MenuItem mnemonicParsing="false" text="Exportar como DOC" />
+                <MenuItem mnemonicParsing="false" text="Exportar como HTML" />
+              </items>
+            </SplitMenuButton>
+         </children>
+      </HBox>
    </children>
 </VBox>

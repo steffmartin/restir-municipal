@@ -42,25 +42,7 @@ public class TaskParamComponents {
             grid.setHgap(10);
             grid.setVgap(10);
 
-            for (int i = 0; i < params.size(); i++) {
-                TaskParam param = params.get(i);
-
-                Label label = new Label(param.getDescription());
-                label.setPrefWidth(200);
-                label.setWrapText(true);
-
-                if (param.isRequired()) {
-                    label.setText(label.getText() + " *");
-                    label.setStyle("-fx-font-weight: bold");
-                }
-
-                Region region = getRegion(param);
-                region.setPrefWidth(200);
-                region.setUserData(param);
-
-                grid.add(label, 0, i);
-                grid.add(region, 1, i);
-            }
+            preencherGridParametros(grid, params);
 
             ScrollPane scroll = new ScrollPane(grid);
             scroll.setFitToWidth(true);
@@ -79,19 +61,7 @@ public class TaskParamComponents {
 
             dialog.setResultConverter(button -> {
                 if (ButtonType.OK.equals(button)) {
-                    Map<String, Object> result = new HashMap<>();
-                    grid.getChildren().stream().filter(node -> !(node instanceof Label))
-                            .map(Region.class::cast).forEach(region -> {
-                                TaskParam param = ((TaskParam) region.getUserData());
-                                String key = param.getParam();
-                                Object value = getObject(region);
-                                if (param.getParamClass().isComparison() && value != null) {
-                                    key += "_" + ((Object[]) value)[0];
-                                    value = ((Object[]) value)[1];
-                                }
-                                result.put(key, value);
-                            });
-                    return result;
+                    return converterGridParametros(grid);
                 }
                 return null;
             });
@@ -100,6 +70,47 @@ public class TaskParamComponents {
         } else {
             return Collections.emptyMap();
         }
+    }
+
+    public static void preencherGridParametros(GridPane grid, List<TaskParam> params) {
+        for (int i = 0; i < params.size(); i++) {
+            TaskParam param = params.get(i);
+
+            Label label = new Label(param.getDescription());
+            label.setPrefWidth(200);
+            label.setWrapText(true);
+
+            if (param.isRequired()) {
+                label.setText(label.getText() + " *");
+                label.setStyle("-fx-font-weight: bold");
+            }
+
+            Region region = getRegion(param);
+            region.setPrefWidth(200);
+            region.setUserData(param);
+
+            grid.add(label, 0, i);
+            grid.add(region, 1, i);
+        }
+
+    }
+
+    public static Map<String, Object> converterGridParametros(GridPane grid) {
+        Map<String, Object> result = new HashMap<>();
+        grid.getChildren().stream().filter(node -> !(node instanceof Label))
+                .map(Region.class::cast).forEach(region -> {
+                    TaskParam param = ((TaskParam) region.getUserData());
+                    if(param != null) {
+                        String key = param.getParam();
+                        Object value = getObject(region);
+                        if (param.getParamClass().isComparison() && value != null) {
+                            key += "_" + ((Object[]) value)[0];
+                            value = ((Object[]) value)[1];
+                        }
+                        result.put(key, value);
+                    }
+                });
+        return result;
     }
 
     private static Region getRegion(TaskParam param) {
@@ -232,7 +243,7 @@ public class TaskParamComponents {
         }
     }
 
-    private static boolean isValidTaskParams(GridPane grid) {
+    public static boolean isValidTaskParams(GridPane grid) {
 
         boolean valid = grid.getChildren().stream().filter(node -> !(node instanceof Label))
                 .map(Region.class::cast).allMatch(TaskParamComponents::isValid);
