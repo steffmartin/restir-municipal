@@ -53,7 +53,7 @@ public class TaskParamComponents {
 
             final Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
             okButton.addEventFilter(ActionEvent.ACTION, event -> {
-                if (!isValidTaskParams(grid)) {
+                if (!isValidTaskParams(grid, 0)) {
                     event.consume();
                 }
             });
@@ -61,7 +61,7 @@ public class TaskParamComponents {
 
             dialog.setResultConverter(button -> {
                 if (ButtonType.OK.equals(button)) {
-                    return converterGridParametros(grid);
+                    return converterGridParametros(grid, 0);
                 }
                 return null;
             });
@@ -95,9 +95,10 @@ public class TaskParamComponents {
 
     }
 
-    public static Map<String, Object> converterGridParametros(GridPane grid) {
+    public static Map<String, Object> converterGridParametros(GridPane grid, int beginLine) {
         Map<String, Object> result = new HashMap<>();
         grid.getChildren().stream().filter(node -> !(node instanceof Label))
+                .skip(beginLine)
                 .map(Region.class::cast).forEach(region -> {
                     TaskParam param = ((TaskParam) region.getUserData());
                     if(param != null) {
@@ -243,10 +244,10 @@ public class TaskParamComponents {
         }
     }
 
-    public static boolean isValidTaskParams(GridPane grid) {
+    public static boolean isValidTaskParams(GridPane grid, int beginLine) {
 
         boolean valid = grid.getChildren().stream().filter(node -> !(node instanceof Label))
-                .map(Region.class::cast).allMatch(TaskParamComponents::isValid);
+                .skip(beginLine).map(Region.class::cast).allMatch(TaskParamComponents::isValid);
 
         if (!valid) {
             Components.alert(AlertType.ERROR, "Erro", "Não é possível continuar",

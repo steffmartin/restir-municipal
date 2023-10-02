@@ -49,10 +49,8 @@ public class Components {
         FileChooser fileChooser = new FileChooser();
         if (initialFile != null) {
             File initialPath = new File(initialFile);
-            if (initialPath.exists()) {
-                fileChooser.setInitialDirectory(initialPath.getParentFile());
-                fileChooser.setInitialFileName(initialPath.getName());
-            }
+            fileChooser.setInitialDirectory(initialPath.getParentFile());
+            fileChooser.setInitialFileName(initialPath.getName());
         }
         fileChooser.setTitle(title);
 

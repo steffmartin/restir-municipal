@@ -12,9 +12,9 @@ import net.sf.jasperreports.export.Exporter;
 import net.sf.jasperreports.export.ExporterOutput;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
@@ -22,9 +22,9 @@ import org.springframework.util.StopWatch;
 import javax.sql.DataSource;
 import java.io.File;
 import java.sql.Connection;
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +33,7 @@ public class ExportReportTask extends GenericTask {
 
     //Inputs
     private final ReportName reportName;
-    private final String outputDir;
+    private final File fileName;
     private final ReportFormat reportFormat;
     private final Map<String, Object> params;
 
@@ -45,6 +45,9 @@ public class ExportReportTask extends GenericTask {
     //Service
     @Autowired
     private DataSource dataSource;
+
+    @Value("${spring.application.ui.title}")
+    private String nomeSistema;
 
     @Override
     @Transactional(readOnly = true)
@@ -77,10 +80,9 @@ public class ExportReportTask extends GenericTask {
         if (hasPages) {
             updateMessage("Montando e gravando o relatório...");
 
-            String fileName = generateFileName();
             Exporter exporter = reportFormat.getExporterInstance();
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(getOutputStream(fileName));
+            exporter.setExporterOutput(getOutputStream());
 
             exporter.exportReport();
             updateProgress(++progress, 2 + subtasks.size());
@@ -109,7 +111,7 @@ public class ExportReportTask extends GenericTask {
     }
 
     private void setupVirtualizer() {
-        JRSwapFile tempFile = new JRSwapFile(outputDir, 4096, 1024);
+        JRSwapFile tempFile = new JRSwapFile(fileName.getParentFile().getAbsolutePath(), 4096, 1024);
         JRVirtualizer virtualizer = new JRSwapFileVirtualizer(300, tempFile);
         JRVirtualizationHelper.setThreadVirtualizer(virtualizer);
 
@@ -122,7 +124,8 @@ public class ExportReportTask extends GenericTask {
     }
 
     private void addExtraParams() {
-        params.put("REPORT_NAME", reportName.getDescription());
+        params.put("DATA_RELATORIO", Date.from(Instant.now()));
+        params.put("NOME_SISTEMA", nomeSistema);
     }
 
     private void prepareSubtasks() {
@@ -152,19 +155,15 @@ public class ExportReportTask extends GenericTask {
     }
 
     @SneakyThrows
-    private ExporterOutput getOutputStream(String fileName) {
-        File file = new File(outputDir + "\\" + fileName + "." + reportFormat.getExtension());
-        file.getParentFile().mkdirs();
-        return reportFormat.getOutputInstance(file);
+    private ExporterOutput getOutputStream() {
+        File finalFile = fileName;
+
+        if (!StringUtils.endsWithIgnoreCase(finalFile.getAbsolutePath(), reportFormat.getExtension())) {
+            finalFile = new File(finalFile.getAbsolutePath() + "." + reportFormat.getExtension());
+        }
+
+        finalFile.getParentFile().mkdirs();
+        return reportFormat.getOutputInstance(finalFile);
     }
 
-    private String generateFileName() {
-        return String.join(" - ",
-                MapUtils.getString(params, "REPORT_NAME"),
-                Util.toMY((Timestamp) Util.getFirst(params, LocalDate.now(), "DT_VENDA_INI", "DT_EMI_INI",
-                        "DT_ES_INI", "INV1.DT_INV", "DT_INV")) + " a " +
-                        Util.toMY((Timestamp) Util.getFirst(params, LocalDate.now(), "DT_VENDA_FIN", "DT_EMI_FIN",
-                                "DT_ES_FIN", "INV2.DT_INV", "DT_INV"))
-        ).replaceAll("[\\\\/:*?\"<>|]", "-");
-    }
 }
