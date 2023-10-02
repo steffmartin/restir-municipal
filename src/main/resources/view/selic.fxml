@@ -1,61 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import java.lang.String?>
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="629.0" spacing="5.0"
-      xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="br.com.saart.controller.SelicPageController">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="629.0" spacing="5.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.saart.controller.SelicPageController">
    <children>
       <Label styleClass="title-3" text="Taxa de Juros Selic" VBox.vgrow="NEVER">
          <graphic>
-            <FontIcon iconLiteral="mdomz-table_rows"/>
+            <FontIcon iconLiteral="mdomz-table_rows" />
          </graphic>
       </Label>
+      <TextFlow>
+         <children>
+            <Label text="Fonte: " textAlignment="JUSTIFY" wrapText="true" />
+            <Hyperlink fx:id="linkReceita" onAction="#abrirReceita" text="Receita Federal" />
+         </children>
+      </TextFlow>
       <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
          <children>
-            <Button onAction="#abrirFiltros" mnemonicParsing="false" prefHeight="36.0">
+            <Button mnemonicParsing="false" onAction="#abrirFiltros" prefHeight="36.0">
                <graphic>
-                  <FontIcon iconLiteral="mdral-filter_alt"/>
+                  <FontIcon iconLiteral="mdral-filter_alt" />
                </graphic>
                <tooltip>
-                  <Tooltip text="Filtros"/>
+                  <Tooltip text="Filtros" />
                </tooltip>
             </Button>
-            <SplitMenuButton fx:id="adicionar" mnemonicParsing="false" onAction="#adicionar" styleClass="accent"
-                             text="Adicionar">
+            <SplitMenuButton fx:id="adicionar" mnemonicParsing="false" onAction="#adicionar" styleClass="accent" text="Adicionar">
                <items>
-                  <MenuItem fx:id="alterar" disable="true" mnemonicParsing="false" text="Alterar"
-                            onAction="#alterar"/>
-                  <SeparatorMenuItem/>
-                  <MenuItem fx:id="excluir" disable="true" mnemonicParsing="false" text="Excluir"
-                            onAction="#excluir"/>
+                  <MenuItem fx:id="alterar" disable="true" mnemonicParsing="false" onAction="#alterar" text="Alterar" />
+                  <SeparatorMenuItem />
+                  <MenuItem fx:id="excluir" disable="true" mnemonicParsing="false" onAction="#excluir" text="Excluir" />
                </items>
             </SplitMenuButton>
          </children>
       </HBox>
       <TableView id="tabela" fx:id="tabela" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="selicId" maxWidth="1000.0" minWidth="50.0" prefWidth="50.0" sortable="false"
-                         text="# ID"/>
-            <TableColumn fx:id="periodo" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false"
-                         text="Período"/>
-            <TableColumn fx:id="valor" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false"
-                         text="Valor da SELIC"/>
-            <TableColumn fx:id="valorAcumulado" maxWidth="1000.0" minWidth="100.0" prefWidth="200.0" sortable="false"
-                         text="Valor Acumulado da SELIC"/>
+            <TableColumn fx:id="selicId" maxWidth="1000.0" minWidth="50.0" prefWidth="50.0" sortable="false" text="# ID" />
+            <TableColumn fx:id="periodo" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false" text="Período" />
+            <TableColumn fx:id="valor" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false" text="Valor da SELIC" />
+            <TableColumn fx:id="valorAcumulado" maxWidth="1000.0" minWidth="100.0" prefWidth="200.0" sortable="false" text="Valor Acumulado da SELIC" />
          </columns>
          <styleClass>
-            <String fx:value="dense"/>
-            <String fx:value="striped"/>
+            <String fx:value="dense" />
+            <String fx:value="striped" />
          </styleClass>
       </TableView>
-      <Pagination fx:id="paginacao" currentPageIndex="0" pageCount="1"
-                  style="-fx-page-information-visible: false;" VBox.vgrow="NEVER">
+      <Pagination fx:id="paginacao" currentPageIndex="0" pageCount="1" style="-fx-page-information-visible: false;" VBox.vgrow="NEVER">
          <VBox.margin>
-            <Insets/>
+            <Insets />
          </VBox.margin>
       </Pagination>
    </children>

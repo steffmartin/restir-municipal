@@ -1,10 +1,12 @@
 package br.com.saart.controller;
 
 import atlantafx.base.theme.Styles;
+import br.com.saart.JavafxApplication;
 import br.com.saart.entity.selic.Selic;
 import br.com.saart.service.SelicService;
 import br.com.saart.specification.CustomSpecification;
 import br.com.saart.view.selic.SelicTable;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -43,6 +45,10 @@ public class SelicPageController implements Initializable {
     @Autowired
     private CustomSpecification<Selic> selicCustomSpecification;
 
+    @Autowired
+    private JavafxApplication application;
+
+    public Hyperlink linkReceita;
     public SplitMenuButton adicionar;
     public MenuItem alterar;
     public MenuItem excluir;
@@ -107,5 +113,10 @@ public class SelicPageController implements Initializable {
                 String.format("Tem certeza que deseja excluir o(s) %d registro(s) selecionado(s)?", quantidade),
                 "A exclusão é permanente e estes registros não poderão ser recuperados.", true, Styles.DANGER)
                 .orElse(ButtonType.NO));
+    }
+
+    public void abrirReceita() {
+        application.getHostServices().showDocument("https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/pagamentos-e-parcelamentos/taxa-de-juros-selic");
+
     }
 }
