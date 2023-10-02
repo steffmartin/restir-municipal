@@ -42,7 +42,7 @@ public class TaskParamComponents {
             grid.setHgap(10);
             grid.setVgap(10);
 
-            preencherGridParametros(grid, params);
+            preencherGridParametros(grid, params, 0);
 
             ScrollPane scroll = new ScrollPane(grid);
             scroll.setFitToWidth(true);
@@ -72,7 +72,7 @@ public class TaskParamComponents {
         }
     }
 
-    public static void preencherGridParametros(GridPane grid, List<TaskParam> params) {
+    public static void preencherGridParametros(GridPane grid, List<TaskParam> params, int beginLine) {
         for (int i = 0; i < params.size(); i++) {
             TaskParam param = params.get(i);
 
@@ -89,8 +89,8 @@ public class TaskParamComponents {
             region.setPrefWidth(200);
             region.setUserData(param);
 
-            grid.add(label, 0, i);
-            grid.add(region, 1, i);
+            grid.add(label, 0, i + beginLine);
+            grid.add(region, 1, i + beginLine);
         }
 
     }
