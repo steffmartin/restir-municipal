@@ -6,9 +6,9 @@
 <?import javafx.scene.text.TextFlow?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import java.lang.String?>
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="629.0" spacing="5.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.saart.controller.SelicPageController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="629.0" spacing="5.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.saart.controller.CodReceitaPageController">
    <children>
-      <Label styleClass="title-3" text="Taxa de Juros Selic" VBox.vgrow="NEVER">
+      <Label styleClass="title-3" text="Códigos de Receita" VBox.vgrow="NEVER">
          <graphic>
             <FontIcon iconLiteral="mdomz-table_rows" />
          </graphic>
@@ -16,7 +16,7 @@
       <TextFlow>
          <children>
             <Label text="Fonte: " textAlignment="JUSTIFY" wrapText="true" />
-            <Hyperlink fx:id="linkReceita" onAction="#abrirReceita" text="Receita Federal" />
+            <Hyperlink fx:id="linkReceita" onAction="#abrirReceita" text="SIEF Receitas" />
          </children>
       </TextFlow>
       <HBox alignment="CENTER_RIGHT" spacing="5.0" VBox.vgrow="NEVER">
@@ -40,10 +40,8 @@
       </HBox>
       <TableView id="tabela" fx:id="tabela" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="selicId" maxWidth="1000.0" minWidth="50.0" prefWidth="50.0" sortable="false" text="# ID" />
-            <TableColumn fx:id="periodo" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false" text="Período" />
-            <TableColumn fx:id="valor" maxWidth="1000.0" minWidth="100.0" prefWidth="150.0" sortable="false" text="Valor da SELIC" />
-            <TableColumn fx:id="valorAcumulado" maxWidth="1000.0" minWidth="100.0" prefWidth="200.0" sortable="false" text="Valor Acumulado da SELIC" />
+            <TableColumn fx:id="idCodRec" maxWidth="1000.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="# ID" />
+            <TableColumn fx:id="descricao" maxWidth="2000.0" minWidth="250.0" prefWidth="500.0" sortable="false" text="Descrição" />
          </columns>
          <styleClass>
             <String fx:value="dense" />

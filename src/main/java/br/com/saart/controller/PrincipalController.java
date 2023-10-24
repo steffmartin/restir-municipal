@@ -57,10 +57,11 @@ public class PrincipalController implements Initializable {
 
         //Grupos Relatórios
         TreeItem<Navitem> relatorios = criaGrupoMenu("Relatórios", "mdsmz-picture_as_pdf");
-        criaItemMenu(relatorios, "Restituição IRRF", "restituicao_irrf", true);
+        criaItemMenu(relatorios, "Restituição IRRF", "restituicao_irrf", false);
 
         //Grupo Tabelas
         TreeItem<Navitem> tabelas = criaGrupoMenu("Tabelas", "mdomz-table_rows");
+        criaItemMenu(tabelas, "Códigos de Receita", "cod_receita", true);
         criaItemMenu(tabelas, "Taxa de Juros Selic", "selic", false);
     }
 

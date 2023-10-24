@@ -35,6 +35,7 @@ from (
 		beneficiario.nome nome_beneficiario,
 		dirf.ano_calendario ano,
 		rend_trib.idrec_codigo cod_receita,
+		rec_codigo.descricao descricao_receita,
 		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 1 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 1 <= $P{MES_FINAL}) then rend_trib.jan else 0 end rt_jan,
 		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 1 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 1 <= $P{MES_FINAL}) then imp_retido.jan else 0 end irf_jan,
 		case when (dirf.ano_calendario > $P{ANO_INICIAL} or 1 >= $P{MES_INICIAL}) and (dirf.ano_calendario < $P{ANO_FINAL} or 1 <= $P{MES_FINAL}) then aplicar_selic(imp_retido.jan, 1, dirf.ano_calendario) else 0 end jan_atualizado,
@@ -84,6 +85,8 @@ from (
 		-- JOIN IMPOSTO RETIDO
 		join dirf_beneficiario_valores join_ir on join_ir.beneficiario_id = beneficiario.id and join_ir.cod_registro like '%IRF'
 		join dirf_valores imp_retido on imp_retido.id = join_ir.valor_id 
+		-- JOIN CÓDIGO RECEITA
+		join rec_codigo rec_codigo on rec_codigo.id = imp_retido.idrec_codigo
 	where
 		dirf.ano_calendario between $P{ANO_INICIAL} and $P{ANO_FINAL}
 		and declarante.cpf_cnpj = $P{CNPJ_DECLARANTE}
@@ -114,6 +117,11 @@ order by
 		<property name="com.jaspersoft.studio.field.name" value="cod_receita"/>
 		<property name="com.jaspersoft.studio.field.label" value="cod_receita"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="dirf_valores"/>
+	</field>
+	<field name="descricao_receita" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descricao_receita"/>
+		<property name="com.jaspersoft.studio.field.label" value="descricao_receita"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rec_codigo"/>
 	</field>
 	<field name="rt_jan" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="rt_jan"/>
@@ -474,7 +482,7 @@ order by
 						<textElement>
 							<font isBold="true"/>
 						</textElement>
-						<textFieldExpression><![CDATA["Ano: "+$F{ano}+" Cód. Receita: "+$F{cod_receita}]]></textFieldExpression>
+						<textFieldExpression><![CDATA["Ano: "+$F{ano}+" Cód. Receita: "+$F{cod_receita}+" - "+$F{descricao_receita}]]></textFieldExpression>
 					</textField>
 				</frame>
 			</band>

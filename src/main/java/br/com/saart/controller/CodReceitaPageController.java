@@ -2,10 +2,10 @@ package br.com.saart.controller;
 
 import atlantafx.base.theme.Styles;
 import br.com.saart.JavafxApplication;
-import br.com.saart.entity.selic.Selic;
-import br.com.saart.service.SelicService;
+import br.com.saart.entity.codRec.CodReceita;
+import br.com.saart.service.CodRecService;
 import br.com.saart.specification.CustomSpecification;
-import br.com.saart.view.selic.SelicTable;
+import br.com.saart.view.codRec.CodRecTable;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -31,7 +31,7 @@ import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
 @Controller
-public class SelicPageController implements Initializable {
+public class CodReceitaPageController implements Initializable {
 
     private static final int PAGE_SIZE = 30;
 
@@ -39,10 +39,10 @@ public class SelicPageController implements Initializable {
     private FiltrosController filtrosController;
 
     @Autowired
-    private SelicService selicService;
+    private CodRecService codRecService;
 
     @Autowired
-    private CustomSpecification<Selic> selicCustomSpecification;
+    private CustomSpecification<CodReceita> codReceitaCustomSpecification;
 
     @Autowired
     private JavafxApplication application;
@@ -51,10 +51,10 @@ public class SelicPageController implements Initializable {
     public SplitMenuButton adicionar;
     public MenuItem alterar;
     public MenuItem excluir;
-    public TableView<SelicTable> tabela;
+    public TableView<CodRecTable> tabela;
     public Pagination paginacao;
 
-    private Specification<Selic> currentSpecification = null;
+    private Specification<CodReceita> currentSpecification = null;
     private Sort currentSort = Sort.unsorted();
 
     @Override
@@ -62,7 +62,7 @@ public class SelicPageController implements Initializable {
         alterar.disableProperty().bind(Bindings.size(tabela.getSelectionModel().getSelectedIndices()).isNotEqualTo(1));
         excluir.disableProperty().bind(Bindings.isNotEmpty(tabela.getSelectionModel().getSelectedIndices()).not());
         tabela.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tabela.getColumns().forEach(coluna -> configuraColuna(Selic.class, tabela, (TableColumn<SelicTable, String>) coluna, coluna.getId()));
+        tabela.getColumns().forEach(coluna -> configuraColuna(CodReceita.class, tabela, (TableColumn<CodRecTable, String>) coluna, coluna.getId()));
         paginacao.setPageFactory(i -> lerPagina());
         Platform.runLater(this::lerPagina);
     }
@@ -70,7 +70,7 @@ public class SelicPageController implements Initializable {
     private Node lerPagina() {
         Pageable pageable = PageRequest.of(paginacao.getCurrentPageIndex(), PAGE_SIZE, currentSort);
 
-        Page<SelicTable> pagina = selicService.findAll(pageable, currentSpecification).map(SelicTable::new);
+        Page<CodRecTable> pagina = codRecService.findAll(pageable, currentSpecification).map(CodRecTable::new);
 
         tabela.setItems(FXCollections.observableList(pagina.toList()));
 
@@ -83,26 +83,26 @@ public class SelicPageController implements Initializable {
     public void abrirFiltros() {
         filtrosController.montar();
 
-        filtrosController.abrir(SelicTable.COLUNAS, selicCustomSpecification, (specification, sort) -> {
-            currentSpecification = (Specification<Selic>) specification;
+        filtrosController.abrir(CodRecTable.COLUNAS, codReceitaCustomSpecification, (specification, sort) -> {
+            currentSpecification = (Specification<CodReceita>) specification;
             currentSort = sort;
             lerPagina();
         });
     }
 
     public void adicionar() {
-        alert(WARNING, "Em desenvolvimento", "Esta funcionalidade está sendo desenvolvida", "A inclusão de registros na tabela de juros SELIC será adicionada na próxima versão do sistema.", false);
+        alert(WARNING, "Em desenvolvimento", "Esta funcionalidade está sendo desenvolvida", "A inclusão de registros na tabela de códigos de Receita será adicionada na próxima versão do sistema.", false);
     }
 
     public void alterar() {
-        alert(WARNING, "Em desenvolvimento", "Esta funcionalidade está sendo desenvolvida", "A alteração de registros da tabela de juros SELIC será adicionada na próxima versão do sistema.", false);
+        alert(WARNING, "Em desenvolvimento", "Esta funcionalidade está sendo desenvolvida", "A alteração de registros da tabela de códigos de Receita será adicionada na próxima versão do sistema.", false);
     }
 
     public void excluir() {
-        ObservableList<SelicTable> selectedItems = tabela.getSelectionModel().getSelectedItems();
+        ObservableList<CodRecTable> selectedItems = tabela.getSelectionModel().getSelectedItems();
 
         if (confirmarExclusao(selectedItems.size())) {
-            selectedItems.forEach(linha -> selicService.delete(Long.parseLong(linha.getSelicId())));
+            selectedItems.forEach(linha -> codRecService.delete(linha.getIdCodRec()));
             lerPagina();
         }
     }
@@ -115,7 +115,6 @@ public class SelicPageController implements Initializable {
     }
 
     public void abrirReceita() {
-        application.getHostServices().showDocument("https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/pagamentos-e-parcelamentos/taxa-de-juros-selic");
-
+        application.getHostServices().showDocument("https://siefreceitas.receita.economia.gov.br/codigos-de-receita-de-tributos-e-contribuicoes-darf-e-dje");
     }
 }

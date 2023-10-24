@@ -1,6 +1,5 @@
 package br.com.saart.controller;
 
-import atlantafx.base.controls.ToggleSwitch;
 import br.com.saart.service.DirfService;
 import br.com.saart.task.exportreport.ExportReportTask;
 import br.com.saart.task.exportreport.ReportFormat;
@@ -79,7 +78,7 @@ public class RestituicaoIrrfPageController implements Initializable {
 
     private File generateFile(ReportFormat reportFormat) {
         File file = Components.fileChooser(System.getProperty("user.home") + "\\relatorio." + reportFormat.getExtension(), "Salvar como",
-                reportFormat.getDescription(), reportFormat.getExtension()).showSaveDialog(parametrosGrid.getScene().getWindow());
+                reportFormat.getDescription(), "*."+reportFormat.getExtension()).showSaveDialog(parametrosGrid.getScene().getWindow());
         if (file != null && !StringUtils.endsWithIgnoreCase(file.getAbsolutePath(), reportFormat.getExtension())) {
             file = new File(file.getAbsolutePath() + "." + reportFormat.getExtension());
         }
